@@ -11,7 +11,7 @@ while true do
 
 	name = lfile:read(); -- get the next line of the file
 
-	if (lfile==nil) then 
+	if (name==nil) then 
 	break;
 	end
 
