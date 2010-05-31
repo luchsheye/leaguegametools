@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeagueOverlay", "LeagueOverlay\LeagueOverlay.csproj", "{4E5E0FFD-64F9-4CCD-A408-63CFBEED8836}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeagueToolLauncher", "LeagueToolLauncher\LeagueToolLauncher.csproj", "{975E5AAE-941F-44C1-B457-B2110619D5A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendedItemTool", "RecommendedItemTool\RecommendedItemTool.csproj", "{619124C6-A09A-4FF1-B74B-4FC4A48902FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateTool", "UpdateTool\UpdateTool.csproj", "{FD157DC0-2567-4770-8D91-307E941CA923}"
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E5E0FFD-64F9-4CCD-A408-63CFBEED8836}.Debug|x86.ActiveCfg = Debug|x86
+		{4E5E0FFD-64F9-4CCD-A408-63CFBEED8836}.Debug|x86.Build.0 = Debug|x86
+		{4E5E0FFD-64F9-4CCD-A408-63CFBEED8836}.Release|x86.ActiveCfg = Release|x86
+		{4E5E0FFD-64F9-4CCD-A408-63CFBEED8836}.Release|x86.Build.0 = Release|x86
+		{975E5AAE-941F-44C1-B457-B2110619D5A5}.Debug|x86.ActiveCfg = Debug|x86
+		{975E5AAE-941F-44C1-B457-B2110619D5A5}.Debug|x86.Build.0 = Debug|x86
+		{975E5AAE-941F-44C1-B457-B2110619D5A5}.Release|x86.ActiveCfg = Release|x86
+		{975E5AAE-941F-44C1-B457-B2110619D5A5}.Release|x86.Build.0 = Release|x86
+		{619124C6-A09A-4FF1-B74B-4FC4A48902FB}.Debug|x86.ActiveCfg = Debug|x86
+		{619124C6-A09A-4FF1-B74B-4FC4A48902FB}.Debug|x86.Build.0 = Debug|x86
+		{619124C6-A09A-4FF1-B74B-4FC4A48902FB}.Release|x86.ActiveCfg = Release|x86
+		{619124C6-A09A-4FF1-B74B-4FC4A48902FB}.Release|x86.Build.0 = Release|x86
+		{FD157DC0-2567-4770-8D91-307E941CA923}.Debug|x86.ActiveCfg = Debug|x86
+		{FD157DC0-2567-4770-8D91-307E941CA923}.Debug|x86.Build.0 = Debug|x86
+		{FD157DC0-2567-4770-8D91-307E941CA923}.Release|x86.ActiveCfg = Release|x86
+		{FD157DC0-2567-4770-8D91-307E941CA923}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

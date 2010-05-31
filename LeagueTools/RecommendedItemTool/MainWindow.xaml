@@ -1,0 +1,18 @@
+﻿<Window x:Class="RecommendedItemTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Recommended Item Tool" Height="610" Width="1000" Loaded="Window_Loaded" ResizeMode="NoResize" Background="Black" Closed="Window_Closed" MouseMove="Window_MouseMove" MouseDoubleClick="Window_MouseDoubleClick" Icon="/RecommendedItemTool;component/icon.png">
+    <Canvas Name="mainCanvas" MouseUp="mainCanvas_MouseUp">
+        <Label Canvas.Left="694" Canvas.Top="12" Content="Champion Name" Height="51" Name="championNameLbl" Width="255" FontFamily="Miramonte" FontSize="30" Foreground="White" HorizontalContentAlignment="Right" />
+        <Button Canvas.Left="16" Canvas.Top="525" Content="Champion Select" Height="34" Name="championSelectBtn" Width="134" Style="{StaticResource GlassButton}" Click="championSelectBtn_Click" />
+        <Rectangle Canvas.Left="581" Canvas.Top="450" Height="50" Name="recItemImg1" Stroke="White" Width="50" RadiusX="8" RadiusY="8" StrokeThickness="2" Style="{StaticResource ItemImage}" />
+        <Rectangle Canvas.Left="637" Canvas.Top="450" Height="50" Name="recItemImg2" RadiusX="8" RadiusY="8" Stroke="White" StrokeThickness="2" Width="50" Style="{StaticResource ItemImage}" />
+        <Rectangle Canvas.Left="693" Canvas.Top="450" Height="50" Name="recItemImg3" RadiusX="8" RadiusY="8" Stroke="White" StrokeThickness="2" Width="50" Style="{StaticResource ItemImage}" />
+        <Rectangle Canvas.Left="749" Canvas.Top="450" Height="50" Name="recItemImg4" RadiusX="8" RadiusY="8" Stroke="White" StrokeThickness="2" Width="50" Style="{StaticResource ItemImage}" />
+        <Rectangle Canvas.Left="807" Canvas.Top="450" Height="50" Name="recItemImg5" RadiusX="8" RadiusY="8" Stroke="White" StrokeThickness="2" Width="50" Style="{StaticResource ItemImage}" />
+        <Rectangle Canvas.Left="863" Canvas.Top="450" Height="50" Name="recItemImg6" RadiusX="8" RadiusY="8" Stroke="White" StrokeThickness="2" Width="50" Style="{StaticResource ItemImage}" />
+        <Button Canvas.Left="268" Canvas.Top="525" Content="Help" Height="34" Name="helpBtn" Style="{StaticResource GlassButton}" Width="134" Click="helpBtn_Click" />
+        <Button Canvas.Left="581" Canvas.Top="525" Content="Load/View Item String" Height="34" Name="loadViewBtn" Style="{StaticResource GlassButton}" Width="144" Click="loadViewBtn_Click" />
+        <Button Canvas.Left="779" Canvas.Top="525" Content="Save to Game" Height="34" Name="button3" Style="{StaticResource GlassButton}" Width="134" />
+    </Canvas>
+</Window>

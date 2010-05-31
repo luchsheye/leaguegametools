@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="RecommendedItemTool.ItemSelect"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Loaded="UserControl_Loaded" Background="#64000000" Width="379" Height="450" BorderBrush="White" BorderThickness="2">
+    <Canvas Height="Auto" Name="mainCanvas" Width="416">
+        <Label Canvas.Left="12" Canvas.Top="0" Content="Use filters below to find items" Height="28" Name="label1" Width="350" HorizontalContentAlignment="Center" FontFamily="Miramonte" FontSize="14" FontWeight="Normal" Foreground="White" />
+        <TextBox Canvas.Left="12" Canvas.Top="363" Height="21" Name="nameFilterBox" Width="86" Text="" TextChanged="nameFilterBox_TextChanged" FontFamily="Miramonte" />
+        <Label Canvas.Left="12" Canvas.Top="348" Content="Item Name" Height="17" Name="label2" Width="86" VerticalContentAlignment="Top" Padding="0" Foreground="#FF6CB5F8" FontFamily="Miramonte" HorizontalContentAlignment="Center"></Label>
+        <Label Canvas.Left="148" Canvas.Top="427" Content="&lt;some items not shown&gt;" FontFamily="Miramonte" FontSize="14" FontWeight="Normal" Foreground="White" Height="19" HorizontalContentAlignment="Center" Name="tooManyItemsLabel" Width="165" Padding="0" Visibility="Hidden" />
+    </Canvas>
+</UserControl>

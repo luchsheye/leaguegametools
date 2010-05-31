@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="RecommendedItemTool.HelpScreen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" Background="#96000000" Loaded="UserControl_Loaded" d:DesignHeight="610" d:DesignWidth="1000">
+    <Grid>
+        <Label Content="Help" FontFamily="Miramonte" FontSize="21" FontWeight="Bold" Foreground="White" Height="33" Margin="470,12,471,565" Name="label1" />
+        <TextBlock Height="37" HorizontalAlignment="Left" Margin="47,87,0,0" Name="textBlock1" Text="To select a champion, click the &quot;Select Champion&quot; button on the bottom left." VerticalAlignment="Top" Width="904" TextWrapping="Wrap" FontSize="15" FontFamily="Miramonte" Foreground="White" />
+        <TextBlock FontFamily="Miramonte" FontSize="15" Foreground="White" Height="57" HorizontalAlignment="Left" Margin="47,130,0,0" Name="textBlock2" Text="To change the default items of a Champion, drag and drop items from the item bank to the champion's item bar on the bottom right.  Items can be filtered through by clicking one or more of the item filters on the left." TextWrapping="Wrap" VerticalAlignment="Top" Width="904" />
+        <TextBlock FontFamily="Miramonte" FontSize="15" Foreground="White" Height="57" HorizontalAlignment="Left" Margin="47,193,0,0" Name="textBlock3" Text="To save the new item build you have created as your default build, hit the &quot;save to game&quot; button on the bottom right, this must be done for each individual champion's build you change." TextWrapping="Wrap" VerticalAlignment="Top" Width="904" />
+        <TextBlock FontFamily="Miramonte" FontSize="15" Foreground="White" Height="57" HorizontalAlignment="Left" Margin="47,256,0,0" Name="textBlock4" Text="If you would like to share or load an item build, click on the &quot;load/view item string&quot; button on the bottom right.  Copying this string will allow you to share your item build with friends, pasting someone elses build and loading it will load that build. " TextWrapping="Wrap" VerticalAlignment="Top" Width="904" />
+        <TextBlock FontFamily="Miramonte" FontSize="15" Foreground="White" Height="72" HorizontalAlignment="Left" Margin="47,319,0,0" Name="textBlock5" Text="Be Warned! Items show up in the item bank that are not actually allowed in game!  These items may be used for developers or items that may be introduced in the future.  We do not distinguish these few items from the rest, so if you do not remember them from in game then do not use them for your item build.   They WILL NOT show up in game and may cause problems with your League of Legends Application" TextWrapping="Wrap" VerticalAlignment="Top" Width="904" />
+        <Button Content="Close" Height="24" Margin="893,542,32,44" Name="cancelBtn" Style="{StaticResource GlassButton}" Width="75" Click="cancelBtn_Click" />
+        <Button Content="Restore league hero data" Height="24" Margin="28,539,780,47" Name="restoreBtn" Style="{StaticResource GlassButtonRed}" Click="restoreBtn_Click" />
+    </Grid>
+</UserControl>

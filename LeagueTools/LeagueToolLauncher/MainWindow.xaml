@@ -1,0 +1,19 @@
+﻿<Window x:Class="LeagueToolLauncher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="League Tools" Loaded="Window_Loaded" WindowStyle="ToolWindow" ResizeMode="NoResize" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="451" Width="757" Icon="/LeagueToolLauncher;component/icon.png"> 
+    <Canvas>
+        <Label Content="League Tools" Height="54" HorizontalAlignment="Left" Margin="43,29,0,0" Name="label1" VerticalAlignment="Top" Width="238" FontFamily="Miramonte" FontSize="36" Foreground="White" Canvas.Left="-6" Canvas.Top="-2" />
+        <Label Canvas.Left="23" Canvas.Top="371" Content="ver 1.51" FontFamily="Miramonte" FontSize="15" FontWeight="Bold" Foreground="White" Height="15" Name="versionLbl" Padding="0" Width="Auto" />
+        <Button Canvas.Left="85" Canvas.Top="365" Content="Update Available!" Height="25" Name="updateBtn" Style="{StaticResource GlassButton}" Visibility="Hidden" Width="127" Click="updateBtn_Click" />
+        <Button Canvas.Left="516" Canvas.Top="352" Content="Start League of Legends" Height="34" Name="startLeagueBtn" Style="{StaticResource GlassButton}" Visibility="Visible" Width="185" Click="startLeagueBtn_Click" />
+        <Label Canvas.Left="151" Canvas.Top="120" Content="League Overlay:" FontFamily="Miramonte" FontSize="14" Foreground="White" Height="29" Name="label2" Width="106" />
+        <Label Canvas.Left="90" Canvas.Top="169" Content="Recommended Items Tool:" FontFamily="Miramonte" FontSize="14" Foreground="White" Height="29" Name="label3" Width="167" />
+        <Label Canvas.Left="258" Canvas.Top="125" Content="enabled" FontFamily="Miramonte" FontSize="14" Foreground="#FF80E231" Height="15" Name="label4" Width="52" Padding="0" />
+        <Button Canvas.Left="258" Canvas.Top="169" Content="Open Tool" Height="21" Name="openRecItemToolBtn" Style="{StaticResource GlassButton}" Visibility="Visible" Width="118" Click="openRecItemToolBtn_Click" />
+        <Button Canvas.Left="316" Canvas.Top="122" Content="Options" Height="21" Name="button3" Style="{StaticResource GlassButton}" Visibility="Visible" Width="60" />
+    </Canvas>
+    <Window.Background>
+        <ImageBrush ImageSource="/LeagueToolLauncher;component/LeagueTools.png" Stretch="Fill" TileMode="None" />
+    </Window.Background>
+</Window>

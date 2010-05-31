@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="RecommendedItemTool.ItemToolTip"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="189" d:DesignWidth="392" Background="#D8000000" Width="264" BorderBrush="White" BorderThickness="2">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="312*" />
+            <ColumnDefinition Width="80*" />
+        </Grid.ColumnDefinitions>
+        <Label Content="Label" Height="29" HorizontalAlignment="Left" Name="itemNameLbl" VerticalAlignment="Top" Width="396" FontFamily="Miramonte" Foreground="White" FontSize="13" Grid.ColumnSpan="2" />
+        <TextBlock Height="158" HorizontalAlignment="Left" Margin="0,27,0,0" Name="itemDescriptionLbl" Text="TextBlock" VerticalAlignment="Top" Width="260" TextWrapping="Wrap" FontFamily="Miramonte" Foreground="#FF6CB5F8" Grid.ColumnSpan="2" Padding="4" />
+    </Grid>
+</UserControl>
