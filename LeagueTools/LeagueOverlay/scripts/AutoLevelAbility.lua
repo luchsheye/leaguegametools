@@ -11,6 +11,10 @@ while true do
 
 	name = lfile:read(); -- get the next line of the file
 
+	if (lfile==nil) then 
+	break;
+	end
+
 	if (name == GetHeroName()) then --check if the line is the hero name you want, if not, keep looping
 		temp = lfile:read(); --get the next line, string containing leveling up info
 		abNum = tonumber(string.sub(temp,level,level)); --get which ability to level up for this level

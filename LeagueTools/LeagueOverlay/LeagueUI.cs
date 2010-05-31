@@ -53,7 +53,7 @@ namespace LeagueOverlay
             int cLevelHeight0 = (int)Math.Round(13 * widthScale);
             int avatarSize = (int)Math.Round(102 * widthScale);
             int abPlusHeight = (int)Math.Round(yRes - 142 * widthScale);
-            int clevelHeight = (int)Math.Floor(yRes - (768 - 735) * widthScale);
+            int clevelHeight = (int)Math.Floor (yRes - (768 - 735) * widthScale);
             int playerAvatarHeight = (int)Math.Round(yRes - (117) * widthScale);
 
             cAbility1R = new Rect((int)Math.Round((507) * widthScale), abilityHeight, abilitySize, abilitySize);

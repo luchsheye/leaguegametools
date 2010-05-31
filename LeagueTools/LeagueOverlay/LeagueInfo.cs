@@ -100,17 +100,18 @@ namespace LeagueOverlay
             int thinkLevel = 1;
             Bitmap levelBit;
             Bitmap wLevelBit;
-            wLevelBit = new Bitmap(form.windowImage.Clone(LeagueUI.cLevel, System.Drawing.Imaging.PixelFormat.Undefined),new System.Drawing.Size(19*3,13*3));
-            double lrms = 0, curlrms = 100000.0;
+            wLevelBit = new Bitmap(form.windowImage.Clone(LeagueUI.cLevel, System.Drawing.Imaging.PixelFormat.Undefined),new System.Drawing.Size(19,13));
+            double lrms = 0, curlrms = 0;
            // wLevelBit.Save("C:\\LEVEL.png");
             foreach (FileInfo f in (new DirectoryInfo("levelImages")).GetFiles())
             {
                 string []  split = f.Name.Split("_.".ToCharArray());
-                levelBit = new Bitmap(new Bitmap(f.FullName),new System.Drawing.Size(19*3,13*3));
-                lrms = calcRMSDiff(levelBit, wLevelBit);
+                levelBit = new Bitmap(new Bitmap(f.FullName));
+                //lrms = calcRMSDiff(levelBit, wLevelBit);
+                lrms = calcDiff(levelBit, wLevelBit);
                 //Console.WriteLine(f.Name + " " + lrms);
                 Console.WriteLine(f.Name +  " rms " + lrms);
-                if (lrms < curlrms)
+                if (lrms > curlrms)
                 {
                     curlrms = lrms;
                     thinkLevel = Convert.ToInt32(split[1]);
@@ -229,7 +230,26 @@ namespace LeagueOverlay
             if ((double)count / (double)total > .1) return true;
             return false;
         }
+        public int calcDiff(Bitmap r, Bitmap b)
+        {
+             int w, h;
+            w = r.Width;
+            h = r.Height;
+            int count =0;
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    var wi = r.GetPixel(i, j);
+                    var bi = b.GetPixel(i, j);
 
+                    if (bi.R > 50 && wi.R > 50) count++;
+
+
+                }
+            }
+            return count;
+        }
         public double calcRMSDiff(Bitmap r, Bitmap b)
         {
 
