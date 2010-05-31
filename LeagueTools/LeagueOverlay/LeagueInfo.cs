@@ -100,18 +100,19 @@ namespace LeagueOverlay
             int thinkLevel = 1;
             Bitmap levelBit;
             Bitmap wLevelBit;
-            wLevelBit = new Bitmap(form.windowImage.Clone(LeagueUI.cLevel, System.Drawing.Imaging.PixelFormat.Undefined),new System.Drawing.Size(19,13));
-            double lrms = 0, curlrms = 0;
-           // wLevelBit.Save("C:\\LEVEL.png");
+            wLevelBit = new Bitmap(form.windowImage.Clone(LeagueUI.cLevel, System.Drawing.Imaging.PixelFormat.Undefined),new System.Drawing.Size(12,8));
+            double lrms = 0, curlrms = 1000000.0;
+           wLevelBit.Save("C:\\LEVEL.png");
             foreach (FileInfo f in (new DirectoryInfo("levelImages")).GetFiles())
             {
                 string []  split = f.Name.Split("_.".ToCharArray());
-                levelBit = new Bitmap(new Bitmap(f.FullName));
-                //lrms = calcRMSDiff(levelBit, wLevelBit);
-                lrms = calcDiff(levelBit, wLevelBit);
+                levelBit = new Bitmap(new Bitmap(f.FullName).Clone(new Rect(3,3,(12),(8)),System.Drawing.Imaging.PixelFormat.Undefined));
+                if (Convert.ToInt32(split[1]) == 2) levelBit.Save("C://Level2.png");
+                lrms = calcRMSDiff(levelBit, wLevelBit);
+               // lrms = calcDiff(levelBit, wLevelBit);
                 //Console.WriteLine(f.Name + " " + lrms);
                 Console.WriteLine(f.Name +  " rms " + lrms);
-                if (lrms > curlrms)
+                if (lrms < curlrms)
                 {
                     curlrms = lrms;
                     thinkLevel = Convert.ToInt32(split[1]);

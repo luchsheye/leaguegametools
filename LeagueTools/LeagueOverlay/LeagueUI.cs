@@ -49,13 +49,13 @@ namespace LeagueOverlay
             int firstXPos = (int)Math.Round(507 * widthScale);
             int abilityHeight = (int)Math.Round(yRes - 105 * widthScale);
 
-            int cLevelWidth = (int)Math.Round(19 * widthScale);
-            int cLevelHeight0 = (int)Math.Round(13 * widthScale);
+            int cLevelWidth = (int)Math.Round(12 * widthScale);
+            int cLevelHeight0 = (int)Math.Ceiling(8 * widthScale);
             int avatarSize = (int)Math.Round(102 * widthScale);
             int abPlusHeight = (int)Math.Round(yRes - 142 * widthScale);
-            int clevelHeight = (int)Math.Floor (yRes - (768 - 735) * widthScale);
+            int clevelHeight = (int)Math.Floor (yRes - (31) * widthScale)-1;
             int playerAvatarHeight = (int)Math.Round(yRes - (117) * widthScale);
-
+            //3 3 - 14 10
             cAbility1R = new Rect((int)Math.Round((507) * widthScale), abilityHeight, abilitySize, abilitySize);
             cAbility2R = new Rect((int)Math.Round((507 + 42) * widthScale), abilityHeight, abilitySize, abilitySize);
             cAbility3R = new Rect((int)Math.Round((593) * widthScale), abilityHeight, abilitySize, abilitySize);
@@ -81,7 +81,7 @@ namespace LeagueOverlay
                 (int)Math.Round(14 * widthScale));
 
             playerAvatar = new Rect((int)Math.Round(9 * widthScale), playerAvatarHeight, avatarSize, avatarSize);
-            cLevel = new Rect((int)Math.Floor(73 * widthScale), clevelHeight, cLevelWidth, cLevelHeight0);
+            cLevel = new Rect((int)Math.Floor(76 * widthScale), clevelHeight, cLevelWidth, cLevelHeight0);
 
         }
     }
