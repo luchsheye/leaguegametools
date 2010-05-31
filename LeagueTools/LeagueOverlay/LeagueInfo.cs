@@ -100,13 +100,13 @@ namespace LeagueOverlay
             int thinkLevel = 1;
             Bitmap levelBit;
             Bitmap wLevelBit;
-            wLevelBit = new Bitmap(form.windowImage.Clone(LeagueUI.cLevel, System.Drawing.Imaging.PixelFormat.Undefined),new System.Drawing.Size(19,13));
+            wLevelBit = new Bitmap(form.windowImage.Clone(LeagueUI.cLevel, System.Drawing.Imaging.PixelFormat.Undefined),new System.Drawing.Size(19*3,13*3));
             double lrms = 0, curlrms = 100000.0;
            // wLevelBit.Save("C:\\LEVEL.png");
             foreach (FileInfo f in (new DirectoryInfo("levelImages")).GetFiles())
             {
                 string []  split = f.Name.Split("_.".ToCharArray());
-                levelBit = new Bitmap(new Bitmap(f.FullName));
+                levelBit = new Bitmap(new Bitmap(f.FullName),new System.Drawing.Size(19*3,13*3));
                 lrms = calcRMSDiff(levelBit, wLevelBit);
                 //Console.WriteLine(f.Name + " " + lrms);
                 Console.WriteLine(f.Name +  " rms " + lrms);
