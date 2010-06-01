@@ -35,7 +35,9 @@ namespace LeagueOverlay
             Regex r = new Regex(@"""(\w+)_(\w+)"" = ""([^""]+)");
             foreach (string s in File.ReadAllLines("C:\\Riot Games\\League of Legends\\game\\DATA\\Menu\\fontconfig_en_US.txt"))
             {
+                
                 Match m = r.Match(s);
+               
                 if (m.Success)
                 {
 
@@ -100,9 +102,10 @@ namespace LeagueOverlay
             int thinkLevel = 1;
             Bitmap levelBit;
             Bitmap wLevelBit;
+            Console.WriteLine(LeagueUI.cLevel);
             wLevelBit = new Bitmap(form.windowImage.Clone(LeagueUI.cLevel, System.Drawing.Imaging.PixelFormat.Undefined),new System.Drawing.Size(12,8));
             double lrms = 0, curlrms = 1000000.0;
-           wLevelBit.Save("C:\\LEVEL.png");
+            wLevelBit.Save("C:\\LEVEL.png");
             foreach (FileInfo f in (new DirectoryInfo("levelImages")).GetFiles())
             {
                 string []  split = f.Name.Split("_.".ToCharArray());
@@ -166,6 +169,7 @@ namespace LeagueOverlay
 
                 /* Set Ability Cooldowns */
                 getAbilityCooldownAngle(LeagueUI.cAbility3R);
+            
         }
 
         public float getAbilityCooldownAngle(Rect abilityRect)

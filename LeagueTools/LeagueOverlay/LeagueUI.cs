@@ -40,19 +40,35 @@ namespace LeagueOverlay
         //calculate all of the locations for screen elements
         public static void init(int xRes, int yRes)
         {
+            
+
+         
             //92,747
             double widthScale = xRes / 1280.0;
             double heightScale = yRes / 758.0;
+
+            ///////
+            int tempx = (int)Math.Round(73 * widthScale);
+            int tempy = (int)Math.Round(yRes - (768 - 734) * widthScale);
+            int wid = (int)Math.Round(19 * widthScale);
+            int hi = (int)Math.Round(13 * widthScale);
+
+            
+            int cLevelWidth = (int)Math.Round(12 * widthScale);
+            int cLevelHeight0 = (int)Math.Round(8 * widthScale);
+
+            cLevel = new Rect((int)Math.Round(tempx+ wid / 2.0 - cLevelWidth/2.0), (int)Math.Round(tempy + hi / 2.0 - cLevelHeight0/2.0), cLevelWidth, cLevelHeight0);
+
+
+            ////
 
             int plusSize = (int)Math.Round(16 * widthScale);
             int abilitySize = (int)Math.Round(42 * widthScale);
             int firstXPos = (int)Math.Round(507 * widthScale);
             int abilityHeight = (int)Math.Round(yRes - 105 * widthScale);
 
-            int cLevelWidth = (int)Math.Round(12 * widthScale);
-            int cLevelHeight0 = (int)Math.Ceiling(8 * widthScale);
             int avatarSize = (int)Math.Round(102 * widthScale);
-            int abPlusHeight = (int)Math.Round(yRes - 142 * widthScale);
+            int abPlusHeight = (int)Math.Round(yRes - 142 * widthScale) -(int)(Math.Ceiling(1.0/widthScale));
             int clevelHeight = (int)Math.Floor (yRes - (31) * widthScale)-1;
             int playerAvatarHeight = (int)Math.Round(yRes - (117) * widthScale);
             //3 3 - 14 10
@@ -81,7 +97,7 @@ namespace LeagueOverlay
                 (int)Math.Round(14 * widthScale));
 
             playerAvatar = new Rect((int)Math.Round(9 * widthScale), playerAvatarHeight, avatarSize, avatarSize);
-            cLevel = new Rect((int)Math.Floor(76 * widthScale), clevelHeight, cLevelWidth, cLevelHeight0);
+           // cLevel = new Rect((int)Math.Floor(76 * widthScale), clevelHeight, cLevelWidth, cLevelHeight0);
 
         }
     }

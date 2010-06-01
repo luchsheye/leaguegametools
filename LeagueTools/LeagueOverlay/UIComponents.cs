@@ -5,11 +5,14 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace LeagueOverlay
 {
     public class UIComponents
     {
+       
+        
         public Dictionary<int, UIElement> activeComponents;
 
         public int compNum = 0;
@@ -56,6 +59,7 @@ namespace LeagueOverlay
         [AttrLuaFunc("RemoveComponent")]
         public bool removeComponent(int c)
         {
+            
             if (activeComponents.ContainsKey(c))
             {
                 parent.mainCanvas.Children.Remove(activeComponents[c]);
@@ -80,6 +84,9 @@ namespace LeagueOverlay
         public int newLabel()
         {
             int id = compNum++;
+            Label l = new Label();
+            
+            
             activeComponents[id] = new Label();
             Canvas.SetLeft(activeComponents[id], 0);
             Canvas.SetTop(activeComponents[id], 0);
