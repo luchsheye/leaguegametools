@@ -55,11 +55,12 @@ namespace LeagueOverlay
             scriptControl = new ScriptControl(this);
             uicomponents = new UIComponents(this);
             keyboardManager = new KeyboardManager();
-
+            LeagueUI.setMainWindow(this);
 
             scriptControl.registerLuaFunctions(leagueInfo);
             scriptControl.registerLuaFunctions(uicomponents);
             scriptControl.registerLuaFunctions(keyboardManager);
+            scriptControl.registerLuaFunctions(new LeagueUI());
             scriptControl.LoadScriptFiles();
 
             Width = 0;
@@ -132,6 +133,7 @@ namespace LeagueOverlay
                 mainCanvas.Height = this.Height;
                 
                 this.procTimeLabel.Content = "Procesing Time:" + (int)(Math.Round((DateTime.Now - start).TotalMilliseconds)) + "ms";
+                scriptControl.raiseEvent("processingFinished", "");
                 //this.Show();
                 //WIN32_API.SetFocus(windowHandle);
             }

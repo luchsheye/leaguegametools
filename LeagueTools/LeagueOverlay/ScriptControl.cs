@@ -23,12 +23,25 @@ namespace LeagueOverlay
         {
             this.parent = parent;
             eventTable["update"] = new List<string>();
-
+            eventTable["interfaceInit"] = new List<string>();
+            eventTable["processingFinished"] = new List<string>();
             eventTable["levelUp"] = new List<string>();
             Console.WriteLine(this);
             LuaVM = new Lua();
             registerLuaFunctions(this);
+
+            LuaVM.DoString("t={};");
+            LuaVM.DoString("function t:amazing() local i=0; end");
+            LuaVM.DoString("t:amazing()");
             //LuaVM.RegisterFunction("RegisterEvent", this, parent.leagueInfo.GetType().GetMethod("registerEvent"));
+        }
+        public LuaTable storeRectInTable(System.Drawing.Rectangle r, LuaTable table)
+        {
+            table["x"] = r.X;
+            table["y"] = r.Y;
+            table["width"] = r.Width;
+            table["height"] = r.Height;
+            return table;
         }
 
         public void registerLuaFunctions(Object o)
@@ -55,8 +68,22 @@ namespace LeagueOverlay
         {
             foreach (FileInfo f in (new DirectoryInfo("scripts")).GetFiles())
             {
-                if (f.Name.Contains("lua"))
+                if (f.Name.Contains(".lua"))
+                {
                     LuaVM.DoFile(f.FullName);
+                    /*
+                    try
+                    {
+
+                        
+                    }
+                    catch(Exception e)
+                    {
+                        MessageBox.Show(e.Message,"Lua Error: " + f.Name);
+                        Console.WriteLine(e.StackTrace);
+                    }
+                     * */
+                }
             }
         }
 
@@ -69,13 +96,23 @@ namespace LeagueOverlay
             }
         }
 
+        public void raiseEvent(string eventName,string arguments)
+        {
+            if (eventTable.ContainsKey(eventName))
+            {
+                foreach (string s in eventTable[eventName])
+                {
+                    LuaVM.DoString(s + "(" + arguments + ")");
+                }
+            }
+        }
         public void update()
         {
             if (lastUpdate == null) lastUpdate = DateTime.Now;
             int elapsedTime = (int)Math.Round((DateTime.Now - lastUpdate).TotalMilliseconds);
             foreach (string s in eventTable["update"])
             {
-                LuaVM.DoString(s + "(" + elapsedTime + ")");
+                LuaVM.DoString(s + "(" + elapsedTime + ");");
             }
             lastUpdate = DateTime.Now;
         }
@@ -83,7 +120,8 @@ namespace LeagueOverlay
         {
             foreach (string s in eventTable["levelUp"])
             {
-                LuaVM.DoString(s + "(" + LeagueInfo.currentLevel + ")");
+                
+                LuaVM.DoString(s + "(" + LeagueInfo.currentLevel + ");");
             }
         }
 

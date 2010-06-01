@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using Rect = System.Drawing.Rectangle;
+using LuaInterface;
 
 namespace LeagueOverlay
 {
@@ -36,7 +37,11 @@ namespace LeagueOverlay
 
             playerAvatar;
 
-
+        public static MainWindow parent;
+        public static void setMainWindow(MainWindow mw)
+        {
+            parent = mw;
+        }
         //calculate all of the locations for screen elements
         public static void init(int xRes, int yRes)
         {
@@ -99,6 +104,53 @@ namespace LeagueOverlay
             playerAvatar = new Rect((int)Math.Round(9 * widthScale), playerAvatarHeight, avatarSize, avatarSize);
            // cLevel = new Rect((int)Math.Floor(76 * widthScale), clevelHeight, cLevelWidth, cLevelHeight0);
 
+            parent.scriptControl.raiseEvent("interfaceInit", "");
         }
+
+        
+        //functions for getting UI element positions in LUA
+        [AttrLuaFunc("GetUIRect_Map")]
+        public void LUA_getmapR(LuaTable table) { parent.scriptControl.storeRectInTable(mapR, table); }
+        [AttrLuaFunc("GetUIRect_ChampionLevel")]
+        public void LUA_getcLevel(LuaTable table) { parent.scriptControl.storeRectInTable(cLevel, table); }
+        [AttrLuaFunc("GetUIRect_ChampionHealth")]
+        public void LUA_getcHealth(LuaTable table) { parent.scriptControl.storeRectInTable(cHealth, table); }
+        [AttrLuaFunc("GetUIRect_ChampionMana")]
+        public void LUA_getcMana(LuaTable table) { parent.scriptControl.storeRectInTable(cMana, table); }
+        [AttrLuaFunc("GetUIRect_ChampionAbility1")]
+        public void LUA_getcAbility1R(LuaTable table) { parent.scriptControl.storeRectInTable(cAbility1R, table); }
+        [AttrLuaFunc("GetUIRect_ChampionAbility2")]
+        public void LUA_getcAbility2R(LuaTable table) { parent.scriptControl.storeRectInTable(cAbility2R, table); }
+        [AttrLuaFunc("GetUIRect_ChampionAbility3")]
+        public void LUA_getcAbility3R(LuaTable table) { parent.scriptControl.storeRectInTable(cAbility3R, table); }
+        [AttrLuaFunc("GetUIRect_ChampionAbility4")]
+        public void LUA_getcAbility4R(LuaTable table) { parent.scriptControl.storeRectInTable(cAbility4R, table); }
+        [AttrLuaFunc("GetUIRect_SummonerAbility1")]
+        public void LUA_getsAbility1R(LuaTable table) { parent.scriptControl.storeRectInTable(sAbility1R, table); }
+        [AttrLuaFunc("GetUIRect_SummonerAbility2")]
+        public void LUA_getsAbility2R(LuaTable table) { parent.scriptControl.storeRectInTable(sAbility2R, table); }
+        [AttrLuaFunc("GetUIRect_PlayerAvatar")]
+        public void LUA_getplayerAvatar(LuaTable table) { parent.scriptControl.storeRectInTable(playerAvatar, table); }
+        [AttrLuaFunc("GetUIRect_AbilityByNum")]
+        public LuaTable LUA_getAbilityByNum(int num, LuaTable table)
+        {
+            switch (num)
+            {
+                case 0:
+                    return parent.scriptControl.storeRectInTable(cAbility1R, table);
+                case 1:
+                    return parent.scriptControl.storeRectInTable(cAbility2R, table);
+                case 2:
+                    return parent.scriptControl.storeRectInTable(cAbility3R, table);
+                case 3:
+                    return parent.scriptControl.storeRectInTable(cAbility4R, table);
+                case 4:
+                    return parent.scriptControl.storeRectInTable(sAbility1R, table);
+                case 5:
+                    return parent.scriptControl.storeRectInTable(sAbility2R, table);
+            }
+            return parent.scriptControl.storeRectInTable(new Rect(), table);
+        }
+
     }
 }

@@ -29,6 +29,12 @@ namespace LeagueOverlay
         public static bool[] canChooseAbility = new bool[4] { false, false, false, false };
         public MainWindow form;
         public static List<string> cnames = new List<string>();
+
+        DateTime lastUpdate = DateTime.Now;
+        int[] remainingCooldown;
+        double[] lastCooldownPerc;
+        Rect[] abilityRectangles;
+        DateTime[] cooldownStartTime;
         public LeagueInfo(MainWindow f)
         {
             form = f;
@@ -52,14 +58,19 @@ namespace LeagueOverlay
 
                 }
             }
+            abilityRectangles = new Rect[]{
+                LeagueUI.cAbility1R,LeagueUI.cAbility2R,LeagueUI.cAbility3R,LeagueUI.cAbility4R,LeagueUI.sAbility1R,LeagueUI.sAbility2R};
+            remainingCooldown = new int[abilityRectangles.Length];
+            lastCooldownPerc = new double[abilityRectangles.Length];
+            cooldownStartTime = new DateTime[abilityRectangles.Length];
         }
 
         //do update league info
         public void update()
         {
-         //   canChooseAbility[0] = (canLevelAbility(LeagueUI.ab1Plus) ? true : false);
-           // canChooseAbility[1] = (canLevelAbility(LeagueUI.ab2Plus) ? true : false);
-           // canChooseAbility[2] = (canLevelAbility(LeagueUI.ab3Plus) ? true : false);
+            //   canChooseAbility[0] = (canLevelAbility(LeagueUI.ab1Plus) ? true : false);
+            // canChooseAbility[1] = (canLevelAbility(LeagueUI.ab2Plus) ? true : false);
+            // canChooseAbility[2] = (canLevelAbility(LeagueUI.ab3Plus) ? true : false);
             //canChooseAbility[3] = (canLevelAbility(LeagueUI.ab4Plus) ? true : false);
 
             /* Set Current Hero Name */
@@ -69,7 +80,7 @@ namespace LeagueOverlay
                 string curName = "";
                 double curRMS = 1000000.0;
                 double rms = 0;
-                
+
                 Bitmap cBit = new Bitmap((Image)form.windowImage.Clone(LeagueUI.playerAvatar, System.Drawing.Imaging.PixelFormat.Undefined), new System.Drawing.Size(120, 120)); ;
                 cBit = cBit.Clone(new System.Drawing.Rectangle((int)(cBit.Width * .25), (int)(cBit.Height * .25), (int)(cBit.Width * .5), (int)(cBit.Height * .5)), System.Drawing.Imaging.PixelFormat.Undefined);
                 Bitmap bit;
@@ -86,7 +97,7 @@ namespace LeagueOverlay
                         curRMS = rms;
                         curName = cnames[i];
                     }
-                  //  Console.WriteLine(cnames[i] + " " + rms);
+                    //  Console.WriteLine(cnames[i] + " " + rms);
 
                 }
                 heroName = curName;
@@ -102,25 +113,29 @@ namespace LeagueOverlay
             int thinkLevel = 1;
             Bitmap levelBit;
             Bitmap wLevelBit;
+
             Console.WriteLine(LeagueUI.cLevel);
             wLevelBit = new Bitmap(form.windowImage.Clone(LeagueUI.cLevel, System.Drawing.Imaging.PixelFormat.Undefined),new System.Drawing.Size(12,8));
             double lrms = 0, curlrms = 1000000.0;
-            wLevelBit.Save("C:\\LEVEL.png");
+
+            //wLevelBit.Save("C:\\LEVEL.png");
             foreach (FileInfo f in (new DirectoryInfo("levelImages")).GetFiles())
             {
-                string []  split = f.Name.Split("_.".ToCharArray());
-                levelBit = new Bitmap(new Bitmap(f.FullName).Clone(new Rect(3,3,(12),(8)),System.Drawing.Imaging.PixelFormat.Undefined));
-                if (Convert.ToInt32(split[1]) == 2) levelBit.Save("C://Level2.png");
+                string[] split = f.Name.Split("_.".ToCharArray());
+                levelBit = new Bitmap(new Bitmap(f.FullName).Clone(new Rect(3, 3, (12), (8)), System.Drawing.Imaging.PixelFormat.Undefined));
+                // if (Convert.ToInt32(split[1]) == 2) levelBit.Save("C://Level2.png");
                 lrms = calcRMSDiff(levelBit, wLevelBit);
-               // lrms = calcDiff(levelBit, wLevelBit);
+                // lrms = calcDiff(levelBit, wLevelBit);
                 //Console.WriteLine(f.Name + " " + lrms);
-                Console.WriteLine(f.Name +  " rms " + lrms);
+                //if (f.Name.Contains('2')) levelBit.Save("LEVELTHink2.png");
+                Console.WriteLine(f.Name + " rms " + lrms);
                 if (lrms < curlrms)
                 {
                     curlrms = lrms;
                     thinkLevel = Convert.ToInt32(split[1]);
+                    //levelBit.Save("LEVELTHink.png");
                 }
-               // tempLevel++;
+                // tempLevel++;
             }
 
             if (thinkLevel > currentLevel)
@@ -135,7 +150,7 @@ namespace LeagueOverlay
             /*********************************************************************/
 
             /* Set Available Abilities */
-          //  Console.WriteLine(canChooseAbility[0] + " " + canChooseAbility[1] + " " + canChooseAbility[2] + " " + canChooseAbility[3]);
+            //  Console.WriteLine(canChooseAbility[0] + " " + canChooseAbility[1] + " " + canChooseAbility[2] + " " + canChooseAbility[3]);
             /* End Setting Available Abilities */
 
             /*********************************************************************/
@@ -165,22 +180,50 @@ namespace LeagueOverlay
                 healthPercent = (double)hCount / (double)healthPixCount;
             }
             Console.WriteLine("health percent" + healthPercent);
-                /* Set Mana/Energy Percent */
+            /* Set Mana/Energy Percent */
 
-                /* Set Ability Cooldowns */
-                getAbilityCooldownAngle(LeagueUI.cAbility3R);
+            /* Set Ability Cooldowns */
+            abilityRectangles = new Rect[]{
+                LeagueUI.cAbility1R,LeagueUI.cAbility2R,LeagueUI.cAbility3R,LeagueUI.cAbility4R,LeagueUI.sAbility1R,LeagueUI.sAbility2R};
+            for (int i = 0; i < abilityRectangles.Length; i++)
+            {
+                double curPerc = getAbilityCooldownPercent(abilityRectangles[i]);
+                TimeSpan ts = DateTime.Now - lastUpdate;
+                if (curPerc >= 0 && lastCooldownPerc[i] < 0)
+                {
+                    cooldownStartTime[i] = DateTime.Now;
+                }
+                else if (curPerc >= 0 && lastCooldownPerc[i] >= 0)
+                {
+                    //this is sort of wrong, but it may work decently
+                    double c = (DateTime.Now - cooldownStartTime[i]).TotalSeconds / curPerc;
+                    remainingCooldown[i] = (int)Math.Ceiling((1-curPerc)*c);
+
+                }
+                else
+                {
+                    remainingCooldown[i] = 0;
+                }
+                lastCooldownPerc[i] = curPerc;
+                
+            }
+            
+
+
+            lastUpdate = DateTime.Now;
             
         }
 
-        public float getAbilityCooldownAngle(Rect abilityRect)
+        public double getAbilityCooldownPercent(Rect abilityRect)
         {
             int cx = abilityRect.Left + abilityRect.Width / 2;
             int cy = abilityRect.Top + abilityRect.Height / 2;
             int r = abilityRect.Width / 4;
 
-
+            //check to see if its on cooldown at all
             int countAbove=0;
             int total = 0;
+            int superBlueCount=0;
             for (int x = cx - r; x <= cx + r; x++)
             {
                 for (int y = cy - r; y <= cy + r; y++)
@@ -189,11 +232,24 @@ namespace LeagueOverlay
                     {
                         countAbove++;
                     }
+                    if (form.windowImage.GetPixel(x, y).B >= 2 * form.windowImage.GetPixel(x, y).R && form.windowImage.GetPixel(x, y).B >= 2 * form.windowImage.GetPixel(x, y).G)
+                    {
+                        superBlueCount++;
+                    }
                     total += 1;
                 }
             }
-            Console.WriteLine(countAbove / (double)total);
-            return 0;
+            if (superBlueCount / (double)total > 0.8)
+            {
+                //Console.WriteLine("On cooldown:" + (countAbove / (double)total));
+                return countAbove / (double)total;
+            }
+            else
+            {
+               // Console.WriteLine("no cooldown");              
+            }
+
+            return -1;
         }
 
         [AttrLuaFunc("GetHeroLevel")]
@@ -218,7 +274,11 @@ namespace LeagueOverlay
         {
             return canChooseAbility[abilityNum];
         }
-
+        [AttrLuaFunc("GetAbilityCooldown")]
+        public int getAbilityCooldown(int abilityNum)
+        {
+            return remainingCooldown[abilityNum];
+        }
         public bool canLevelAbility(Rectangle r)
         {
             int count = 0;
@@ -312,5 +372,7 @@ namespace LeagueOverlay
             return temp;
         }
 
+
+        public double[] lastCooldownPercent { get; set; }
     }
 }
