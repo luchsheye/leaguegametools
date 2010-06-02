@@ -297,10 +297,13 @@ namespace LeagueOverlay
         }
         public int calcDiff(Bitmap r, Bitmap b)
         {
-             int w, h;
+            int w, h;
             w = r.Width;
             h = r.Height;
             int count =0;
+
+
+
             for (int i = 0; i < w; i++)
             {
                 for (int j = 0; j < h; j++)
@@ -323,23 +326,27 @@ namespace LeagueOverlay
             int w, h;
             w = r.Width;
             h = r.Height;
-            for (int i = 0; i < w; i++)
+
+
+
+            System.Drawing.Imaging.BitmapData bd = r.LockBits(new System.Drawing.Rectangle(0, 0, r.Width, r.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            IntPtr ip = bd.Scan0;
+            int bytes = bd.Stride * r.Height;
+            byte[] rBytes = new byte[bytes];
+            System.Runtime.InteropServices.Marshal.Copy(ip, rBytes, 0, bytes);
+            r.UnlockBits(bd);
+
+            bd = b.LockBits(new System.Drawing.Rectangle(0, 0, b.Width, b.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            ip = bd.Scan0;
+            byte[] bBytes = new byte[bytes];
+            System.Runtime.InteropServices.Marshal.Copy(ip, bBytes, 0, bytes);
+            b.UnlockBits(bd);
+
+
+            for (int i = 0; i < w*h*3; i++)
             {
-                for (int j = 0; j < h; j++)
-                {
-                    var wi = r.GetPixel(i, j);
-                    var bi = b.GetPixel(i, j);
-                    //red
-                    sumR = Math.Pow(wi.R - bi.R, 2);
-                    //green
-                    sumG = Math.Pow(wi.G - bi.G, 2);
-                    //blue
-                    sumB = Math.Pow(wi.B - bi.B, 2);
+                     sum += Math.Pow(rBytes[i] - bBytes[i], 2);
 
-                    sum += (sumR + sumG + sumB) / 3.0;
-                    sumR = sumG = sumB = 0;
-
-                }
             }
 
             return (1 / ((double)(h * w))) * sum;

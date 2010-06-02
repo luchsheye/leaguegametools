@@ -110,10 +110,13 @@ namespace LeagueOverlay
                 windowHandle = tempHandle;
                 Bitmap temp = windowImage;
                 windowImage = GetClientWindowImage();
-               // windowImage.Save("C:\\window.png");
-              //  MemoryStream m = new MemoryStream();
-               // windowImage.Save(m, System.Drawing.Imaging.ImageFormat.Png);
-               // windowBytes = m.GetBuffer();
+                System.Drawing.Imaging.BitmapData bd = windowImage.LockBits(new System.Drawing.Rectangle(0,0,windowImage.Width,windowImage.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                IntPtr ip = bd.Scan0;
+                int bytes = bd.Stride * windowImage.Height;
+                windowBytes = new byte[bytes];
+                System.Runtime.InteropServices.Marshal.Copy(ip, windowBytes, 0, bytes);
+                windowImage.UnlockBits(bd);
+
                 temp.Dispose();
 
                 //TODO: Add image processing here
