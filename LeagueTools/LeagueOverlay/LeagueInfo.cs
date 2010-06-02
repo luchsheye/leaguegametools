@@ -327,8 +327,6 @@ namespace LeagueOverlay
             w = r.Width;
             h = r.Height;
 
-
-
             System.Drawing.Imaging.BitmapData bd = r.LockBits(new System.Drawing.Rectangle(0, 0, r.Width, r.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             IntPtr ip = bd.Scan0;
             int bytes = bd.Stride * r.Height;
@@ -341,7 +339,6 @@ namespace LeagueOverlay
             byte[] bBytes = new byte[bytes];
             System.Runtime.InteropServices.Marshal.Copy(ip, bBytes, 0, bytes);
             b.UnlockBits(bd);
-
 
             for (int i = 0; i < w*h*3; i++)
             {
