@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Interop;
 using System.Windows.Threading;
+using System.IO;
 
 using Bitmap = System.Drawing.Bitmap;
 
@@ -25,7 +26,7 @@ namespace LeagueOverlay
     {
         IntPtr windowHandle;
         IntPtr windowBitmapHandle;
-
+        public byte[] windowBytes;
         public Bitmap windowImage = new Bitmap(1, 1);
         public LeagueInfo leagueInfo;
         public ScriptControl scriptControl;
@@ -109,6 +110,10 @@ namespace LeagueOverlay
                 windowHandle = tempHandle;
                 Bitmap temp = windowImage;
                 windowImage = GetClientWindowImage();
+               // windowImage.Save("C:\\window.png");
+              //  MemoryStream m = new MemoryStream();
+               // windowImage.Save(m, System.Drawing.Imaging.ImageFormat.Png);
+               // windowBytes = m.GetBuffer();
                 temp.Dispose();
 
                 //TODO: Add image processing here

@@ -61,8 +61,8 @@ namespace LeagueOverlay
             
             int cLevelWidth = (int)Math.Round(12 * widthScale);
             int cLevelHeight0 = (int)Math.Round(8 * widthScale);
-
-            cLevel = new Rect((int)Math.Round(tempx+ wid / 2.0 - cLevelWidth/2.0), (int)Math.Round(tempy + hi / 2.0 - cLevelHeight0/2.0), cLevelWidth, cLevelHeight0);
+           
+            cLevel = new Rect((int)Math.Round(tempx+ Math.Round(wid / 2.0) - Math.Round(cLevelWidth/2.0))-1, (int)Math.Round(tempy + Math.Round(hi / 2.0) - Math.Round(cLevelHeight0/2.0))+(int)Math.Floor(xRes/1280.0), cLevelWidth, cLevelHeight0);
 
 
             ////
