@@ -7,7 +7,7 @@ function autoLevelAbilityFunction(level)
 
 
 local lfile = assert(io.open("abilities.txt","r")); --open the file containing the level up info
-if (lfile==nil) return;
+if (lfile==nil) then return; end;
 
 while true do 
 
