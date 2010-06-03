@@ -799,6 +799,7 @@ namespace RecommendedItemTool
 
         void getAutoAbilityInfo()
         {
+            if (!File.Exists("abilities.txt")) return;
             StreamReader sr = new StreamReader("abilities.txt");
             string s;
             
@@ -873,41 +874,50 @@ namespace RecommendedItemTool
             {
                 Q_btn.Opacity = .5;
                 Q_btn.IsEnabled = false;
+                label_Q.Content = Math.Abs(heroAbilityLevels[0] - 5);
             }
             else
             {
                 Q_btn.Opacity =1;
                 Q_btn.IsEnabled = true;
+                label_Q.Content = Math.Abs(heroAbilityLevels[0] - 5);
             }
             if (!canLevelAbility(1))
             {
                 W_btn.Opacity = .5;
                 W_btn.IsEnabled = false;
+                label_W.Content = Math.Abs(heroAbilityLevels[1] - 5);
             }
             else
             {
                 W_btn.Opacity = 1;
                 W_btn.IsEnabled = true;
+                label_W.Content = Math.Abs(heroAbilityLevels[1] - 5);
+
             }
             if (!canLevelAbility(2))
             {
                 E_btn.Opacity = .5;
                 E_btn.IsEnabled = false;
+                label_E.Content = Math.Abs(heroAbilityLevels[2] - 5);
             }
             else
             {
                 E_btn.Opacity = 1;
                 E_btn.IsEnabled = true;
+                label_E.Content = Math.Abs(heroAbilityLevels[2] - 5);
             }
             if (!canLevelAbility(3))
             {
                 R_btn.Opacity = .5;
                 R_btn.IsEnabled = false;
+                label_R.Content = Math.Abs(3 - heroAbilityLevels[3]);
             }
             else
             {
                 R_btn.Opacity = 1;
                 R_btn.IsEnabled = true;
+                label_R.Content = Math.Abs(3 - heroAbilityLevels[3]);
             }
         }
         private void Q_btn_Click(object sender, RoutedEventArgs e)
