@@ -298,32 +298,10 @@ namespace LeagueOverlay
             if ((double)count / (double)total > .1) return true;
             return false;
         }
-        public int calcDiff(Bitmap r, Bitmap b)
-        {
-            int w, h;
-            w = r.Width;
-            h = r.Height;
-            int count =0;
 
-
-
-            for (int i = 0; i < w; i++)
-            {
-                for (int j = 0; j < h; j++)
-                {
-                    var wi = r.GetPixel(i, j);
-                    var bi = b.GetPixel(i, j);
-
-                    if (bi.R > 50 && wi.R > 50) count++;
-
-
-                }
-            }
-            return count;
-        }
         public double calcRMSDiff(Bitmap r, Bitmap b)
         {
-           
+
             double sumR = 0, sumG = 0, sumB = 0, sum = 0;
             int w, h;
             w = r.Width;
@@ -345,7 +323,6 @@ namespace LeagueOverlay
             for (int i = 0; i < w*h*3; i++)
             {
                      sum += Math.Pow(rBytes[i] - bBytes[i], 2);
-
             }
 
             return (1 / ((double)(h * w))) * sum;
