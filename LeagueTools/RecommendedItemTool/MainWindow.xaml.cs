@@ -1018,6 +1018,7 @@ namespace RecommendedItemTool
 
         private void mainCanvas_KeyUp(object sender, KeyEventArgs e)
         {
+            //
             if (e.Key == Key.Q)
             {
                 Q_btn_Click(null, null);
