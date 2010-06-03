@@ -1011,6 +1011,31 @@ namespace RecommendedItemTool
 
         }
 
+        private void mainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.championSelectBtn.Focus();
+        }
+
+        private void mainCanvas_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Q)
+            {
+                Q_btn_Click(null, null);
+            }
+            else if (e.Key == Key.W)
+            {
+                W_btn_Click(null, null);
+            }
+            else if (e.Key == Key.E)
+            {
+                E_btn_Click(null, null);
+            }
+            else if (e.Key == Key.R)
+            {
+                R_btn_Click(null, null);
+            }
+        }
+
       
 
        
