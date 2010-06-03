@@ -29,13 +29,18 @@ namespace LeagueOverlay
         
         public static bool[] canChooseAbility = new bool[4] { false, false, false, false };
         public MainWindow form;
-        public static List<string> cnames = new List<string>();
+        public static Dictionary<string, string> cnames = new Dictionary<string, string>();
 
         DateTime lastUpdate = DateTime.Now;
         int[] remainingCooldown;
         double[] lastCooldownPerc;
         Rect[] abilityRectangles;
         DateTime[] cooldownStartTime;
+
+        public bool outOfLoadScreen = false;
+        LoadScreenInfo loadScreenInfo = null;
+
+        SummonerInfo[][] summonerInfo = new SummonerInfo[2][];
         public LeagueInfo(MainWindow f)
         {
             form = f;
@@ -51,10 +56,10 @@ namespace LeagueOverlay
                     string infoType = m.Groups[1].Value;
                     string infoID = m.Groups[2].Value;
                     string infoValue = m.Groups[3].Value;
-                    if (infoType == "game_character_lore" && infoValue.Length > 50
+                    if (infoType == "game_character_displayname"
                         && File.Exists("C:\\Riot Games\\League of Legends\\air\\assets\\images\\champions\\" + infoID + "_Square_0.png"))
                     {
-                        cnames.Add(infoID);
+                        cnames.Add(infoID, infoValue);
                     }
 
                 }
@@ -69,10 +74,55 @@ namespace LeagueOverlay
         //do update league info
         public void update()
         {
-            //   canChooseAbility[0] = (canLevelAbility(LeagueUI.ab1Plus) ? true : false);
-            // canChooseAbility[1] = (canLevelAbility(LeagueUI.ab2Plus) ? true : false);
-            // canChooseAbility[2] = (canLevelAbility(LeagueUI.ab3Plus) ? true : false);
-            //canChooseAbility[3] = (canLevelAbility(LeagueUI.ab4Plus) ? true : false);
+            if (form.windowImage.Width < 10 || form.windowImage.Height < 10) return;
+            /*look for the load screen*/
+            if (!outOfLoadScreen)
+            {
+                var w =  form.windowImage;
+                bool allBlack = true;
+                for (int x = w.Width / 2; x < w.Width; x++)
+                {
+                    for (int y = w.Height-5; y < w.Height; y++)
+                    {
+                        var c = w.GetPixel(x, y);
+                        if (c.R != 0 || c.G != 0 || c.B != 0)
+                        {
+                            allBlack = false;
+                            break;
+                        }
+                    }
+                }
+                if (allBlack) //process the load screen
+                {
+                    if (loadScreenInfo == null) parseLoadingScreen();
+
+                    for (int i = 0; i < loadScreenInfo.topChampionCount; i++)
+                    {
+                        if (summonerInfo[0][i] == null)
+                        summonerInfo[0][i] = getSummonerInfo(
+                            (Bitmap)w, 
+                            loadScreenInfo.minX + i * (loadScreenInfo.championWidth + loadScreenInfo.xpadding), 
+                            loadScreenInfo.topPadding, 
+                            loadScreenInfo.scale);
+                    }
+
+                    for (int i = 0; i < loadScreenInfo.botChampionCount; i++)
+                    {
+                        if (summonerInfo[1][i] == null)
+                        summonerInfo[1][i] = getSummonerInfo(
+                            (Bitmap)w, 
+                            loadScreenInfo.minXBot + i * (loadScreenInfo.championWidth + loadScreenInfo.xpadding), 
+                            w.Height - loadScreenInfo.topPadding - loadScreenInfo.championHeight + 1, 
+                            loadScreenInfo.scale);
+                    }
+                    return;
+                }
+                else  //in game now
+                {
+                    form.scriptControl.raiseEvent("interfaceInit", "");
+                    outOfLoadScreen = true;
+                }
+            }
 
             /* Set Current Hero Name */
 
@@ -86,9 +136,9 @@ namespace LeagueOverlay
                 cBit = cBit.Clone(new System.Drawing.Rectangle((int)(cBit.Width * .25), (int)(cBit.Height * .25), (int)(cBit.Width * .5), (int)(cBit.Height * .5)), System.Drawing.Imaging.PixelFormat.Undefined);
                 Bitmap bit;
                 // loop through heroes and find the one with the lowest rms diff.
-                for (int i = 0; i < cnames.Count; i++)
+                foreach (string c in cnames.Keys)
                 {
-                    bit = new Bitmap("C:\\Riot Games\\League of Legends\\air\\assets\\images\\champions\\" + cnames[i] + "_Square_0.png");
+                    bit = new Bitmap("C:\\Riot Games\\League of Legends\\air\\assets\\images\\champions\\" + c + "_Square_0.png");
                     bit = bit.Clone(new System.Drawing.Rectangle((int)(bit.Width * .25), (int)(bit.Height * .25), (int)(bit.Width * .5), (int)(bit.Height * .5)), System.Drawing.Imaging.PixelFormat.Undefined);
 
                     rms = calcRMSDiff(cBit, bit);
@@ -96,7 +146,7 @@ namespace LeagueOverlay
                     if (rms < curRMS)
                     {
                         curRMS = rms;
-                        curName = cnames[i];
+                        curName = c;
                     }
                     //  Console.WriteLine(cnames[i] + " " + rms);
 
@@ -329,6 +379,36 @@ namespace LeagueOverlay
 
         }
 
+        public double calcRMSDiff(Bitmap r, Bitmap b, Rectangle rect)
+        {
+
+            double sumR = 0, sumG = 0, sumB = 0, sum = 0;
+            int w, h;
+            w = r.Width;
+            h = r.Height;
+            if (rect.Right > b.Width || rect.Height > b.Height || rect.X > b.Width || rect.Y > b.Height) return double.MaxValue;
+            for (int j = rect.Top; j < rect.Bottom; j++)
+            {
+                for (int i = rect.Left; i < rect.Right; i++)
+                {
+                    var wi = r.GetPixel(i, j);
+                    var bi = b.GetPixel(i, j);
+                    //red
+                    sumR = Math.Pow(wi.R - bi.R, 2);
+                    //green
+                    sumG = Math.Pow(wi.G - bi.G, 2);
+                    //blue
+                    sumB = Math.Pow(wi.B - bi.B, 2);
+
+                    sum += (sumR + sumG + sumB);
+                    sumR = sumG = sumB = 0;
+
+                }
+            }
+
+            return (1 / ((double)(h * w))) * sum;
+
+        }
 
         public bool[] levelableAbilities(int[] ab,int curLevel)
         {
@@ -358,16 +438,195 @@ namespace LeagueOverlay
         [AttrLuaFunc("GetSummonerInfo")]
         public LuaTable getSummonerInfo(int team, int summoner, LuaTable infoTable)
         {
-            infoTable["championName"] = "Ashe";
-            infoTable["championCodeName"] = "Bowmaster";
+            try
+            {
+                SummonerInfo si = summonerInfo[team][summoner];
 
-            infoTable["spell1CodeName"] = "Spell_SummonerBoost";
-            infoTable["spell1Name"] = "Cleanse";
+                infoTable["championName"] = cnames[si.championCodeName];
+                infoTable["championCodeName"] = si.championCodeName;
 
-            infoTable["spell2CodeName"] = "Spell_SummonerDot";
-            infoTable["spell2Name"] = "Ignite";
+                Console.WriteLine(si.summonerSpell1);
+                infoTable["spell1CodeName"] = si.summonerSpell1;
+                infoTable["spell1Name"] = si.summonerSpell1;
 
+                infoTable["spell2CodeName"] = si.summonerSpell2;
+                infoTable["spell2Name"] = si.summonerSpell2;
+            }
+            catch
+            {
+                infoTable["championName"] = "Ashe";
+                infoTable["championCodeName"] = "Bowmaster";
+
+                infoTable["spell1CodeName"] = "Spell_SummonerBoost";
+                infoTable["spell1Name"] = "Cleanse";
+
+                infoTable["spell2CodeName"] = "Spell_SummonerDot";
+                infoTable["spell2Name"] = "Ignite";
+            }
             return infoTable;
         }
+
+        class SummonerInfo
+        {
+            public string championCodeName;
+            public string summonerSpell1;
+            public string summonerSpell2;
+        }
+
+        class LoadScreenInfo
+        {
+            public int 
+                minX, 
+                maxX, 
+                minY,
+                maxY,
+                minXBot, 
+                maxXBot,
+                topChampionCount,
+                botChampionCount,
+                championWidth,
+                championHeight,
+                xpadding,
+                topPadding;
+            public double scale;
+        }
+
+
+            
+        public void parseLoadingScreen()
+        {
+            Image b = form.windowImage;
+            loadScreenInfo = new LoadScreenInfo();
+            LoadScreenInfo lsi = loadScreenInfo;
+
+            lsi.minX = b.Width - 1;
+            lsi.maxX = 0;
+            lsi.minXBot = b.Width - 1;
+            lsi.maxXBot = 0;
+            for (int x = 5; x < b.Width - 5; x++)
+            {
+                var c = ((Bitmap)b).GetPixel(x, b.Height / 4);
+                if (c.B != 0 || c.R != 0 || c.G != 0)
+                {
+                    if (x < lsi.minX) lsi.minX = x;
+                    if (x > lsi.maxX) lsi.maxX = x;
+                }
+                c = ((Bitmap)b).GetPixel(x, 3 * b.Height / 4);
+                if (c.B != 0 || c.R != 0 || c.G != 0)
+                {
+                    if (x < lsi.minXBot) lsi.minXBot = x;
+                    if (x > lsi.maxXBot) lsi.maxXBot = x;
+                }
+            }
+            //find a safe bottom point
+            int bot = b.Height / 2;
+            for (int y = b.Height / 2; y >= 0; y--)
+            {
+                var c = ((Bitmap)b).GetPixel(lsi.minX + 20, y);
+                if (c.B == 0 && c.R == 0 && c.G == 0)
+                {
+                    bot = y;
+                    break;
+                }
+            }
+
+            //get the champion heights
+            lsi.minY = b.Height - 1;
+            lsi.maxY = 0;
+            for (int y = 5; y < bot; y++)
+            {
+                var c = ((Bitmap)b).GetPixel(lsi.minX + 20, y);
+                if (c.B != 0 || c.R != 0 || c.G != 0)
+                {
+                    if (y < lsi.minY) lsi.minY = y;
+                    if (y > lsi.maxY) lsi.maxY = y;
+                }
+            }
+
+
+            lsi.topChampionCount = (lsi.maxX - lsi.minX) / 190;
+            lsi.botChampionCount = (lsi.maxXBot - lsi.minXBot) / 190;
+
+            lsi.scale = (lsi.maxY - lsi.minY) / 341.0;
+
+            lsi.championWidth = (int)Math.Round(190 * lsi.scale);
+            lsi.championHeight = (int)Math.Round(341 * lsi.scale);
+            lsi.xpadding = (int)Math.Round(9 * lsi.scale);
+            lsi.topPadding = (int)Math.Round(18 * lsi.scale);
+
+
+            Console.WriteLine("Top champions:" + lsi.topChampionCount);
+            Console.WriteLine("Bottom champions:" + lsi.botChampionCount);
+            summonerInfo[0] = new SummonerInfo[lsi.topChampionCount];
+            summonerInfo[1] = new SummonerInfo[lsi.botChampionCount];
+            
+             
+        }
+
+        SummonerInfo getSummonerInfo(Bitmap screenImage, int left, int top, double scale)
+        {
+            SummonerInfo si = new SummonerInfo();
+            Bitmap champImg = screenImage.Clone(new Rectangle(left, top, (int)Math.Round(185 * scale), (int)Math.Round(305 * scale)), System.Drawing.Imaging.PixelFormat.DontCare);
+            Bitmap sSpell1 = screenImage.Clone(new Rectangle(left + (int)Math.Round(72 * scale), top + (int)Math.Round(298 * scale), (int)Math.Round(23 * scale), (int)Math.Round(24 * scale)), System.Drawing.Imaging.PixelFormat.DontCare);
+            Bitmap sSpell2 = screenImage.Clone(new Rectangle(left + (int)Math.Round(99 * scale), top + (int)Math.Round(298 * scale), (int)Math.Round(23 * scale), (int)Math.Round(24 * scale)), System.Drawing.Imaging.PixelFormat.DontCare);
+            double minRMS1 = double.MaxValue;
+            double minRMS2 = double.MaxValue;
+            sSpell1 = new Bitmap(sSpell1, 64, 64);
+            sSpell2 = new Bitmap(sSpell2, 64, 64);
+
+            //check the color on sSpell1 if it is black summoner is not connected
+            int blackCount=0;
+            for (int x = 0; x < sSpell1.Width; x++)
+            {
+                for (int y = 0; y < sSpell1.Height; y++)
+                {
+                    var c = sSpell1.GetPixel(x, y);
+                    if (c.R == 0 && c.G == 0 && c.B == 0) blackCount++;
+                }
+            }
+            if (blackCount / (64.0 * 64.0) > 0.8) return null;
+
+            foreach (FileInfo fi in new DirectoryInfo(@"C:\Riot Games\League of Legends\air\assets\images\spells").GetFiles("*.png"))
+            {
+                Bitmap temp = (Bitmap)Bitmap.FromFile(fi.FullName);
+                double rms = calcRMSDiff(sSpell1, temp);
+                if (rms < minRMS1)
+                {
+                    
+                    si.summonerSpell1 = fi.Name.Split('.')[0];
+                    minRMS1 = rms;
+                }
+                rms = calcRMSDiff(sSpell2, temp);
+                if (rms < minRMS2)
+                {
+                    si.summonerSpell2 = fi.Name.Split('.')[0];
+                    minRMS2 = rms;
+                }
+            }
+
+            Console.WriteLine("S1 = " + si.summonerSpell1 + " minrms of" + minRMS1);
+            Console.WriteLine("S2 = " + si.summonerSpell2);
+
+            double minChampionRMS = double.MaxValue;
+            champImg = new Bitmap(champImg, 307, 557);
+            Rectangle compareRect = new Rectangle(0, 130, 150, 20);
+            champImg.Clone(compareRect, System.Drawing.Imaging.PixelFormat.DontCare).Save("champ.png");
+            foreach (FileInfo fi in new DirectoryInfo(@"C:\Riot Games\League of Legends\air\assets\images\champions").GetFiles("*.jpg"))
+            {
+                if (fi.Name.ToLower().Contains("_square_") || fi.Name.ToLower().Contains("_splash_") || fi.Name.Count(c => c == '_') != 1) continue;
+                Bitmap temp = (Bitmap)Bitmap.FromFile(fi.FullName);
+                if (fi.Name.ToLower().Contains("arms") && fi.Name.ToLower().Contains("0")) temp.Clone(compareRect, System.Drawing.Imaging.PixelFormat.DontCare).Save("morde.png");
+                double rms = calcRMSDiff(champImg, temp, compareRect);
+                if (rms < minChampionRMS)
+                {
+                    si.championCodeName = fi.Name.Split('_')[0];
+                    temp.Clone(compareRect, System.Drawing.Imaging.PixelFormat.DontCare).Save("bestfit.png");
+                    minChampionRMS = rms;
+                }
+            }
+            Console.WriteLine("champion is " + si.championCodeName);
+            return si;
+        }
+
     }
 }

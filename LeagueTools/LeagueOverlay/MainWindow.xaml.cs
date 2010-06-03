@@ -15,6 +15,7 @@ using System.Windows.Interop;
 using System.Windows.Threading;
 using System.IO;
 
+using Keys = System.Windows.Forms.Keys;
 using Bitmap = System.Drawing.Bitmap;
 
 namespace LeagueOverlay
@@ -86,15 +87,14 @@ namespace LeagueOverlay
             DisplayTimers.updateTimers();
             keyboardManager.update();
             scriptControl.update();
-            
-            if (keyboardManager.wasKeyPressed((int)Key.D9))
+            if (keyboardManager.wasKeyPressed((int)Keys.D9))
             {
-                keyboardManager.sendKeyDown(KeyboardManager.DIK_LCONTROL);
-                keyboardManager.sendKeyPress(KeyboardManager.DIK_W);
-                keyboardManager.sendKeyUp(KeyboardManager.DIK_LCONTROL);
+                Console.WriteLine("loading screen");
+                leagueInfo.parseLoadingScreen();
             }
-            else if (keyboardManager.wasKeyPressed((int)Key.Up))
+            else if (keyboardManager.wasKeyPressed((int)Keys.Up))
             {
+                Console.WriteLine("UP");
                 DisplayTimers.createTimer("testing", new TimeSpan(0, 0, 10));
             }
         }

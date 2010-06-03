@@ -24,11 +24,11 @@ function EnemyDisplay:UIInit()
 	local yPos = GetResolutionY() / 2 - 300;	
 	PrintMsg(":"..yPos);
 	self.teamRect = NewRectangle();
-	SetComponentPos(self.teamRect,GetResolutionX()- 40, yPos);
-	SetRectangleSize(self.teamRect,20,20);
-	SetRectangleBgColor(self.teamRect,255,255,0,0);
+	SetComponentPos(self.teamRect,GetResolutionX()- 60, yPos);
+	SetRectangleSize(self.teamRect,60,20);
+	SetRectangleBgColor(self.teamRect,255,4,61,124);
 	SetRectangleClickEvent(self.teamRect,"EnemyDisplay:SwapTeams()");
-	yPos = yPos + 30;
+	yPos = yPos + 25;
 	for i = 0, 4 do
 		self.championImages[i] = NewRectangle();
 		SetComponentPos(self.championImages[i],GetResolutionX()- 40, yPos);
@@ -71,7 +71,14 @@ function EnemyDisplay:UIInit()
 end
 
 function EnemyDisplay:SwapTeams()
-
+	if(self.currentTeam == 0) then
+		self.currentTeam = 1;
+		SetRectangleBgColor(self.teamRect,255,4,61,124);
+	else
+		self.currentTeam = 0;
+		SetRectangleBgColor(self.teamRect,255,94,2,130);
+	end
+	self:UpdateTeamDisplay();
 end
 
 function EnemyDisplay:UpdateTeamDisplay()

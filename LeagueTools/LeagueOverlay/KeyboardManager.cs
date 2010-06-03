@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace LeagueOverlay
 {
@@ -40,6 +41,7 @@ namespace LeagueOverlay
         [AttrLuaFunc("WasKeyPressed")]
         public bool wasKeyPressed(int key)
         {
+
             if (!currentKeyState.ContainsKey(key))
             {
                 currentKeyState[key] = WIN32_API.GetAsyncKeyState(key);

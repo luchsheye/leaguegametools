@@ -123,7 +123,8 @@ namespace LeagueOverlay
             playerAvatar = new Rect((int)Math.Round(9 * widthScale), playerAvatarHeight, avatarSize, avatarSize);
            // cLevel = new Rect((int)Math.Floor(76 * widthScale), clevelHeight, cLevelWidth, cLevelHeight0);
 
-            parent.scriptControl.raiseEvent("interfaceInit", "");
+            if(parent.leagueInfo.outOfLoadScreen)
+                parent.scriptControl.raiseEvent("interfaceInit", "");
         }
 
         
