@@ -62,14 +62,16 @@ namespace LeagueOverlay
             int hi = (int)Math.Round(13 * widthScale);
 
             int resShift=0;
+            int resXSift = 0;
+            
             switch (xRes)
             {
                 case 1280:
-                    Console.WriteLine("ADFADFAF");
                     resShift = 1;
                     break;
                 case 1152:
                     resShift = 1;
+                    resXSift = 1;
                     break;
                 case 1024:
                     resShift = 0;
@@ -82,7 +84,7 @@ namespace LeagueOverlay
             int cLevelWidth = (int)Math.Round(12 * widthScale);
             int cLevelHeight0 = (int)Math.Round(8 * widthScale);
            
-            cLevel = new Rect((int)Math.Round(tempx+ Math.Round(wid / 2.0) - Math.Round(cLevelWidth/2.0))-1, (int)Math.Round(tempy + Math.Round(hi / 2.0) - Math.Round(cLevelHeight0/2.0))+resShift, cLevelWidth, cLevelHeight0);
+            cLevel = new Rect((int)Math.Round(tempx+ Math.Round(wid / 2.0) - Math.Round(cLevelWidth/2.0))-1+resXSift, (int)Math.Round(tempy + Math.Round(hi / 2.0) - Math.Round(cLevelHeight0/2.0))+resShift, cLevelWidth, cLevelHeight0);
 
 
             ////
