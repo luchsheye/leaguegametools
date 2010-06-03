@@ -94,7 +94,11 @@ namespace LeagueOverlay
                 }
                 if (allBlack) //process the load screen
                 {
-                    if (loadScreenInfo == null) parseLoadingScreen();
+                    if (loadScreenInfo == null)
+                    {
+                        parseLoadingScreen();
+                        return;
+                    }
 
                     for (int i = 0; i < loadScreenInfo.topChampionCount; i++)
                     {
@@ -434,6 +438,12 @@ namespace LeagueOverlay
 
             return temp;
         }
+        [AttrLuaFunc("GetSummonerCount")]
+        public int getSummonerCount(int team)
+        {
+            if (summonerInfo[team] == null) return 0;
+            return summonerInfo[team].Length;
+        }
 
         [AttrLuaFunc("GetSummonerInfo")]
         public LuaTable getSummonerInfo(int team, int summoner, LuaTable infoTable)
@@ -518,6 +528,14 @@ namespace LeagueOverlay
                     if (x > lsi.maxXBot) lsi.maxXBot = x;
                 }
             }
+            lsi.topChampionCount = (lsi.maxX - lsi.minX) / 190;
+            lsi.botChampionCount = (lsi.maxXBot - lsi.minXBot) / 190;
+
+            if (lsi.topChampionCount == 0 || lsi.botChampionCount == 0)
+            {
+                loadScreenInfo = null;
+                return;
+            }
             //find a safe bottom point
             int bot = b.Height / 2;
             for (int y = b.Height / 2; y >= 0; y--)
@@ -544,8 +562,7 @@ namespace LeagueOverlay
             }
 
 
-            lsi.topChampionCount = (lsi.maxX - lsi.minX) / 190;
-            lsi.botChampionCount = (lsi.maxXBot - lsi.minXBot) / 190;
+            
 
             lsi.scale = (lsi.maxY - lsi.minY) / 341.0;
 

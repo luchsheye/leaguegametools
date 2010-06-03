@@ -97,7 +97,7 @@ namespace LeagueOverlay
             foreach (UIElement uie in parent.uicomponents.activeComponents.Values)
             {
                 Rectangle r = uie as Rectangle;
-                if (r != null && r.Tag != null)
+                if (r != null && r.Tag != null && r.Visibility == Visibility.Visible)
                 {
                     
                     int leftPos = (int)Canvas.GetLeft(r);

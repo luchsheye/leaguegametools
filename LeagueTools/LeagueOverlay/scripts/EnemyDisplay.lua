@@ -83,15 +83,28 @@ end
 
 function EnemyDisplay:UpdateTeamDisplay()
 	local imageDir = GetLeagueDir().."air\\assets\\images\\";
-
-	for i = 0, 4 do
+	local summonerCount = GetSummonerCount(self.currentTeam);
+	for i = 0, (summonerCount-1) do
 		local summonerInfo = {};
 		GetSummonerInfo(self.currentTeam,i,summonerInfo);
 		SetRectangleImage(self.championImages[i],imageDir.."champions\\"..summonerInfo.championCodeName.."_Square_0.png");
 		SetRectangleImage(self.sSpell1Images[i],imageDir.."spells\\"..summonerInfo.spell1CodeName..".png");
 		SetRectangleImage(self.sSpell2Images[i],imageDir.."spells\\"..summonerInfo.spell2CodeName..".png");
 
+		SetComponentVisible(self.championImages[i],true);
+		SetComponentVisible(self.sSpell1Images[i],true);
+		SetComponentVisible(self.sSpell2Images[i],true);
+		SetComponentVisible(self.sSpell1CooldownLbl[i],true);
+		SetComponentVisible(self.sSpell2CooldownLbl[i],true);
+
 		self.summonerInfoTable[i] = summonerInfo;
+	end
+	for i = summonerCount, 4 do
+		SetComponentVisible(self.championImages[i],false);
+		SetComponentVisible(self.sSpell1Images[i],false);
+		SetComponentVisible(self.sSpell2Images[i],false);
+		SetComponentVisible(self.sSpell1CooldownLbl[i],false);
+		SetComponentVisible(self.sSpell2CooldownLbl[i],false);
 	end
 end
 

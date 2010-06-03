@@ -6,7 +6,7 @@ function autoLevelAbilityFunction(level)
 --Function -> automatically levels up an ability
 
 
-local lfile = assert(io.open("abilities.txt","r")); --open the file containing the level up info
+local lfile = io.open("abilities.txt","r"); --open the file containing the level up info
 if (lfile==nil) then return; end;
 
 while true do 
