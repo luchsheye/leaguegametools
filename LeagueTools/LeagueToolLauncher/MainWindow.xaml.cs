@@ -29,6 +29,10 @@ namespace LeagueToolLauncher
         Dictionary<string, string> versionInformation = new Dictionary<string, string>();
         string versionString = "1.13";
 
+        Process leagueOverlayProcess;
+
+        bool downloadingUpdater = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -40,7 +44,15 @@ namespace LeagueToolLauncher
         {
             webClient.OpenReadAsync(new Uri("http://code.google.com/p/leaguegametools/wiki/VersionPage"));
             webClient.OpenReadCompleted+=new OpenReadCompletedEventHandler(webClient_OpenReadCompleted);
-            
+            webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(webClient_DownloadDataCompleted);
+            webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(webClient_DownloadProgressChanged);
+
+            updateOverlayButtons();
+        }
+
+        void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            downloadProgressBar.Value = e.ProgressPercentage;
         }
 
         void  webClient_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
@@ -92,22 +104,86 @@ namespace LeagueToolLauncher
 
         private void updateBtn_Click(object sender, RoutedEventArgs e)
         {
-            webClient.DownloadFile(versionInformation["UpdaterLink"],"Updater.zip");
-            
-            using (ZipFile zip = ZipFile.Read("Updater.zip"))
+            downloadingUpdater = true;
+            webClient.DownloadDataAsync(new Uri(versionInformation["UpdaterLink"]));
+            updateBtn.Visibility = Visibility.Hidden;
+            downloadProgressBar.Visibility = Visibility.Visible;
+            downloadProgressLbl.Visibility = Visibility.Visible;
+            downloadProgressLbl.Content = "File 1 of 2";
+        }
+
+        void webClient_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        {
+            if (downloadingUpdater)
             {
-                zip.ExtractAll("Updater", ExtractExistingFileAction.OverwriteSilently);
+                File.WriteAllBytes("Updater.zip", e.Result);
+                webClient.DownloadDataAsync(new Uri(versionInformation["DownloadLink"]));
+                using (ZipFile zip = ZipFile.Read("Updater.zip"))
+                {
+                    zip.ExtractAll("Updater", ExtractExistingFileAction.OverwriteSilently);
+                }
+                File.Delete("Updater.zip");
+                downloadingUpdater = false;
+                downloadProgressLbl.Content = "File 2 of 2";
             }
-            webClient.DownloadFile(versionInformation["DownloadLink"], "Updater\\newVersion.zip");
-            File.Delete("Updater.zip");
-            try
+            else
             {
-                Process.Start("Updater\\UpdateTool.exe");
-                this.Close();
+                downloadProgressLbl.Content = "Complete";
+                File.WriteAllBytes("Updater\\newVersion.zip", e.Result);
+                try
+                {
+                    MessageBox.Show("The launcher will now close and the update will be applied", "Download Complete");
+                    Process.Start("Updater\\UpdateTool.exe");
+                    this.Close();
+                }
+                catch
+                {
+                    Console.WriteLine("something went wrong :'(");
+                }
             }
-            catch
+        }
+
+        public void updateOverlayButtons()
+        {
+            if (leagueOverlayProcess == null)
             {
-                Console.WriteLine("something went wrong :'(");
+                overlayStartBtn.Content = "Enable";
+                overlayStatusLbl.Content = "Disabled";
+                overlayStatusLbl.Foreground = new SolidColorBrush(Colors.Red);
+            }
+            else
+            {
+                overlayStartBtn.Content = "Disable";
+                overlayStatusLbl.Content = "Enabled";
+                overlayStatusLbl.Foreground = new SolidColorBrush(Colors.LightGreen);
+            }
+        }
+        private void overlayStartBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (leagueOverlayProcess == null)
+            {
+                leagueOverlayProcess = Process.Start("LeagueOverlay.exe");
+                leagueOverlayProcess.Exited += new EventHandler(leagueOverlayProcess_Exited);
+            }
+            else
+            {
+                leagueOverlayProcess.Kill();
+                leagueOverlayProcess = null;
+            }
+            updateOverlayButtons();
+        }
+
+        void leagueOverlayProcess_Exited(object sender, EventArgs e)
+        {
+            leagueOverlayProcess = null;
+            updateOverlayButtons();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if (leagueOverlayProcess != null)
+            {
+                leagueOverlayProcess.Kill();
             }
         }
     }

@@ -764,28 +764,33 @@ namespace RecommendedItemTool
         private void saveAbilityBtn_Click(object sender, RoutedEventArgs e)
         {
            // Clipboard.SetText(abilityString);
-            StreamReader sr = new StreamReader("abilities.txt");
-            string outString="";
-            string s;
-            bool found = false; ;
-            while (!sr.EndOfStream)
+            bool found = false;
+            string outString = "";
+            if (File.Exists("abilities.txt"))
             {
-                s = sr.ReadLine();
-                if (s.ToLower() == selectedChampion.ToLower())
+                StreamReader sr = new StreamReader("abilities.txt");
+
+                string s;
+
+                while (!sr.EndOfStream)
                 {
-                    found = true;
-                    outString += s + Environment.NewLine;
-                    outString += abilityString + Environment.NewLine;
-                    sr.ReadLine();
+                    s = sr.ReadLine();
+                    if (s.ToLower() == selectedChampion.ToLower())
+                    {
+                        found = true;
+                        outString += s + Environment.NewLine;
+                        outString += abilityString + Environment.NewLine;
+                        sr.ReadLine();
+                    }
+                    else
+                    {
+                        outString += s + Environment.NewLine;
+                    }
+
                 }
-                else
-                {
-                    outString += s + Environment.NewLine;
-                }
-                
+
+                sr.Close();
             }
-            
-            sr.Close();
             if (!found)
             {
                 outString += selectedChampion + Environment.NewLine;
