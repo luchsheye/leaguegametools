@@ -16,6 +16,7 @@ using System.Drawing.Imaging;
 using Bitmap = System.Drawing.Bitmap;
 using Rect = System.Drawing.Rectangle;
 using SColor = System.Drawing.Color;
+using LuaInterface;
 
 namespace LeagueOverlay
 {
@@ -114,11 +115,12 @@ namespace LeagueOverlay
             Bitmap levelBit;
             Bitmap wLevelBit;
 
-            Console.WriteLine(LeagueUI.cLevel);
+            //Console.WriteLine(LeagueUI.cLevel);
             wLevelBit = new Bitmap(form.windowImage.Clone(LeagueUI.cLevel, System.Drawing.Imaging.PixelFormat.Undefined),new System.Drawing.Size(12,8));
             double lrms = 0, curlrms = 1000000.0;
 
-            wLevelBit.Save("C:\\LEVEL.png");
+            //wLevelBit.Save("LEVEL.png");
+
             foreach (FileInfo f in (new DirectoryInfo("levelImages")).GetFiles())
             {
                 string[] split = f.Name.Split("_.".ToCharArray());
@@ -127,8 +129,8 @@ namespace LeagueOverlay
                 lrms = calcRMSDiff(levelBit, wLevelBit);
                 // lrms = calcDiff(levelBit, wLevelBit);
                 //Console.WriteLine(f.Name + " " + lrms);
-               levelBit.Save("C:\\LEVELTHink" + split[1]+".png");
-                Console.WriteLine(f.Name + " rms " + lrms);
+               //levelBit.Save("C:\\LEVELTHink" + split[1]+".png");
+                //Console.WriteLine(f.Name + " rms " + lrms);
                 if (lrms < curlrms)
                 {
                     curlrms = lrms;
@@ -183,6 +185,7 @@ namespace LeagueOverlay
             /* Set Mana/Energy Percent */
 
             /* Set Ability Cooldowns */
+            /*
             abilityRectangles = new Rect[]{
                 LeagueUI.cAbility1R,LeagueUI.cAbility2R,LeagueUI.cAbility3R,LeagueUI.cAbility4R,LeagueUI.sAbility1R,LeagueUI.sAbility2R};
             for (int i = 0; i < abilityRectangles.Length; i++)
@@ -207,7 +210,7 @@ namespace LeagueOverlay
                 lastCooldownPerc[i] = curPerc;
                 
             }
-            
+            */
 
 
             lastUpdate = DateTime.Now;
@@ -320,8 +323,7 @@ namespace LeagueOverlay
         }
         public double calcRMSDiff(Bitmap r, Bitmap b)
         {
-
-
+           
             double sumR = 0, sumG = 0, sumB = 0, sum = 0;
             int w, h;
             w = r.Width;
@@ -376,7 +378,19 @@ namespace LeagueOverlay
             return temp;
         }
 
+        [AttrLuaFunc("GetSummonerInfo")]
+        public LuaTable getSummonerInfo(int team, int summoner, LuaTable infoTable)
+        {
+            infoTable["championName"] = "Ashe";
+            infoTable["championCodeName"] = "Bowmaster";
 
-        public double[] lastCooldownPercent { get; set; }
+            infoTable["spell1CodeName"] = "Spell_SummonerBoost";
+            infoTable["spell1Name"] = "Cleanse";
+
+            infoTable["spell2CodeName"] = "Spell_SummonerDot";
+            infoTable["spell2Name"] = "Ignite";
+
+            return infoTable;
+        }
     }
 }

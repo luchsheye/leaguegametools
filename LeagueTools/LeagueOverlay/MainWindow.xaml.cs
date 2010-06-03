@@ -52,10 +52,11 @@ namespace LeagueOverlay
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+
             leagueInfo = new LeagueInfo(this);
             scriptControl = new ScriptControl(this);
             uicomponents = new UIComponents(this);
-            keyboardManager = new KeyboardManager();
+            keyboardManager = new KeyboardManager(this);
             LeagueUI.setMainWindow(this);
 
             scriptControl.registerLuaFunctions(leagueInfo);
@@ -74,7 +75,7 @@ namespace LeagueOverlay
             processingTimer.Start();
 
             UILogicTimer = new DispatcherTimer();
-            UILogicTimer.Interval = TimeSpan.FromMilliseconds(100);
+            UILogicTimer.Interval = TimeSpan.FromMilliseconds(32);
             UILogicTimer.Tick += new EventHandler(UILogicTimer_Tick);
             UILogicTimer.Start();
         }
@@ -85,6 +86,7 @@ namespace LeagueOverlay
             DisplayTimers.updateTimers();
             keyboardManager.update();
             scriptControl.update();
+            
             if (keyboardManager.wasKeyPressed((int)Key.D9))
             {
                 keyboardManager.sendKeyDown(KeyboardManager.DIK_LCONTROL);
@@ -103,6 +105,7 @@ namespace LeagueOverlay
             IntPtr tempHandle = WIN32_API.GetForegroundWindow();
             WIN32_API.GetWindowText(tempHandle, sb, (IntPtr)sb.MaxCapacity);
 
+            
             if (sb.ToString().ToLower().Contains("league of legends (tm) client"))
             {
                 DateTime start = DateTime.Now;

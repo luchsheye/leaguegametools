@@ -6,6 +6,8 @@ using LuaInterface;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Shapes;
+using System.Windows.Controls;
 
 namespace LeagueOverlay
 {
@@ -26,7 +28,6 @@ namespace LeagueOverlay
             eventTable["interfaceInit"] = new List<string>();
             eventTable["processingFinished"] = new List<string>();
             eventTable["levelUp"] = new List<string>();
-            Console.WriteLine(this);
             LuaVM = new Lua();
             registerLuaFunctions(this);
 
@@ -71,6 +72,7 @@ namespace LeagueOverlay
                 if (f.Name.Contains(".lua"))
                 {
                     LuaVM.DoFile(f.FullName);
+                    
                     /*
                     try
                     {
@@ -83,6 +85,27 @@ namespace LeagueOverlay
                         Console.WriteLine(e.StackTrace);
                     }
                      * */
+                }
+            }
+        }
+
+        public void doMouseClick()
+        {
+            int mouseX = (int)(System.Windows.Forms.Cursor.Position.X - parent.Left);
+            int mouseY = (int)(System.Windows.Forms.Cursor.Position.Y - parent.Top);
+
+            foreach (UIElement uie in parent.uicomponents.activeComponents.Values)
+            {
+                Rectangle r = uie as Rectangle;
+                if (r != null && r.Tag != null)
+                {
+                    
+                    int leftPos = (int)Canvas.GetLeft(r);
+                    int topPos = (int)Canvas.GetTop(r);
+                    if (mouseX >= leftPos && mouseX <= leftPos + r.Width && mouseY >= topPos && mouseY <= topPos + r.Height)
+                    {                       
+                        LuaVM.DoString((string)r.Tag);
+                    }
                 }
             }
         }
@@ -136,6 +159,11 @@ namespace LeagueOverlay
         public int getmsTime()
         {
             return (int)Math.Round((DateTime.Now - ProgramStartTime).TotalMilliseconds);
+        }
+        [AttrLuaFunc("GetLeagueDir")]
+        public string getLeagueDir()
+        {
+            return @"C:\Riot Games\League of legends\";
         }
     }
 }

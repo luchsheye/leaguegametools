@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace LeagueOverlay
 {
@@ -12,6 +13,13 @@ namespace LeagueOverlay
         Dictionary<int,int> currentKeyState = new Dictionary<int,int>();
         Dictionary<int, int> previousKeyState = new Dictionary<int,int>();
 
+        bool mouseLeft,previousMouseLeft;
+        MainWindow parent;
+
+        public KeyboardManager(MainWindow mw)
+        {
+            parent = mw;
+        }
         public void update()
         {
             foreach(int k in currentKeyState.Keys)
@@ -21,7 +29,12 @@ namespace LeagueOverlay
             foreach (int k in previousKeyState.Keys)
             {
                 currentKeyState[k] = WIN32_API.GetAsyncKeyState(k);
+                if (currentKeyState[k] < 0 && previousKeyState[k] >= 0)
+                    parent.scriptControl.raiseEvent("keypress", k.ToString());
             }
+            previousMouseLeft = mouseLeft;
+            mouseLeft = ((int)System.Windows.Forms.Control.MouseButtons & 1048576) == 1048576;
+            if (!mouseLeft && previousMouseLeft) parent.scriptControl.doMouseClick();
         }
 
         [AttrLuaFunc("WasKeyPressed")]
@@ -44,9 +57,16 @@ namespace LeagueOverlay
         [AttrLuaFunc("SendAllyChatMessage")]
         public void sendAllyChatMessage(string Message)
         {
+            bool wasControlDown = WIN32_API.GetAsyncKeyState((int)System.Windows.Forms.Keys.LControlKey) < 0;
+            if (wasControlDown)
+                sendKeyUp(DIK_LCONTROL);
             sendKeyPress(DIK_RETURN);
-            //SendKeys.Send(Message);
+            Thread.Sleep(20);
+            System.Windows.Forms.SendKeys.SendWait(Message);
+            Thread.Sleep(20);
             sendKeyPress(DIK_RETURN);
+            if (wasControlDown)
+                sendKeyDown(DIK_LCONTROL);
         }
         [AttrLuaFunc("SendChatMessage")]
         public void sendChatMessage(string Message)
@@ -54,9 +74,10 @@ namespace LeagueOverlay
             sendKeyDown(DIK_LSHIFT);
             sendKeyPress(DIK_RETURN);
             sendKeyUp(DIK_LSHIFT);
-            //SendKeys.Send(Message);
+            //System.Windows.Forms.SendKeys.SendWait(Message);
             sendKeyPress(DIK_RETURN);
         }
+
         //the send key functions should use the SCAN key codes found below...
         [AttrLuaFunc("SendKeyDown")]
         public void sendKeyDown(ushort k)
@@ -93,23 +114,17 @@ namespace LeagueOverlay
         [AttrLuaFunc("SendKeyPress")]
         public void sendKeyPress(ushort k)
         {
-            WIN32_API.INPUT[] InputData = new WIN32_API.INPUT[1];
+            WIN32_API.INPUT[] InputData = new WIN32_API.INPUT[2];
 
             InputData[0].type = (IntPtr)1; //INPUT_KEYBOARD
             InputData[0].wScan = k;
             InputData[0].dwFlags = (IntPtr)WIN32_API.SendInputFlags.KEYEVENTF_SCANCODE;
+            
+            InputData[1].type = (IntPtr)1; //INPUT_KEYBOARD
+            InputData[1].wScan = k;
+            InputData[1].dwFlags = (IntPtr)((uint)WIN32_API.SendInputFlags.KEYEVENTF_SCANCODE | (uint)WIN32_API.SendInputFlags.KEYEVENTF_KEYUP);
 
-            if (WIN32_API.SendInput(1, InputData, Marshal.SizeOf(InputData[0])) == 0)
-            {
-                System.Diagnostics.Debug.WriteLine("SendInput failed with code: " +
-                Marshal.GetLastWin32Error().ToString());
-            }
-
-            InputData[0].type = (IntPtr)1; //INPUT_KEYBOARD
-            InputData[0].wScan = k;
-            InputData[0].dwFlags = (IntPtr)((uint)WIN32_API.SendInputFlags.KEYEVENTF_SCANCODE | (uint)WIN32_API.SendInputFlags.KEYEVENTF_KEYUP);
-
-            if (WIN32_API.SendInput(1, InputData, Marshal.SizeOf(InputData[0])) == 0)
+            if (WIN32_API.SendInput(2, InputData, Marshal.SizeOf(InputData[0])) == 0)
             {
                 System.Diagnostics.Debug.WriteLine("SendInput failed with code: " +
                 Marshal.GetLastWin32Error().ToString());

@@ -38,6 +38,8 @@ namespace LeagueOverlay
             playerAvatar;
 
         public static MainWindow parent;
+        public static int xResolution, yResolution;
+
         public static void setMainWindow(MainWindow mw)
         {
             parent = mw;
@@ -45,8 +47,9 @@ namespace LeagueOverlay
         //calculate all of the locations for screen elements
         public static void init(int xRes, int yRes)
         {
-            
 
+            xResolution = xRes;
+            yResolution = yRes;
          
             //92,747
             double widthScale = xRes / 1280.0;
@@ -125,6 +128,11 @@ namespace LeagueOverlay
 
         
         //functions for getting UI element positions in LUA
+        [AttrLuaFunc("GetResolutionX")]
+        public int getResolutionX() { return xResolution; }
+        [AttrLuaFunc("GetResolutionY")]
+        public int getResolutionY() { return yResolution; }
+
         [AttrLuaFunc("GetUIRect_Map")]
         public void LUA_getmapR(LuaTable table) { parent.scriptControl.storeRectInTable(mapR, table); }
         [AttrLuaFunc("GetUIRect_ChampionLevel")]

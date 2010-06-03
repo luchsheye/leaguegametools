@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
 
 namespace LeagueOverlay
 {
@@ -83,9 +84,7 @@ namespace LeagueOverlay
         [AttrLuaFunc("NewLabel")]
         public int newLabel()
         {
-            int id = compNum++;
-            Label l = new Label();
-            
+            int id = compNum++;       
             
             activeComponents[id] = new Label();
             Canvas.SetLeft(activeComponents[id], 0);
@@ -138,6 +137,80 @@ namespace LeagueOverlay
                     ((Label)activeComponents[l]).Foreground = Brushes.White;
                     return false;
                 }
+                return true;
+            }
+            return false;
+        }
+
+        //Rectangle functions
+
+        [AttrLuaFunc("NewRectangle")]
+        public int newRectangle()
+        {
+            int id = compNum++;
+
+            activeComponents[id] = new Rectangle();
+            Canvas.SetLeft(activeComponents[id], 0);
+            Canvas.SetTop(activeComponents[id], 0);
+            parent.mainCanvas.Children.Add(activeComponents[id]);
+            return id;
+        }
+
+        [AttrLuaFunc("SetRectangleSize")]
+        public bool setRectangleSize(int r, int w, int h)
+        {
+            if (activeComponents.ContainsKey(r) && activeComponents[r] is Rectangle)
+            {
+                ((Rectangle)activeComponents[r]).Width = w;
+                ((Rectangle)activeComponents[r]).Height = h;
+                return true;
+            }
+            return false;
+        }
+
+        [AttrLuaFunc("SetRectangleBgColor")]
+        public bool setRectangleBgColor(int r, byte alpha, byte red, byte green, byte blue)
+        {
+            if (activeComponents.ContainsKey(r) && activeComponents[r] is Rectangle)
+            {
+                try
+                {
+                    ((Rectangle)activeComponents[r]).Fill = new SolidColorBrush(
+                        Color.FromArgb(alpha, red, green, blue)
+                        );
+                }
+                catch
+                {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        [AttrLuaFunc("SetRectangleImage")]
+        public bool setRectangleBgColor(int r, string path)
+        {
+            if (activeComponents.ContainsKey(r) && activeComponents[r] is Rectangle)
+            {
+                try
+                {
+                    ((Rectangle)activeComponents[r]).Fill = new ImageBrush(new BitmapImage(new Uri(path)));
+                }
+                catch
+                {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+        [AttrLuaFunc("SetRectangleClickEvent")]
+        public bool setRectangleClickEvent(int r, string func)
+        {
+            if (activeComponents.ContainsKey(r) && activeComponents[r] is Rectangle)
+            {
+                ((Rectangle)activeComponents[r]).Tag = func;
                 return true;
             }
             return false;

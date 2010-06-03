@@ -1,3 +1,5 @@
+--[[
+UNUSED SCRIPT
 --init "class" table and member variables
 CooldownDisplay = {
 	abilityLabels = {};
@@ -44,3 +46,4 @@ CooldownDisplay:Init();
 RegisterEvent("processingFinished","CooldownDisplay:ProcessingFinished");
 RegisterEvent("interfaceInit","CooldownDisplay:UIInit");
 PrintMsg("CooldownDisplay Loaded");
+--]]
