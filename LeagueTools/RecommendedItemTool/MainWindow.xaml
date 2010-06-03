@@ -12,7 +12,20 @@
         <Rectangle Canvas.Left="807" Canvas.Top="450" Height="50" Name="recItemImg5" RadiusX="8" RadiusY="8" Stroke="White" StrokeThickness="2" Width="50" Style="{StaticResource ItemImage}" />
         <Rectangle Canvas.Left="863" Canvas.Top="450" Height="50" Name="recItemImg6" RadiusX="8" RadiusY="8" Stroke="White" StrokeThickness="2" Width="50" Style="{StaticResource ItemImage}" />
         <Button Canvas.Left="268" Canvas.Top="525" Content="Help" Height="34" Name="helpBtn" Style="{StaticResource GlassButton}" Width="134" Click="helpBtn_Click" />
-        <Button Canvas.Left="581" Canvas.Top="525" Content="Load/View Item String" Height="34" Name="loadViewBtn" Style="{StaticResource GlassButton}" Width="144" Click="loadViewBtn_Click" />
         <Button Canvas.Left="779" Canvas.Top="525" Content="Save to Game" Height="34" Name="button3" Style="{StaticResource GlassButton}" Width="134" />
+        <Button Canvas.Left="581" Canvas.Top="358" Content="Save" Height="50" Name="saveAbilityBtn" Width="50" Click="saveAbilityBtn_Click" Style="{StaticResource GlassButton}" />
+        <Button Canvas.Left="637" Canvas.Top="358" Content="Q" Height="50" Name="Q_btn" Width="50" Style="{StaticResource GlassButton}" FontFamily="Miramonte" FontSize="32" Click="Q_btn_Click" />
+        <Button Canvas.Left="693" Canvas.Top="358" Content="W" FontFamily="Miramonte" FontSize="32" Height="50" Name="W_btn" Style="{StaticResource GlassButton}" Width="50" Click="W_btn_Click" />
+        <Button Canvas.Left="749" Canvas.Top="358" Content="E" FontFamily="Miramonte" FontSize="32" Height="50" Name="E_btn" Style="{StaticResource GlassButton}" Width="50" Click="E_btn_Click" />
+        <Button Canvas.Left="807" Canvas.Top="358" Content="R" FontFamily="Miramonte" FontSize="32" Height="50" Name="R_btn" Style="{StaticResource GlassButton}" Width="50" Click="R_btn_Click" />
+        <Button Canvas.Left="863" Canvas.Top="359" Content="Reset" Height="22" Name="button1" Style="{StaticResource GlassButton}" Width="50" Click="button1_Click" />
+        <Label Canvas.Left="581" Canvas.Top="290" Content="1  2  3  4  5  6  7  8  9  10  11  12  13  14  15  16  17  18 " Height="28" Name="label1" Width="332" Foreground="White" FontSize="13" />
+        <Label Canvas.Left="581" Canvas.Top="324" FontSize="13" Foreground="White" Height="28" Name="abilityLabel" Width="332" />
+        <Rectangle Canvas.Left="10" Canvas.Top="10" Height="100" Name="rectangle1" Stroke="Black" Width="200" />
+        <Button Canvas.Left="863" Canvas.Top="386" Content="Delete" Height="22" Name="DeleteBtn" Style="{StaticResource GlassButton}" Width="50" Click="DeleteBtn_Click" />
+        <Label Canvas.Left="652" Canvas.Top="414" Content="5" Height="30" Name="label_Q" Width="21" Foreground="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}" />
+        <Label Canvas.Left="822" Canvas.Top="414" Content="5" Foreground="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}" Height="30" Name="label2" Width="21" />
+        <Label Canvas.Left="766" Canvas.Top="414" Content="5" Foreground="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}" Height="30" Name="label3" Width="21" />
+        <Label Canvas.Left="708" Canvas.Top="414" Content="5" Foreground="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}" Height="30" Name="label4" Width="21" />
     </Canvas>
 </Window>

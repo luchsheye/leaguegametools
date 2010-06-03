@@ -29,6 +29,11 @@ namespace RecommendedItemTool
         public ItemSelect its;
         HelpScreen hs;
 
+        string abilityString = "";
+        bool[] heroLevelableAbilities = new bool[4];
+        int[] heroAbilityLevels = new int[4] { 0, 0, 0, 0 };
+        int heroCurrentLevel = 1;
+
         public string[] recommendedItems = { "", "", "", "", "", "" };
 
         public Dictionary<string, ItemData> itemData = new Dictionary<string, ItemData>();
@@ -59,6 +64,8 @@ namespace RecommendedItemTool
 
         public MainWindow()
         {
+     
+            
             InitializeComponent();
             rPictureBoxes = new Rectangle[] { recItemImg1, recItemImg2, recItemImg3, recItemImg4, recItemImg5, recItemImg6 };
             //register the events for the item boxes
@@ -314,9 +321,12 @@ namespace RecommendedItemTool
         }
         public void selectChampion(string name)
         {
+            
+                
             string cName = name;
             selectedChampion = cName;
-
+            getAutoAbilityInfo();
+            initAbilityButtons();
             bool setManagerVisible = setManager.IsVisible;
             if (setManagerVisible) setManager.Visibility = Visibility.Hidden;
 
@@ -690,6 +700,7 @@ namespace RecommendedItemTool
             Canvas.SetZIndex(backgroundImage, 10);
             its.Visibility = Visibility.Hidden ;
             hs.Visibility = Visibility.Visible;
+            
         }
 
         private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -701,12 +712,304 @@ namespace RecommendedItemTool
                     new Uri(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + selectedChampion + "_Splash_" + currentSkinNum + ".jpg"));
         }
 
-        private void loadViewBtn_Click(object sender, RoutedEventArgs e)
+
+        public bool[] levelableAbilities(int[] ab, int curLevel)
         {
-            if (setManager.Visibility == Visibility.Hidden)
-                setManager.Visibility = Visibility.Visible;
-            else
-                setManager.Visibility = Visibility.Hidden;
+            bool[] temp = new bool[4];
+
+            //regular abilities
+            for (int i = 0; i < 3; i++)
+            {
+                if (ab[i] * 2 + 1 <= curLevel)
+                    temp[i] = true;
+            }
+            //ultimate
+            if (curLevel == 16)
+                temp[3] = true;
+            else if (curLevel == 11)
+                temp[3] = true;
+            else if (curLevel > 11 && ab[3] < 2)
+                temp[3] = true;
+            else if (curLevel == 6)
+                temp[3] = true;
+            else if (curLevel > 6 && ab[3] < 1)
+                temp[3] = true;
+
+            return temp;
         }
+        bool canLevelAbility(int aNum)
+        {
+            if (aNum < 3 && (heroAbilityLevels[aNum] * 2 + 1 <= heroCurrentLevel && heroAbilityLevels[aNum] < 5))
+            {
+                return true;
+            }
+            else if (aNum == 3)
+            {
+                if (heroCurrentLevel == 16)
+                    return true;
+                else if (heroCurrentLevel > 16 && heroAbilityLevels[3] < 3)
+                    return true;
+                else if (heroCurrentLevel == 11)
+                    return true;
+                else if (heroCurrentLevel > 11 && heroAbilityLevels[3] < 2)
+                    return true;
+                else if (heroCurrentLevel == 6)
+                    return true;
+                else if (heroCurrentLevel > 6 && heroAbilityLevels[3] < 1)
+                    return true;
+            }
+            return false; ;
+        }
+
+        private void saveAbilityBtn_Click(object sender, RoutedEventArgs e)
+        {
+           // Clipboard.SetText(abilityString);
+            StreamReader sr = new StreamReader("abilities.txt");
+            string outString="";
+            string s;
+            bool found = false; ;
+            while (!sr.EndOfStream)
+            {
+                s = sr.ReadLine();
+                if (s.ToLower() == selectedChampion.ToLower())
+                {
+                    found = true;
+                    outString += s + Environment.NewLine;
+                    outString += abilityString + Environment.NewLine;
+                    sr.ReadLine();
+                }
+                else
+                {
+                    outString += s + Environment.NewLine;
+                }
+                
+            }
+            
+            sr.Close();
+            if (!found)
+            {
+                outString += selectedChampion + Environment.NewLine;
+                outString += abilityString + Environment.NewLine;
+
+            }
+            StreamWriter sw = new StreamWriter("abilities.txt");
+            sw.Write(outString);
+            sw.Close();
+        }
+
+        void getAutoAbilityInfo()
+        {
+            StreamReader sr = new StreamReader("abilities.txt");
+            string s;
+            
+            while (!sr.EndOfStream)
+            {
+                s = sr.ReadLine();
+               
+                if (s.ToLower() == selectedChampion.ToLower())
+                {
+                    heroCurrentLevel = 18;
+                    s=sr.ReadLine();
+                    
+                    abilityString = s;
+                    for (int i = 0; i < s.Length; i++)
+                    {
+                        char num = s[i];
+                        heroAbilityLevels[abLetterToNum(num)]++;
+                    }
+                    sr.Close();
+                    writeAbilityLabel();
+                    return;
+                }
+
+            }
+            heroCurrentLevel =1;
+            abilityString = "";
+            for (int i = 0; i < 4; i++) heroAbilityLevels[i] = 0;
+            writeAbilityLabel();
+            sr.Close();
+            
+        }
+        string abNumToLetter(int num)
+        {
+            switch (num)
+            {
+                case 0:
+                    return "q";
+                case 1:
+                    return "w";
+                case 2:
+                    return "e";
+                case 3:
+                    return "r";
+                default:
+                    return "";
+
+            }
+
+        }
+
+        int abLetterToNum(char s)
+        {
+            switch (s)
+            {
+                case 'q':
+                    return 0;
+                case 'w':
+                    return 1;
+                case 'e':
+                    return 2;
+                case 'r':
+                    return 3;
+                default:
+                    return -1;
+
+            }
+
+        }
+        public void initAbilityButtons()
+        {
+            if (!canLevelAbility(0))
+            {
+                Q_btn.Opacity = .5;
+                Q_btn.IsEnabled = false;
+            }
+            else
+            {
+                Q_btn.Opacity =1;
+                Q_btn.IsEnabled = true;
+            }
+            if (!canLevelAbility(1))
+            {
+                W_btn.Opacity = .5;
+                W_btn.IsEnabled = false;
+            }
+            else
+            {
+                W_btn.Opacity = 1;
+                W_btn.IsEnabled = true;
+            }
+            if (!canLevelAbility(2))
+            {
+                E_btn.Opacity = .5;
+                E_btn.IsEnabled = false;
+            }
+            else
+            {
+                E_btn.Opacity = 1;
+                E_btn.IsEnabled = true;
+            }
+            if (!canLevelAbility(3))
+            {
+                R_btn.Opacity = .5;
+                R_btn.IsEnabled = false;
+            }
+            else
+            {
+                R_btn.Opacity = 1;
+                R_btn.IsEnabled = true;
+            }
+        }
+        private void Q_btn_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (abilityString.Length == 18) return;
+            if (canLevelAbility(0))
+            {
+                heroAbilityLevels[0]++;
+                abilityString += abNumToLetter(0);
+                heroCurrentLevel++;
+            }
+            writeAbilityLabel();
+            initAbilityButtons();
+        }
+
+        private void W_btn_Click(object sender, RoutedEventArgs e)
+        {
+            if (abilityString.Length == 18) return;
+            if (canLevelAbility(1))
+            {
+                heroAbilityLevels[1]++;
+                abilityString += abNumToLetter(1);
+                heroCurrentLevel++;
+            }
+            writeAbilityLabel();
+            initAbilityButtons();
+        }
+
+        private void E_btn_Click(object sender, RoutedEventArgs e)
+        {
+            if (abilityString.Length == 18) return;
+            if (canLevelAbility(2))
+            {
+                heroAbilityLevels[2]++;
+                abilityString += abNumToLetter(2);
+                heroCurrentLevel++;
+            }
+            writeAbilityLabel();
+            initAbilityButtons();
+        }
+
+        private void R_btn_Click(object sender, RoutedEventArgs e)
+        {
+            
+            if (abilityString.Length == 18) return;
+            if (canLevelAbility(3))
+            {
+                heroAbilityLevels[3]++;
+                abilityString += abNumToLetter(3);
+                heroCurrentLevel++;
+
+            }
+            writeAbilityLabel();
+            initAbilityButtons();
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            heroCurrentLevel = 1;
+            abilityString = "";
+            for (int i = 0; i < 4; i++) heroAbilityLevels[i] = 0;
+            writeAbilityLabel();
+            initAbilityButtons();
+        }
+
+        void writeAbilityLabel()
+        {
+            string s = "";
+            for (int i = 0; i < abilityString.Length; i++)
+            {
+                s += abilityString[i];
+                if (i < 9) s += "  ";
+                else s += "    ";
+            }
+            abilityLabel.Content = s;
+        }
+
+        private void DeleteBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (heroCurrentLevel > 1) heroCurrentLevel--;
+            if (abilityString.Length > 0)
+            {
+                Console.Write(abilityString[abilityString.Length - 1]);
+                heroAbilityLevels[abLetterToNum(abilityString[abilityString.Length - 1])]--;
+                abilityString = abilityString.Substring(0, abilityString.Length - 1);
+            }
+            writeAbilityLabel();
+            initAbilityButtons();
+
+        }
+
+      
+
+       
+
+       
+
+       
+
+      
+        
     }
 }
