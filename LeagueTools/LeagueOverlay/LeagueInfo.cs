@@ -169,7 +169,7 @@ namespace LeagueOverlay
             wLevelBit = new Bitmap(form.windowImage.Clone(LeagueUI.cLevel, System.Drawing.Imaging.PixelFormat.Undefined),new System.Drawing.Size(12,8));
             double lrms = 0, curlrms = 1000000.0;
 
-            //wLevelBit.Save("LEVEL.png");
+            wLevelBit.Save("LEVEL.png");
 
             foreach (FileInfo f in (new DirectoryInfo("levelImages")).GetFiles())
             {

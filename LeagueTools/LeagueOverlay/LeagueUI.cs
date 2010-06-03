@@ -65,6 +65,7 @@ namespace LeagueOverlay
             switch (xRes)
             {
                 case 1280:
+                    Console.WriteLine("ADFADFAF");
                     resShift = 1;
                     break;
                 case 1152:
