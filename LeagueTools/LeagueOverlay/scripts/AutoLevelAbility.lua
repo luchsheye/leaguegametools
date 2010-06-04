@@ -13,8 +13,9 @@ while true do
 	
 	local name = lfile:read(); -- get the next line of the file
 
-
-	if (name == GetHeroName()) then --check if the line is the hero name you want, if not, keep looping
+	if(name == nil) then 
+		return;
+	elseif (name == GetHeroName()) then --check if the line is the hero name you want, if not, keep looping
 		local temp = lfile:read(); --get the next line, string containing leveling up info
 		--levelDiff = level-lastSeenLevel;
 		for n=lastSeenLevel,level do

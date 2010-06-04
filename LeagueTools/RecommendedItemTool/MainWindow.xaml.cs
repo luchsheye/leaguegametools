@@ -29,10 +29,8 @@ namespace RecommendedItemTool
         public ItemSelect its;
         HelpScreen hs;
 
-        public string abilityString = "";
-        public bool[] heroLevelableAbilities = new bool[4];
-        public int[] heroAbilityLevels = new int[4] { 0, 0, 0, 0 };
-        public int heroCurrentLevel = 1;
+        
+        
 
         public string[] recommendedItems = { "", "", "", "", "", "" };
 
@@ -48,6 +46,7 @@ namespace RecommendedItemTool
 
         public ItemToolTip itemToolTip;
 
+        public AutoAbilityTool autoAbilityTool;
         public SetManager setManager;
         public AbilityManager abilityManager;
         public SavingOverlay savingOverlay;
@@ -62,6 +61,8 @@ namespace RecommendedItemTool
 
         int currentSkinNum = 0;
         int skinCount = 0;
+
+        
 
         public MainWindow()
         {
@@ -227,26 +228,31 @@ namespace RecommendedItemTool
             Canvas.SetZIndex(draggingItemPic, 9);
             mainCanvas.Children.Add(draggingItemPic);
 
+
+            //autoAbilityTool
+            autoAbilityTool = new AutoAbilityTool(this);
+            Canvas.SetLeft(autoAbilityTool, 570);
+            Canvas.SetTop(autoAbilityTool, 280);
+            autoAbilityTool.Visibility = System.Windows.Visibility.Visible;
+            Canvas.SetZIndex(autoAbilityTool, 1);
+            mainCanvas.Children.Add(autoAbilityTool);
+
             //set manager
             setManager = new SetManager(this);
-           
             Canvas.SetLeft(setManager,
                 Canvas.GetLeft(rPictureBoxes[0]) + 
                 ((Canvas.GetLeft(rPictureBoxes[5]) + rPictureBoxes[5].Width - Canvas.GetLeft(rPictureBoxes[0])) - 
                 setManager.Width) / 2);
             Canvas.SetTop(setManager, Canvas.GetTop(rPictureBoxes[0]) - setManager.Height - 2);
-            //setManager.Left = rPictureBoxes[0].Left + ((rPictureBoxes[5].Right - rPictureBoxes[0].Left) - setManager.Width) / 2;
-            //setManager.Top = rPictureBoxes[0].Top - setManager.Height;
-            //setManager.Visible = false;
             setManager.Visibility = System.Windows.Visibility.Hidden;
-            Canvas.SetZIndex(setManager, 0);
+            Canvas.SetZIndex(setManager, 2);
             mainCanvas.Children.Add(setManager);
 
             abilityManager = new AbilityManager(this);
             abilityManager.Visibility = Visibility.Hidden;
             Canvas.SetLeft(abilityManager, 600);
             Canvas.SetTop(abilityManager, 310);
-            Canvas.SetZIndex(abilityManager, 0);
+            Canvas.SetZIndex(abilityManager, 1);
             mainCanvas.Children.Add(abilityManager);
 
             //saving overlay
@@ -256,9 +262,12 @@ namespace RecommendedItemTool
             mainCanvas.Children.Add(savingOverlay);
 
 
+
+            
             //background worker
             savingThread = new BackgroundWorker();
             savingThread.DoWork += new DoWorkEventHandler(savingThread_DoWork);
+            savingThread.RunWorkerCompleted+=new RunWorkerCompletedEventHandler(savingThread_RunWorkerCompleted);
 
             //dragging timer
             draggingTimer = new DispatcherTimer();
@@ -337,8 +346,8 @@ namespace RecommendedItemTool
                 
             string cName = name;
             selectedChampion = cName;
-            getAutoAbilityInfo();
-            initAbilityButtons();
+            autoAbilityTool.getAutoAbilityInfo();
+            autoAbilityTool.initAbilityButtons();
             bool setManagerVisible = setManager.IsVisible;
             if (setManagerVisible) setManager.Visibility = Visibility.Hidden;
 
@@ -533,6 +542,7 @@ namespace RecommendedItemTool
         private void savingThread_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             savingOverlay.Visibility = Visibility.Hidden;
+            Canvas.SetZIndex(backgroundImage, -1);
         }
 
         private void savingThread_DoWork(object sender, DoWorkEventArgs e)
@@ -545,12 +555,14 @@ namespace RecommendedItemTool
 
             string cFileName = "DATA\\Characters\\" + selectedChampion + "\\" + selectedChampion + ".inibin";
             bool invalidFormat = false;
+
             //extract
             invalidFormat = extractChampionData(selectedChampion);
 
             //fix the zip if the format is invalid
             if (invalidFormat)
             {
+                Console.WriteLine("invalid format detected");
                 using (ZipFile zip = ZipFile.Read(Preferences.leagueFolder + "\\game\\HeroPak_client.zip"))
                 {
                     zip.RemoveEntry(zip[0]);//will do nothing
@@ -601,6 +613,7 @@ namespace RecommendedItemTool
             else
             {
                 //save failed...no message about this for now
+                Console.WriteLine("saving failure..???");
                 return;
             }
 
@@ -749,284 +762,12 @@ namespace RecommendedItemTool
 
             return temp;
         }
-        bool canLevelAbility(int aNum)
-        {
-            if (aNum < 3 && (heroAbilityLevels[aNum] * 2 + 1 <= heroCurrentLevel && heroAbilityLevels[aNum] < 5))
-            {
-                return true;
-            }
-            else if (aNum == 3)
-            {
-                if (heroCurrentLevel == 16)
-                    return true;
-                else if (heroCurrentLevel > 16 && heroAbilityLevels[3] < 3)
-                    return true;
-                else if (heroCurrentLevel == 11)
-                    return true;
-                else if (heroCurrentLevel > 11 && heroAbilityLevels[3] < 2)
-                    return true;
-                else if (heroCurrentLevel == 6)
-                    return true;
-                else if (heroCurrentLevel > 6 && heroAbilityLevels[3] < 1)
-                    return true;
-            }
-            return false; ;
-        }
+        
 
-        private void saveAbilityBtn_Click(object sender, RoutedEventArgs e)
-        {
-           // Clipboard.SetText(abilityString);
-            bool found = false;
-            string outString = "";
-            if (File.Exists("abilities.txt"))
-            {
-                StreamReader sr = new StreamReader("abilities.txt");
+       
 
-                string s;
 
-                while (!sr.EndOfStream)
-                {
-                    s = sr.ReadLine();
-                    if (s.ToLower() == selectedChampion.ToLower())
-                    {
-                        found = true;
-                        outString += s + Environment.NewLine;
-                        outString += abilityString + Environment.NewLine;
-                        sr.ReadLine();
-                    }
-                    else
-                    {
-                        outString += s + Environment.NewLine;
-                    }
-
-                }
-
-                sr.Close();
-            }
-            if (!found)
-            {
-                outString += selectedChampion + Environment.NewLine;
-                outString += abilityString + Environment.NewLine;
-
-            }
-            StreamWriter sw = new StreamWriter("abilities.txt");
-            sw.Write(outString);
-            sw.Close();
-        }
-
-        void getAutoAbilityInfo()
-        {
-            if (!File.Exists("abilities.txt")) return;
-            StreamReader sr = new StreamReader("abilities.txt");
-            string s;
-            
-            while (!sr.EndOfStream)
-            {
-                s = sr.ReadLine();
-               
-                if (s.ToLower() == selectedChampion.ToLower())
-                {
-                    heroCurrentLevel = 18;
-                    s=sr.ReadLine();
-                    
-                    abilityString = s;
-                    for (int i = 0; i < s.Length; i++)
-                    {
-                        char num = s[i];
-                        heroAbilityLevels[abLetterToNum(num)]++;
-                    }
-                    sr.Close();
-                    writeAbilityLabel();
-                    return;
-                }
-
-            }
-            heroCurrentLevel =1;
-            abilityString = "";
-            for (int i = 0; i < 4; i++) heroAbilityLevels[i] = 0;
-            writeAbilityLabel();
-            sr.Close();
-            
-        }
-        public string abNumToLetter(int num)
-        {
-            switch (num)
-            {
-                case 0:
-                    return "q";
-                case 1:
-                    return "w";
-                case 2:
-                    return "e";
-                case 3:
-                    return "r";
-                default:
-                    return "";
-
-            }
-
-        }
-
-        public int abLetterToNum(char s)
-        {
-            switch (s)
-            {
-                case 'q':
-                    return 0;
-                case 'w':
-                    return 1;
-                case 'e':
-                    return 2;
-                case 'r':
-                    return 3;
-                default:
-                    return -1;
-
-            }
-
-        }
-        public void initAbilityButtons()
-        {
-            if (!canLevelAbility(0))
-            {
-                Q_btn.Opacity = .5;
-                Q_btn.IsEnabled = false;
-                label_Q.Content = Math.Abs(heroAbilityLevels[0] - 5);
-            }
-            else
-            {
-                Q_btn.Opacity =1;
-                Q_btn.IsEnabled = true;
-                label_Q.Content = Math.Abs(heroAbilityLevels[0] - 5);
-            }
-            if (!canLevelAbility(1))
-            {
-                W_btn.Opacity = .5;
-                W_btn.IsEnabled = false;
-                label_W.Content = Math.Abs(heroAbilityLevels[1] - 5);
-            }
-            else
-            {
-                W_btn.Opacity = 1;
-                W_btn.IsEnabled = true;
-                label_W.Content = Math.Abs(heroAbilityLevels[1] - 5);
-
-            }
-            if (!canLevelAbility(2))
-            {
-                E_btn.Opacity = .5;
-                E_btn.IsEnabled = false;
-                label_E.Content = Math.Abs(heroAbilityLevels[2] - 5);
-            }
-            else
-            {
-                E_btn.Opacity = 1;
-                E_btn.IsEnabled = true;
-                label_E.Content = Math.Abs(heroAbilityLevels[2] - 5);
-            }
-            if (!canLevelAbility(3))
-            {
-                R_btn.Opacity = .5;
-                R_btn.IsEnabled = false;
-                label_R.Content = Math.Abs(3 - heroAbilityLevels[3]);
-            }
-            else
-            {
-                R_btn.Opacity = 1;
-                R_btn.IsEnabled = true;
-                label_R.Content = Math.Abs(3 - heroAbilityLevels[3]);
-            }
-        }
-        private void Q_btn_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (abilityString.Length == 18) return;
-            if (canLevelAbility(0))
-            {
-                heroAbilityLevels[0]++;
-                abilityString += abNumToLetter(0);
-                heroCurrentLevel++;
-            }
-            writeAbilityLabel();
-            initAbilityButtons();
-        }
-
-        private void W_btn_Click(object sender, RoutedEventArgs e)
-        {
-            if (abilityString.Length == 18) return;
-            if (canLevelAbility(1))
-            {
-                heroAbilityLevels[1]++;
-                abilityString += abNumToLetter(1);
-                heroCurrentLevel++;
-            }
-            writeAbilityLabel();
-            initAbilityButtons();
-        }
-
-        private void E_btn_Click(object sender, RoutedEventArgs e)
-        {
-            if (abilityString.Length == 18) return;
-            if (canLevelAbility(2))
-            {
-                heroAbilityLevels[2]++;
-                abilityString += abNumToLetter(2);
-                heroCurrentLevel++;
-            }
-            writeAbilityLabel();
-            initAbilityButtons();
-        }
-
-        private void R_btn_Click(object sender, RoutedEventArgs e)
-        {
-            
-            if (abilityString.Length == 18) return;
-            if (canLevelAbility(3))
-            {
-                heroAbilityLevels[3]++;
-                abilityString += abNumToLetter(3);
-                heroCurrentLevel++;
-
-            }
-            writeAbilityLabel();
-            initAbilityButtons();
-        }
-
-        private void button1_Click(object sender, RoutedEventArgs e)
-        {
-            heroCurrentLevel = 1;
-            abilityString = "";
-            for (int i = 0; i < 4; i++) heroAbilityLevels[i] = 0;
-            writeAbilityLabel();
-            initAbilityButtons();
-        }
-
-        public void writeAbilityLabel()
-        {
-            string s = "";
-            for (int i = 0; i < abilityString.Length; i++)
-            {
-                s += abilityString[i];
-                if (i < 9) s += "  ";
-                else s += "    ";
-            }
-            abilityLabel.Content = s;
-        }
-
-        private void DeleteBtn_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (heroCurrentLevel > 1) heroCurrentLevel--;
-            if (abilityString.Length > 0)
-            {
-                Console.Write(abilityString[abilityString.Length - 1]);
-                heroAbilityLevels[abLetterToNum(abilityString[abilityString.Length - 1])]--;
-                abilityString = abilityString.Substring(0, abilityString.Length - 1);
-            }
-            writeAbilityLabel();
-            initAbilityButtons();
-
-        }
+ 
 
         private void mainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -1036,28 +777,26 @@ namespace RecommendedItemTool
         private void mainCanvas_KeyUp(object sender, KeyEventArgs e)
         {
             //
+            
             if (e.Key == Key.Q)
             {
-                Q_btn_Click(null, null);
+                autoAbilityTool.Q_btn_Click(null, null);
             }
             else if (e.Key == Key.W)
             {
-                W_btn_Click(null, null);
+                autoAbilityTool.W_btn_Click(null, null);
             }
             else if (e.Key == Key.E)
             {
-                E_btn_Click(null, null);
+                autoAbilityTool.E_btn_Click(null, null);
             }
             else if (e.Key == Key.R)
             {
-                R_btn_Click(null, null);
+                autoAbilityTool.R_btn_Click(null, null);
             }
+            
         }
-
-        private void button2_Click(object sender, RoutedEventArgs e)
-        {
-            abilityManager.Visibility = Visibility.Visible;
-        }
+        
 
         private void loadViewItemStringBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -1069,6 +808,13 @@ namespace RecommendedItemTool
             {
                 setManager.Visibility = Visibility.Hidden;
             }
+        }
+
+        private void saveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Canvas.SetZIndex(backgroundImage, 10);
+            savingOverlay.Visibility = Visibility.Visible;
+            savingThread.RunWorkerAsync(); 
         }
 
       

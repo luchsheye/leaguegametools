@@ -22,7 +22,6 @@ function EnemyDisplay:UIInit()
 	
 	local i;
 	local yPos = GetResolutionY() / 2 - 300;	
-	PrintMsg(":"..yPos);
 	self.teamRect = NewRectangle();
 	SetComponentPos(self.teamRect,GetResolutionX()- 60, yPos);
 	SetRectangleSize(self.teamRect,60,20);

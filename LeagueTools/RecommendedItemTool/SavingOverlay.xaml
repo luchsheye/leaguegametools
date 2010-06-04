@@ -3,9 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
+             mc:Ignorable="d" Width="1000" Height="610">
+    <Grid Background="#96000000">
+        <Label Content="Saving... Do not close this window" FontFamily="Miramonte" FontSize="21" FontWeight="Bold" Foreground="White" Margin="12,248,12,315" Name="label1" HorizontalContentAlignment="Center" />
     </Grid>
 </UserControl>

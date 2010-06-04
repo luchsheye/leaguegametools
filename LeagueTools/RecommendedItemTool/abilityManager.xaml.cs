@@ -35,25 +35,27 @@ namespace RecommendedItemTool
 
         private void button2_Click(object sender, RoutedEventArgs e)
         {
-            textBox1.Text = mw.abilityString;
+            textBox1.Text = mw.autoAbilityTool.abilityString;
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            mw.heroCurrentLevel = 1;
+
+            mw.autoAbilityTool.heroCurrentLevel = 1;
 
             for (int i = 0; i < 4; i++)
             {
-                mw.heroAbilityLevels[i]=0;
+                mw.autoAbilityTool.heroAbilityLevels[i] = 0;
             }
-            mw.abilityString = textBox1.Text;
-            for (int i = 0; i < mw.abilityString.Length; i++)
+            mw.autoAbilityTool.abilityString = textBox1.Text;
+            for (int i = 0; i < mw.autoAbilityTool.abilityString.Length; i++)
             {
-                char num = mw.abilityString[i];
-                mw.heroAbilityLevels[mw.abLetterToNum(num)]++;
+                char num = mw.autoAbilityTool.abilityString[i];
+                mw.autoAbilityTool.heroAbilityLevels[mw.autoAbilityTool.abLetterToNum(num)]++;
             }
-            mw.writeAbilityLabel();
-            mw.initAbilityButtons();
+            mw.autoAbilityTool.writeAbilityLabel();
+            mw.autoAbilityTool.initAbilityButtons();
+            
         }
     }
 }
