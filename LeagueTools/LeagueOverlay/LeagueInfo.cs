@@ -182,7 +182,7 @@ namespace LeagueOverlay
             wLevelBit.UnlockBits(bd);
            // wLevelBit.Save("LEVEL.png");
 
-           for (int i =0;i<LeagueUI.levelBitmaps.Length;i++)
+           for (int i =0;i<LeagueUI.levelBmBytes.Length;i++)
             {
               
                 

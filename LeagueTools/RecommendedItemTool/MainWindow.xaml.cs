@@ -64,9 +64,10 @@ namespace RecommendedItemTool
 
         public MainWindow()
         {
-     
-            
+
+           
             InitializeComponent();
+
             rPictureBoxes = new Rectangle[] { recItemImg1, recItemImg2, recItemImg3, recItemImg4, recItemImg5, recItemImg6 };
             //register the events for the item boxes
             for (int i = 0; i < rPictureBoxes.Length; i++)
@@ -77,7 +78,8 @@ namespace RecommendedItemTool
                 rPictureBoxes[i].MouseDown += new MouseButtonEventHandler(rPictureBoxes_MouseDown);
             }
 
-            
+           
+
             
             //  button1.Image = Bitmap.FromFile("button.png");
 
@@ -168,6 +170,7 @@ namespace RecommendedItemTool
             //cache the hero icons
             foreach (KeyValuePair<string, HeroData> kvp in heroData)
             {
+                
                 kvp.Value.icon = new BitmapImage(new Uri(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + kvp.Key + "_Square_0.png"));
             }
 
@@ -179,7 +182,7 @@ namespace RecommendedItemTool
             Canvas.SetTop(backgroundImage, -20);
             Canvas.SetZIndex(backgroundImage, -10);
             mainCanvas.Children.Add(backgroundImage);
-
+            
             its = new ItemSelect(this);
             mainCanvas.Children.Add(its);
             Canvas.SetLeft(its, 20);
