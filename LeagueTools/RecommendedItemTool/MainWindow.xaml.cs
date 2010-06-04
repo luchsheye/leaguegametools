@@ -29,10 +29,10 @@ namespace RecommendedItemTool
         public ItemSelect its;
         HelpScreen hs;
 
-        string abilityString = "";
-        bool[] heroLevelableAbilities = new bool[4];
-        int[] heroAbilityLevels = new int[4] { 0, 0, 0, 0 };
-        int heroCurrentLevel = 1;
+        public string abilityString = "";
+        public bool[] heroLevelableAbilities = new bool[4];
+        public int[] heroAbilityLevels = new int[4] { 0, 0, 0, 0 };
+        public int heroCurrentLevel = 1;
 
         public string[] recommendedItems = { "", "", "", "", "", "" };
 
@@ -49,6 +49,7 @@ namespace RecommendedItemTool
         public ItemToolTip itemToolTip;
 
         public SetManager setManager;
+        public AbilityManager abilityManager;
         public SavingOverlay savingOverlay;
 
         BackgroundWorker savingThread;
@@ -67,7 +68,7 @@ namespace RecommendedItemTool
 
            
             InitializeComponent();
-
+           
             rPictureBoxes = new Rectangle[] { recItemImg1, recItemImg2, recItemImg3, recItemImg4, recItemImg5, recItemImg6 };
             //register the events for the item boxes
             for (int i = 0; i < rPictureBoxes.Length; i++)
@@ -228,6 +229,7 @@ namespace RecommendedItemTool
 
             //set manager
             setManager = new SetManager(this);
+           
             Canvas.SetLeft(setManager,
                 Canvas.GetLeft(rPictureBoxes[0]) + 
                 ((Canvas.GetLeft(rPictureBoxes[5]) + rPictureBoxes[5].Width - Canvas.GetLeft(rPictureBoxes[0])) - 
@@ -240,6 +242,12 @@ namespace RecommendedItemTool
             Canvas.SetZIndex(setManager, 0);
             mainCanvas.Children.Add(setManager);
 
+            abilityManager = new AbilityManager(this);
+            abilityManager.Visibility = Visibility.Hidden;
+            Canvas.SetLeft(abilityManager, 600);
+            Canvas.SetTop(abilityManager, 300);
+            Canvas.SetZIndex(abilityManager, 0);
+            mainCanvas.Children.Add(abilityManager);
 
             //saving overlay
             savingOverlay = new SavingOverlay();
@@ -840,7 +848,7 @@ namespace RecommendedItemTool
             sr.Close();
             
         }
-        string abNumToLetter(int num)
+        public string abNumToLetter(int num)
         {
             switch (num)
             {
@@ -859,7 +867,7 @@ namespace RecommendedItemTool
 
         }
 
-        int abLetterToNum(char s)
+        public int abLetterToNum(char s)
         {
             switch (s)
             {
@@ -993,7 +1001,7 @@ namespace RecommendedItemTool
             initAbilityButtons();
         }
 
-        void writeAbilityLabel()
+        public void writeAbilityLabel()
         {
             string s = "";
             for (int i = 0; i < abilityString.Length; i++)
@@ -1044,6 +1052,11 @@ namespace RecommendedItemTool
             {
                 R_btn_Click(null, null);
             }
+        }
+
+        private void button2_Click(object sender, RoutedEventArgs e)
+        {
+            abilityManager.Visibility = Visibility.Visible;
         }
 
       

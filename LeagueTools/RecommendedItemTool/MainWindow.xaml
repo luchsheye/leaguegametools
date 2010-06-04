@@ -1,7 +1,7 @@
 ﻿<Window x:Class="RecommendedItemTool.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Recommended Item Tool" Height="610" Width="1000" Loaded="Window_Loaded" ResizeMode="NoResize" Background="Black" Closed="Window_Closed" MouseMove="Window_MouseMove" MouseDoubleClick="Window_MouseDoubleClick" Icon="/RecommendedItemTool;component/icon.png">
+        Title="Recommended Item Tool" Height="610" Width="1000" Loaded="Window_Loaded" ResizeMode="NoResize" Background="Black" Closed="Window_Closed" MouseMove="Window_MouseMove" MouseDoubleClick="Window_MouseDoubleClick" Icon="/RecommendedItemTool;component/icon.png" xmlns:my="clr-namespace:RecommendedItemTool">
     <Canvas Name="mainCanvas" MouseUp="mainCanvas_MouseUp" MouseDown="mainCanvas_MouseDown" KeyUp="mainCanvas_KeyUp">
         <Label Canvas.Left="694" Canvas.Top="12" Content="Champion Name" Height="51" Name="championNameLbl" Width="255" FontFamily="Miramonte" FontSize="30" Foreground="White" HorizontalContentAlignment="Right" />
         <Button Canvas.Left="16" Canvas.Top="525" Content="Champion Select" Height="34" Name="championSelectBtn" Width="134" Style="{StaticResource GlassButton}" Click="championSelectBtn_Click" />
@@ -13,13 +13,13 @@
         <Rectangle Canvas.Left="863" Canvas.Top="450" Height="50" Name="recItemImg6" RadiusX="8" RadiusY="8" Stroke="White" StrokeThickness="2" Width="50" Style="{StaticResource ItemImage}" />
         <Button Canvas.Left="268" Canvas.Top="525" Content="Help" Height="34" Name="helpBtn" Style="{StaticResource GlassButton}" Width="134" Click="helpBtn_Click" />
         <Button Canvas.Left="779" Canvas.Top="525" Content="Save to Game" Height="34" Name="button3" Style="{StaticResource GlassButton}" Width="134" />
-        <Button Canvas.Left="581" Canvas.Top="358" Content="Save" Height="50" Name="saveAbilityBtn" Width="50" Click="saveAbilityBtn_Click" Style="{StaticResource GlassButton}" />
+        <Button Canvas.Left="581" Canvas.Top="358" Content="Save" Height="23" Name="saveAbilityBtn" Width="50" Click="saveAbilityBtn_Click" Style="{StaticResource GlassButton}" />
         <Button Canvas.Left="637" Canvas.Top="358" Content="Q" Height="50" Name="Q_btn" Width="50" Style="{StaticResource GlassButton}" FontFamily="Miramonte" FontSize="32" Click="Q_btn_Click" />
         <Button Canvas.Left="693" Canvas.Top="358" Content="W" FontFamily="Miramonte" FontSize="32" Height="50" Name="W_btn" Style="{StaticResource GlassButton}" Width="50" Click="W_btn_Click" />
         <Button Canvas.Left="749" Canvas.Top="358" Content="E" FontFamily="Miramonte" FontSize="32" Height="50" Name="E_btn" Style="{StaticResource GlassButton}" Width="50" Click="E_btn_Click" />
         <Button Canvas.Left="807" Canvas.Top="358" Content="R" FontFamily="Miramonte" FontSize="32" Height="50" Name="R_btn" Style="{StaticResource GlassButton}" Width="50" Click="R_btn_Click" />
         <Button Canvas.Left="863" Canvas.Top="359" Content="Reset" Height="22" Name="button1" Style="{StaticResource GlassButton}" Width="50" Click="button1_Click" />
-        <Label Canvas.Left="581" Canvas.Top="290" Content="1  2  3  4  5  6  7  8  9  10  11  12  13  14  15  16  17  18 " Height="28" Name="label1" Width="332" Foreground="White" FontSize="13" />
+        <Label Canvas.Left="581" Canvas.Top="302" Content="1  2  3  4  5  6  7  8  9  10  11  12  13  14  15  16  17  18 " Height="28" Name="label1" Width="332" Foreground="White" FontSize="13" />
         <Label Canvas.Left="581" Canvas.Top="324" FontSize="13" Foreground="White" Height="28" Name="abilityLabel" Width="332" />
         <Rectangle Canvas.Left="10" Canvas.Top="10" Height="100" Name="rectangle1" Stroke="Black" Width="200" />
         <Button Canvas.Left="863" Canvas.Top="386" Content="Delete" Height="22" Name="DeleteBtn" Style="{StaticResource GlassButton}" Width="50" Click="DeleteBtn_Click" />
@@ -29,5 +29,7 @@
         <Label Canvas.Left="708" Canvas.Top="405" Content="5" Foreground="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}" Height="30" Name="label_W" Width="21" />
         <Label Canvas.Left="447" Canvas.Top="459" Content="Recommended Items" Height="32" Name="label2" Width="128" Foreground="{StaticResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
         <Label Canvas.Left="447" Canvas.Top="371" Content="Auto-Leveled Abilities" Foreground="{StaticResource {x:Static SystemColors.ActiveCaptionBrushKey}}" Height="32" Name="label3" Width="128" />
+        <Button Canvas.Left="581" Canvas.Top="385" Content="Copy/Load" Height="23" Name="button2" Style="{StaticResource GlassButton}" Width="50" FontSize="9" Click="button2_Click" />
+       
     </Canvas>
 </Window>

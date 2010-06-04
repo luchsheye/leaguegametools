@@ -60,6 +60,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AbilityManager.xaml.cs">
+      <DependentUpon>AbilityManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AutoAbilityTool.xaml.cs">
       <DependentUpon>AutoAbilityTool.xaml</DependentUpon>
     </Compile>
@@ -70,6 +73,10 @@
       <DependentUpon>SetManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="ZipFile.cs" />
+    <Page Include="AbilityManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AutoAbilityTool.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
