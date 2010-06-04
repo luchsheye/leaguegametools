@@ -1,0 +1,11 @@
+﻿<Window x:Class="LeagueToolLauncher.LeagueDirectoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="LeagueDirectoryWindow" Height="119" Width="730" Background="#FF0A0A0A" WindowStyle="ToolWindow" Loaded="Window_Loaded" Closed="Window_Closed" Topmost="True">
+    <Canvas Height="Auto" Name="canvas1" Width="Auto">
+        <TextBlock Canvas.Left="10" Canvas.Top="10" FontFamily="Miramonte" FontSize="14" Foreground="White" Height="22" Name="textBlock1" Text="League of legends directory:" TextWrapping="Wrap" Width="182" />
+        <Button Canvas.Left="184" Canvas.Top="7" Content="Change" Height="24" Name="changeDirectoryBtn" Style="{StaticResource GlassButton}" Visibility="Visible" Width="72" Click="changeDirectoryBtn_Click" />
+        <TextBlock Canvas.Left="260" Canvas.Top="9" FontFamily="Miramonte" FontSize="14" Foreground="White" Height="22" Name="leagueDirectoryLabel" Text="League of legends directory:" TextWrapping="Wrap" Width="182" />
+        <Button Canvas.Left="624" Canvas.Top="44" Content="Done" Height="24" Name="doneBtn" Style="{StaticResource GlassButton}" Visibility="Visible" Width="72" Click="doneBtn_Click" />
+    </Canvas>
+</Window>

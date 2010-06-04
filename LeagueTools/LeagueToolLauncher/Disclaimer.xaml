@@ -1,0 +1,13 @@
+﻿<Window x:Class="LeagueToolLauncher.Disclaimer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Disclaimer" Height="524" Width="616" Background="Black" WindowStyle="ToolWindow" Topmost="True">
+    <Grid>
+        <Label Content="Important" Height="52" HorizontalAlignment="Left" Name="label1" VerticalAlignment="Top" Width="594" FontFamily="Miramonte" FontSize="36" Foreground="#FFC72121" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+        <TextBlock Height="93" HorizontalAlignment="Left" Margin="12,70,0,0" Name="textBlock1" Text="This program could potentially cause damage to your league of legends install. Additionally, Riot has not stated if modifying these files is okay. Many safegaurds have been put into place, by the creators of this program (Lazything/Ramzod)  however we are not responsible for any potential damages, i.e. you are using this program at your own risk!" VerticalAlignment="Top" Width="570" FontFamily="Miramonte" Foreground="White" TextWrapping="Wrap" FontSize="14" />
+        <TextBlock FontFamily="Miramonte" FontSize="14" Foreground="White" Height="93" HorizontalAlignment="Left" Margin="12,162,0,0" Name="textBlock2" Text="Once you have edited the recommended items of champions you will be unable to patch the game successfully until the changes are reverted. Before patching, it is important that you use this tool to undo any changes made." TextWrapping="Wrap" VerticalAlignment="Top" Width="570" />
+        <TextBlock FontFamily="Miramonte" FontSize="14" Foreground="White" Height="93" HorizontalAlignment="Left" Margin="12,243,0,0" Name="textBlock3" Text="In order to be able to undo all changes a backup of the League of Legends hero file must be made. This operation requires about 150MB of space and is created for you by this program. For safety reasons this program will refuse to run if this backup is not present." TextWrapping="Wrap" VerticalAlignment="Top" Width="570" />
+        <Button Content="Accept" Height="34" Margin="89,409,337,42" Name="AcceptBtn" Style="{StaticResource GlassButton}" Visibility="Visible" Click="AcceptBtn_Click" />
+        <Button Content="Decline" Height="34" Margin="341,409,85,42" Name="declineBtn" Style="{StaticResource GlassButtonRed}" Visibility="Visible" Click="declineBtn_Click" />
+    </Grid>
+</Window>

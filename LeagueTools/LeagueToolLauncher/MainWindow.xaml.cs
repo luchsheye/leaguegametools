@@ -16,6 +16,9 @@ using System.Net;
 using System.IO;
 using System.Diagnostics;
 using Ionic.Zip;
+using System.ComponentModel;
+
+using Preferences = RecommendedItemTool.Preferences;
 
 namespace LeagueToolLauncher
 {
@@ -33,13 +36,104 @@ namespace LeagueToolLauncher
 
         bool downloadingUpdater = false;
 
+        BackgroundWorker initialLoadThread;
+        public bool disclaimerAccepted = false;
+        public bool preferencesLoaded = false;
+        public bool heroDataBackedup = false;
+
         public MainWindow()
         {
             InitializeComponent();
             versionLbl.Content = "ver " + versionString;
             Canvas.SetLeft(updateBtn, Canvas.GetLeft(versionLbl) + ((string)versionLbl.Content).Length*7 + 5);
+            Label l = new Label();
+            l.FontFamily = new FontFamily("Miramonte");
+            l.FontSize = 16;
+            l.Foreground = new SolidColorBrush(Colors.White);
+            l.Content = "Loading please wait...";
+            l.Width = this.Width;
+            l.Height = this.Height;
+            l.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
+            l.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
+            this.Content = l;
+
+
+            initialLoadThread = new BackgroundWorker();
+            initialLoadThread.DoWork += new DoWorkEventHandler(initialLoadThread_DoWork);
+            initialLoadThread.RunWorkerCompleted += new RunWorkerCompletedEventHandler(initialLoadThread_RunWorkerCompleted);
+            initialLoadThread.RunWorkerAsync();
         }
 
+        void initialLoadThread_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (heroDataBackedup)
+            {
+                this.Content = mainCanvas;
+            }
+            else if (!preferencesLoaded)
+            {
+                LeagueDirectoryWindow ldw = new LeagueDirectoryWindow(this)
+                {
+                    Visibility = Visibility.Visible,
+                    Top = this.Top + 110,
+                    Left = this.Left
+                };
+            }
+            else if (!disclaimerAccepted)
+            {
+                Disclaimer disclaimer = new Disclaimer(this)
+                {
+                    Visibility = Visibility.Visible,
+                    Top = this.Top + 110,
+                    Left = this.Left + 55
+                };
+                return;
+            }
+            else
+            {
+                //load failed...
+                this.Close();
+            }
+        }
+
+        void initialLoadThread_DoWork(object sender, DoWorkEventArgs e)
+        {
+            //load preferences
+            if (!preferencesLoaded)
+            {
+                if (!Preferences.Load()) return;
+                preferencesLoaded = true;
+            }
+            disclaimerAccepted = Preferences.disclaimerAccepted;
+
+            //show disclaimer??
+            if (!disclaimerAccepted)
+            {
+                return;
+            }
+
+            //check or make hero backup      
+            if (!File.Exists(Preferences.leagueFolder + "\\game\\HeroPak_client_ToolBackup.zip"))
+            {
+                File.Copy(Preferences.leagueFolder + "\\game\\HeroPak_client.zip", Preferences.leagueFolder + "\\game\\HeroPak_client_ToolBackup.zip");
+            }
+            heroDataBackedup = true;
+        }
+
+        public void preferenceSetupComplete()
+        {
+            Preferences.Save();
+            preferencesLoaded = true;
+            initialLoadThread.RunWorkerAsync();
+        }
+
+        public void AcceptDisclaimer()
+        {
+            Preferences.disclaimerAccepted = disclaimerAccepted = true;
+            Preferences.Save();
+            initialLoadThread.RunWorkerAsync();
+        }
+        
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             webClient.OpenReadAsync(new Uri("http://code.google.com/p/leaguegametools/wiki/VersionPage"));
