@@ -120,6 +120,7 @@ namespace RecommendedItemTool
             string alternateName = itemFolder.Replace('\\', '/');
             using (ZipFile zip = ZipFile.Read(Preferences.leagueFolder + "\\game\\HeroPak_client.zip"))
             {
+               
                 foreach (ZipEntry ze in zip)
                 {
                     //Console.WriteLine(ze.FileName);

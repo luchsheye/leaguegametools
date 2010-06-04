@@ -39,7 +39,7 @@ namespace LeagueOverlay
         public MainWindow()
         {
             InitializeComponent();
-            
+            LeagueUI.loadLevelBitmaps();
         }
         protected override void OnActivated(EventArgs e)
         {
@@ -168,6 +168,7 @@ namespace LeagueOverlay
             {
                 Console.WriteLine("got a new bitmap handle");
                 LeagueUI.init(windowSize.width, windowSize.height);
+               
                 windowBitmapHandle = WIN32_API.CreateCompatibleBitmap(hDC, (IntPtr)windowSize.width, (IntPtr)windowSize.height);
             }
 

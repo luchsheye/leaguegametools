@@ -172,23 +172,30 @@ namespace LeagueOverlay
             //Console.WriteLine(LeagueUI.cLevel);
             wLevelBit = new Bitmap(form.windowImage.Clone(LeagueUI.cLevel, System.Drawing.Imaging.PixelFormat.Undefined),new System.Drawing.Size(12,8));
             double lrms = 0, curlrms = 1000000.0;
+            System.Drawing.Imaging.BitmapData bd;
+            IntPtr ip;
+            bd = wLevelBit.LockBits(new System.Drawing.Rectangle(0, 0, wLevelBit.Width,wLevelBit.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            ip = bd.Scan0;
+            int bytes= bd.Stride * wLevelBit.Height;
+            byte[] wBytes = new byte[bytes];
+            System.Runtime.InteropServices.Marshal.Copy(ip, wBytes, 0, LeagueUI.levelBitSize);
+            wLevelBit.UnlockBits(bd);
+           // wLevelBit.Save("LEVEL.png");
 
-            //wLevelBit.Save("LEVEL.png");
-
-            foreach (FileInfo f in (new DirectoryInfo("levelImages")).GetFiles())
+           for (int i =0;i<LeagueUI.levelBitmaps.Length;i++)
             {
-                string[] split = f.Name.Split("_.".ToCharArray());
-                levelBit = new Bitmap(new Bitmap(f.FullName).Clone(new Rect(3, 3, (12), (8)), System.Drawing.Imaging.PixelFormat.Undefined));
-                // if (Convert.ToInt32(split[1]) == 2) levelBit.Save("C://Level2.png");
-                lrms = calcRMSDiff(levelBit, wLevelBit);
-                // lrms = calcDiff(levelBit, wLevelBit);
+              
+                
+                    // if (Convert.ToInt32(split[1]) == 2) levelBit.Save("C://Level2.png");
+                lrms = calcRMSDiff(LeagueUI.levelBmBytes[i], wBytes);
+               // lrms = calcRMSDiff(levelBit, wLevelBit);
                 //Console.WriteLine(f.Name + " " + lrms);
                //levelBit.Save("C:\\LEVELTHink" + split[1]+".png");
                 //Console.WriteLine(f.Name + " rms " + lrms);
                 if (lrms < curlrms)
                 {
                     curlrms = lrms;
-                    thinkLevel = Convert.ToInt32(split[1]);
+                    thinkLevel = i+1;
                     //levelBit.Save("LEVELTHink.png");
                 }
                 // tempLevel++;
@@ -382,6 +389,23 @@ namespace LeagueOverlay
             return (1 / ((double)(h * w))) * sum;
 
         }
+        //two byte arrays
+        public double calcRMSDiff(byte []  rBytes, byte[] bBytes)
+        {
+           
+            double sum = 0;
+            int w = 12;
+            int h = 8;
+
+            for (int i = 0; i < LeagueUI.levelBitSize; i++)
+            {
+                sum += Math.Pow(rBytes[i] - bBytes[i], 2);
+            }
+
+            return (1 / ((double)(h * w))) * sum;
+
+        }
+
 
         public double calcRMSDiff(Bitmap r, Bitmap b, Rectangle rect)
         {

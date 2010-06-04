@@ -23,9 +23,11 @@
         <Label Canvas.Left="581" Canvas.Top="324" FontSize="13" Foreground="White" Height="28" Name="abilityLabel" Width="332" />
         <Rectangle Canvas.Left="10" Canvas.Top="10" Height="100" Name="rectangle1" Stroke="Black" Width="200" />
         <Button Canvas.Left="863" Canvas.Top="386" Content="Delete" Height="22" Name="DeleteBtn" Style="{StaticResource GlassButton}" Width="50" Click="DeleteBtn_Click" />
-        <Label Canvas.Left="652" Canvas.Top="414" Content="5" Height="30" Name="label_Q" Width="21" Foreground="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}" />
-        <Label Canvas.Left="822" Canvas.Top="414" Content="5" Foreground="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}" Height="30" Name="label_R" Width="21" />
-        <Label Canvas.Left="766" Canvas.Top="414" Content="5" Foreground="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}" Height="30" Name="label_E" Width="21" />
-        <Label Canvas.Left="708" Canvas.Top="414" Content="5" Foreground="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}" Height="30" Name="label_W" Width="21" />
+        <Label Canvas.Left="652" Canvas.Top="405" Content="5" Height="30" Name="label_Q" Width="21" Foreground="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}" />
+        <Label Canvas.Left="822" Canvas.Top="405" Content="5" Foreground="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}" Height="30" Name="label_R" Width="21" />
+        <Label Canvas.Left="763" Canvas.Top="405" Content="5" Foreground="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}" Height="30" Name="label_E" Width="21" />
+        <Label Canvas.Left="708" Canvas.Top="405" Content="5" Foreground="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}" Height="30" Name="label_W" Width="21" />
+        <Label Canvas.Left="447" Canvas.Top="459" Content="Recommended Items" Height="32" Name="label2" Width="128" Foreground="{StaticResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
+        <Label Canvas.Left="447" Canvas.Top="371" Content="Auto-Leveled Abilities" Foreground="{StaticResource {x:Static SystemColors.ActiveCaptionBrushKey}}" Height="32" Name="label3" Width="128" />
     </Canvas>
 </Window>
