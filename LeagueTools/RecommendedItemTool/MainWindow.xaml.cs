@@ -245,7 +245,7 @@ namespace RecommendedItemTool
             abilityManager = new AbilityManager(this);
             abilityManager.Visibility = Visibility.Hidden;
             Canvas.SetLeft(abilityManager, 600);
-            Canvas.SetTop(abilityManager, 300);
+            Canvas.SetTop(abilityManager, 310);
             Canvas.SetZIndex(abilityManager, 0);
             mainCanvas.Children.Add(abilityManager);
 
@@ -1057,6 +1057,18 @@ namespace RecommendedItemTool
         private void button2_Click(object sender, RoutedEventArgs e)
         {
             abilityManager.Visibility = Visibility.Visible;
+        }
+
+        private void loadViewItemStringBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (setManager.Visibility == Visibility.Hidden)
+            {
+                setManager.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                setManager.Visibility = Visibility.Hidden;
+            }
         }
 
       

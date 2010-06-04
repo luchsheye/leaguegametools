@@ -49,7 +49,7 @@ namespace LeagueToolLauncher
             l.FontFamily = new FontFamily("Miramonte");
             l.FontSize = 16;
             l.Foreground = new SolidColorBrush(Colors.White);
-            l.Content = "Loading please wait...";
+            l.Content = "Configuration in process...";
             l.Width = this.Width;
             l.Height = this.Height;
             l.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
