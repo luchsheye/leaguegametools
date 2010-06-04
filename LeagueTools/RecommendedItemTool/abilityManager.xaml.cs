@@ -44,7 +44,6 @@ namespace RecommendedItemTool
 
             for (int i = 0; i < 4; i++)
             {
-                
                 mw.heroAbilityLevels[i]=0;
             }
             mw.abilityString = textBox1.Text;

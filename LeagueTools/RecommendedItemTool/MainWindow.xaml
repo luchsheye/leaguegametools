@@ -11,7 +11,7 @@
         <Rectangle Canvas.Left="749" Canvas.Top="450" Height="50" Name="recItemImg4" RadiusX="8" RadiusY="8" Stroke="White" StrokeThickness="2" Width="50" Style="{StaticResource ItemImage}" />
         <Rectangle Canvas.Left="807" Canvas.Top="450" Height="50" Name="recItemImg5" RadiusX="8" RadiusY="8" Stroke="White" StrokeThickness="2" Width="50" Style="{StaticResource ItemImage}" />
         <Rectangle Canvas.Left="863" Canvas.Top="450" Height="50" Name="recItemImg6" RadiusX="8" RadiusY="8" Stroke="White" StrokeThickness="2" Width="50" Style="{StaticResource ItemImage}" />
-        <Button Canvas.Left="268" Canvas.Top="525" Content="Help" Height="34" Name="helpBtn" Style="{StaticResource GlassButton}" Width="134" Click="helpBtn_Click" />
+        <Button Canvas.Left="268" Canvas.Top="525" Content="Help / How-To's" Height="34" Name="helpBtn" Style="{StaticResource GlassButton}" Width="134" Click="helpBtn_Click" />
         <Button Canvas.Left="779" Canvas.Top="525" Content="Save to Game" Height="34" Name="button3" Style="{StaticResource GlassButton}" Width="134" />
         <Button Canvas.Left="581" Canvas.Top="358" Content="Save" Height="23" Name="saveAbilityBtn" Width="50" Click="saveAbilityBtn_Click" Style="{StaticResource GlassButton}" />
         <Button Canvas.Left="637" Canvas.Top="358" Content="Q" Height="50" Name="Q_btn" Width="50" Style="{StaticResource GlassButton}" FontFamily="Miramonte" FontSize="32" Click="Q_btn_Click" />
