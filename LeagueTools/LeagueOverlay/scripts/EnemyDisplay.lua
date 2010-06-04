@@ -117,19 +117,12 @@ function EnemyDisplay:RectangleClick(cNum)
 end
 
 function EnemyDisplay:SummonerSpellClick(sNum,cNum)
-	local cdTable;
 	if(sNum == 0) then
-		cdTable = self.sSpell1Cooldown;
+		self.sSpell1Cooldown = self.summonerInfoTable[cNum].spell1Cooldown;
 		SetComponentVisible(self.sSpell1CooldownLbl[cNum],true);
 	else
-		cdTable = self.sSpell2Cooldown;
+		self.sSpell2Cooldown = self.summonerInfoTable[cNum].spell1Cooldown;
 		SetComponentVisible(self.sSpell2CooldownLbl[cNum],true);
-	end
-	if(IsKeyDown(162)) then
-		--SendAllyChatMessage(self.summonerInfoTable[cNum].championName.." re");
-	else
-		--SendAllyChatMessage(self.summonerInfoTable[cNum].championName.." mia");
-		cdTable[cNum] = 10;
 	end
 end
 

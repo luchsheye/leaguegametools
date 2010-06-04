@@ -32,15 +32,14 @@ namespace LeagueOverlay
         public static Dictionary<string, string> cnames = new Dictionary<string, string>();
 
         DateTime lastUpdate = DateTime.Now;
-        int[] remainingCooldown;
-        double[] lastCooldownPerc;
-        Rect[] abilityRectangles;
-        DateTime[] cooldownStartTime;
 
         public bool outOfLoadScreen = false;
         LoadScreenInfo loadScreenInfo = null;
 
         SummonerInfo[][] summonerInfo = new SummonerInfo[2][];
+
+        Dictionary<string, SummonerSpellInfo> summonerSpellInfo = new Dictionary<string, SummonerSpellInfo>();
+
         public LeagueInfo(MainWindow f)
         {
             form = f;
@@ -64,11 +63,93 @@ namespace LeagueOverlay
 
                 }
             }
-            abilityRectangles = new Rect[]{
-                LeagueUI.cAbility1R,LeagueUI.cAbility2R,LeagueUI.cAbility3R,LeagueUI.cAbility4R,LeagueUI.sAbility1R,LeagueUI.sAbility2R};
-            remainingCooldown = new int[abilityRectangles.Length];
-            lastCooldownPerc = new double[abilityRectangles.Length];
-            cooldownStartTime = new DateTime[abilityRectangles.Length];
+
+
+            //init summoner spell info table
+            SummonerSpellInfo ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerBoost";
+            ssi.name = "Cleanse";
+            ssi.cooldown = 130;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+            ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerClairvoyance";
+            ssi.name = "Clairvoyance";
+            ssi.cooldown = 55;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+            ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerDot";
+            ssi.name = "Ignite";
+            ssi.cooldown = 120;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+            ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerExhaust";
+            ssi.cooldown = 210;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+            ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerFlash";
+            ssi.name = "Flash";
+            ssi.cooldown = 225;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+            ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerFortify";
+            ssi.name = "Fortify";
+            ssi.cooldown = 300;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+            ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerHaste";
+            ssi.name = "Ghost";
+            ssi.cooldown = 210;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+            ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerHeal";
+            ssi.name = "Heal";
+            ssi.cooldown = 270;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+            ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerMana";
+            ssi.name = "Clarity";
+            ssi.cooldown = 180;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+            ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerPromote";
+            ssi.name = "Promote";
+            ssi.cooldown = 300;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+            ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerRally";
+            ssi.name = "Rally";
+            ssi.cooldown = 360;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+            ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerRevive";
+            ssi.name = "Revive";
+            ssi.cooldown = 520;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+            ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerSmite";
+            ssi.name = "Smite";
+            ssi.cooldown = 75;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+            ssi = new SummonerSpellInfo();
+            ssi.codeName = "Spell_SummonerTeleport";
+            ssi.name = "Teleport";
+            ssi.cooldown = 240;
+            summonerSpellInfo[ssi.codeName] = ssi;
+
+
         }
 
         //do update league info
@@ -164,9 +245,7 @@ namespace LeagueOverlay
             /**********************************************************************/
 
             /* Set Current Hero Level */
-            int tempLevel = 1;
             int thinkLevel = 1;
-            Bitmap levelBit;
             Bitmap wLevelBit;
 
             //Console.WriteLine(LeagueUI.cLevel);
@@ -242,78 +321,12 @@ namespace LeagueOverlay
             {
                 healthPercent = (double)hCount / (double)healthPixCount;
             }
-            Console.WriteLine("health percent" + healthPercent);
+            //Console.WriteLine("health percent" + healthPercent);
             /* Set Mana/Energy Percent */
-
-            /* Set Ability Cooldowns */
-            /*
-            abilityRectangles = new Rect[]{
-                LeagueUI.cAbility1R,LeagueUI.cAbility2R,LeagueUI.cAbility3R,LeagueUI.cAbility4R,LeagueUI.sAbility1R,LeagueUI.sAbility2R};
-            for (int i = 0; i < abilityRectangles.Length; i++)
-            {
-                double curPerc = getAbilityCooldownPercent(abilityRectangles[i]);
-                TimeSpan ts = DateTime.Now - lastUpdate;
-                if (curPerc >= 0 && lastCooldownPerc[i] < 0)
-                {
-                    cooldownStartTime[i] = DateTime.Now;
-                }
-                else if (curPerc >= 0 && lastCooldownPerc[i] >= 0)
-                {
-                    //this is sort of wrong, but it may work decently
-                    double c = (DateTime.Now - cooldownStartTime[i]).TotalSeconds / curPerc;
-                    remainingCooldown[i] = (int)Math.Ceiling((1-curPerc)*c);
-
-                }
-                else
-                {
-                    remainingCooldown[i] = 0;
-                }
-                lastCooldownPerc[i] = curPerc;
-                
-            }
-            */
 
 
             lastUpdate = DateTime.Now;
             
-        }
-
-        public double getAbilityCooldownPercent(Rect abilityRect)
-        {
-            int cx = abilityRect.Left + abilityRect.Width / 2;
-            int cy = abilityRect.Top + abilityRect.Height / 2;
-            int r = abilityRect.Width / 4;
-
-            //check to see if its on cooldown at all
-            int countAbove=0;
-            int total = 0;
-            int superBlueCount=0;
-            for (int x = cx - r; x <= cx + r; x++)
-            {
-                for (int y = cy - r; y <= cy + r; y++)
-                {
-                    if (form.windowImage.GetPixel(x, y).B >= 150)
-                    {
-                        countAbove++;
-                    }
-                    if (form.windowImage.GetPixel(x, y).B >= 2 * form.windowImage.GetPixel(x, y).R && form.windowImage.GetPixel(x, y).B >= 2 * form.windowImage.GetPixel(x, y).G)
-                    {
-                        superBlueCount++;
-                    }
-                    total += 1;
-                }
-            }
-            if (superBlueCount / (double)total > 0.8)
-            {
-                //Console.WriteLine("On cooldown:" + (countAbove / (double)total));
-                return countAbove / (double)total;
-            }
-            else
-            {
-               // Console.WriteLine("no cooldown");              
-            }
-
-            return -1;
         }
 
         [AttrLuaFunc("GetHeroLevel")]
@@ -338,11 +351,7 @@ namespace LeagueOverlay
         {
             return canChooseAbility[abilityNum];
         }
-        [AttrLuaFunc("GetAbilityCooldown")]
-        public int getAbilityCooldown(int abilityNum)
-        {
-            return remainingCooldown[abilityNum];
-        }
+
         public bool canLevelAbility(Rectangle r)
         {
             int count = 0;
@@ -363,7 +372,7 @@ namespace LeagueOverlay
         public double calcRMSDiff(Bitmap r, Bitmap b)
         {
 
-            double sumR = 0, sumG = 0, sumB = 0, sum = 0;
+            double sum = 0;
             int w, h;
             w = r.Width;
             h = r.Height;
@@ -479,23 +488,27 @@ namespace LeagueOverlay
                 infoTable["championName"] = cnames[si.championCodeName];
                 infoTable["championCodeName"] = si.championCodeName;
 
-                Console.WriteLine(si.summonerSpell1);
                 infoTable["spell1CodeName"] = si.summonerSpell1;
-                infoTable["spell1Name"] = si.summonerSpell1;
+                infoTable["spell1Name"] = summonerSpellInfo[si.summonerSpell1].name;
+                infoTable["spell1Cooldown"] = summonerSpellInfo[si.summonerSpell1].cooldown;
 
                 infoTable["spell2CodeName"] = si.summonerSpell2;
-                infoTable["spell2Name"] = si.summonerSpell2;
+                infoTable["spell2Name"] = summonerSpellInfo[si.summonerSpell2].name;
+                infoTable["spell2Cooldown"] = summonerSpellInfo[si.summonerSpell2].cooldown;
+
             }
             catch
             {
                 infoTable["championName"] = "Ashe";
-                infoTable["championCodeName"] = "Bowmaster";
+                infoTable["championCodeName"] = "Bowmaster";               
 
                 infoTable["spell1CodeName"] = "Spell_SummonerBoost";
                 infoTable["spell1Name"] = "Cleanse";
+                infoTable["spell1Cooldown"] = 10;
 
                 infoTable["spell2CodeName"] = "Spell_SummonerDot";
                 infoTable["spell2Name"] = "Ignite";
+                infoTable["spell2Cooldown"] = 10;
             }
             return infoTable;
         }
@@ -505,6 +518,12 @@ namespace LeagueOverlay
             public string championCodeName;
             public string summonerSpell1;
             public string summonerSpell2;
+        }
+        class SummonerSpellInfo
+        {
+            public string codeName;
+            public string name;
+            public int cooldown;
         }
 
         class LoadScreenInfo
@@ -597,8 +616,8 @@ namespace LeagueOverlay
             lsi.topPadding = (int)Math.Round(18 * lsi.scale);
 
 
-            Console.WriteLine("Top champions:" + lsi.topChampionCount);
-            Console.WriteLine("Bottom champions:" + lsi.botChampionCount);
+            //Console.WriteLine("Top champions:" + lsi.topChampionCount);
+            //Console.WriteLine("Bottom champions:" + lsi.botChampionCount);
             summonerInfo[0] = new SummonerInfo[lsi.topChampionCount];
             summonerInfo[1] = new SummonerInfo[lsi.botChampionCount];
             
