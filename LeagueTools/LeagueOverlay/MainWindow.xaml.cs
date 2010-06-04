@@ -54,6 +54,8 @@ namespace LeagueOverlay
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
+            Preferences.Load();
+
             leagueInfo = new LeagueInfo(this);
             scriptControl = new ScriptControl(this);
             uicomponents = new UIComponents(this);

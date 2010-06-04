@@ -163,7 +163,7 @@ namespace LeagueOverlay
         [AttrLuaFunc("GetLeagueDir")]
         public string getLeagueDir()
         {
-            return @"C:\Riot Games\League of legends\";
+            return Preferences.leagueFolder + "\\";
         }
     }
 }

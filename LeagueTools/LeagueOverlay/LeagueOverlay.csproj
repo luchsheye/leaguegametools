@@ -71,6 +71,7 @@
     <Compile Include="KeyboardManager.cs" />
     <Compile Include="LeagueInfo.cs" />
     <Compile Include="LeagueUI.cs" />
+    <Compile Include="Preferences.cs" />
     <Compile Include="ScriptControl.cs" />
     <Compile Include="UIComponents.cs" />
     <Compile Include="WIN32_API.cs" />

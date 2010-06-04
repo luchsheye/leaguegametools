@@ -45,7 +45,7 @@ namespace LeagueOverlay
         {
             form = f;
             Regex r = new Regex(@"""(\w+)_(\w+)"" = ""([^""]+)");
-            foreach (string s in File.ReadAllLines("C:\\Riot Games\\League of Legends\\game\\DATA\\Menu\\fontconfig_en_US.txt"))
+            foreach (string s in File.ReadAllLines(Preferences.leagueFolder + "\\game\\DATA\\Menu\\fontconfig_en_US.txt"))
             {
                 
                 Match m = r.Match(s);
@@ -57,7 +57,7 @@ namespace LeagueOverlay
                     string infoID = m.Groups[2].Value;
                     string infoValue = m.Groups[3].Value;
                     if (infoType == "game_character_displayname"
-                        && File.Exists("C:\\Riot Games\\League of Legends\\air\\assets\\images\\champions\\" + infoID + "_Square_0.png"))
+                        && File.Exists(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + infoID + "_Square_0.png"))
                     {
                         cnames.Add(infoID, infoValue);
                     }
@@ -142,7 +142,7 @@ namespace LeagueOverlay
                 // loop through heroes and find the one with the lowest rms diff.
                 foreach (string c in cnames.Keys)
                 {
-                    bit = new Bitmap("C:\\Riot Games\\League of Legends\\air\\assets\\images\\champions\\" + c + "_Square_0.png");
+                    bit = new Bitmap(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + c + "_Square_0.png");
                     bit = bit.Clone(new System.Drawing.Rectangle((int)(bit.Width * .25), (int)(bit.Height * .25), (int)(bit.Width * .5), (int)(bit.Height * .5)), System.Drawing.Imaging.PixelFormat.Undefined);
 
                     rms = calcRMSDiff(cBit, bit);
@@ -628,7 +628,7 @@ namespace LeagueOverlay
             }
             if (blackCount / (64.0 * 64.0) > 0.8) return null;
 
-            foreach (FileInfo fi in new DirectoryInfo(@"C:\Riot Games\League of Legends\air\assets\images\spells").GetFiles("*.png"))
+            foreach (FileInfo fi in new DirectoryInfo(Preferences.leagueFolder + @"\air\assets\images\spells").GetFiles("*.png"))
             {
                 Bitmap temp = (Bitmap)Bitmap.FromFile(fi.FullName);
                 double rms = calcRMSDiff(sSpell1, temp);
@@ -653,7 +653,7 @@ namespace LeagueOverlay
             champImg = new Bitmap(champImg, 307, 557);
             Rectangle compareRect = new Rectangle(0, 130, 150, 20);
             champImg.Clone(compareRect, System.Drawing.Imaging.PixelFormat.DontCare).Save("champ.png");
-            foreach (FileInfo fi in new DirectoryInfo(@"C:\Riot Games\League of Legends\air\assets\images\champions").GetFiles("*.jpg"))
+            foreach (FileInfo fi in new DirectoryInfo(Preferences.leagueFolder + @"\air\assets\images\champions").GetFiles("*.jpg"))
             {
                 if (fi.Name.ToLower().Contains("_square_") || fi.Name.ToLower().Contains("_splash_") || fi.Name.Count(c => c == '_') != 1) continue;
                 Bitmap temp = (Bitmap)Bitmap.FromFile(fi.FullName);
