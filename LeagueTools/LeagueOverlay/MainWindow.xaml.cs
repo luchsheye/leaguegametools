@@ -89,16 +89,6 @@ namespace LeagueOverlay
             DisplayTimers.updateTimers();
             keyboardManager.update();
             scriptControl.update();
-            if (keyboardManager.wasKeyPressed((int)Keys.D9))
-            {
-                Console.WriteLine("loading screen");
-                leagueInfo.parseLoadingScreen();
-            }
-            else if (keyboardManager.wasKeyPressed((int)Keys.Up))
-            {
-                Console.WriteLine("UP");
-                DisplayTimers.createTimer("testing", new TimeSpan(0, 0, 10));
-            }
         }
 
         void processingTimer_Tick(object sender, EventArgs e)
