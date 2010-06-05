@@ -556,6 +556,8 @@ namespace LeagueOverlay
             lsi.maxX = 0;
             lsi.minXBot = b.Width - 1;
             lsi.maxXBot = 0;
+
+            bool foundNonBlack = false;
             for (int x = 5; x < b.Width - 5; x++)
             {
                 var c = ((Bitmap)b).GetPixel(x, b.Height / 4);
@@ -563,6 +565,7 @@ namespace LeagueOverlay
                 {
                     if (x < lsi.minX) lsi.minX = x;
                     if (x > lsi.maxX) lsi.maxX = x;
+                    foundNonBlack = true;
                 }
                 c = ((Bitmap)b).GetPixel(x, 3 * b.Height / 4);
                 if (c.B != 0 || c.R != 0 || c.G != 0)
@@ -570,6 +573,12 @@ namespace LeagueOverlay
                     if (x < lsi.minXBot) lsi.minXBot = x;
                     if (x > lsi.maxXBot) lsi.maxXBot = x;
                 }
+            }
+
+            if (lsi.minX >= lsi.maxX || lsi.minXBot >= lsi.maxXBot || !foundNonBlack)
+            {
+                loadScreenInfo = null;
+                return;
             }
 
             //find a safe bottom point
@@ -582,6 +591,12 @@ namespace LeagueOverlay
                     bot = y;
                     break;
                 }
+            }
+
+            if (bot == b.Height / 2)
+            {
+                loadScreenInfo = null;
+                return;
             }
 
             //get the champion heights
@@ -597,7 +612,11 @@ namespace LeagueOverlay
                 }
             }
 
-
+            if (lsi.minY >= lsi.maxY)
+            {
+                loadScreenInfo = null;
+                return;
+            }
             
 
             lsi.scale = (lsi.maxY - lsi.minY) / 341.0;
