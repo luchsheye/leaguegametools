@@ -259,7 +259,7 @@ namespace LeagueOverlay
             byte[] wBytes = new byte[bytes];
             System.Runtime.InteropServices.Marshal.Copy(ip, wBytes, 0, LeagueUI.levelBitSize);
             wLevelBit.UnlockBits(bd);
-           // wLevelBit.Save("LEVEL.png");
+            wLevelBit.Save("LEVEL.png");
 
            for (int i =0;i<LeagueUI.levelBmBytes.Length;i++)
             {
