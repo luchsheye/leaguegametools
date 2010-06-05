@@ -593,12 +593,6 @@ namespace LeagueOverlay
                 }
             }
 
-            if (bot == b.Height / 2)
-            {
-                loadScreenInfo = null;
-                return;
-            }
-
             //get the champion heights
             lsi.minY = b.Height - 1;
             lsi.maxY = 0;
