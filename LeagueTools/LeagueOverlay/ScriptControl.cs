@@ -31,9 +31,6 @@ namespace LeagueOverlay
             LuaVM = new Lua();
             registerLuaFunctions(this);
 
-            LuaVM.DoString("t={};");
-            LuaVM.DoString("function t:amazing() local i=0; end");
-            LuaVM.DoString("t:amazing()");
             //LuaVM.RegisterFunction("RegisterEvent", this, parent.leagueInfo.GetType().GetMethod("registerEvent"));
         }
         public LuaTable storeRectInTable(System.Drawing.Rectangle r, LuaTable table)

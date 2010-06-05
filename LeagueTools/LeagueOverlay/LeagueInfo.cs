@@ -571,15 +571,7 @@ namespace LeagueOverlay
                     if (x > lsi.maxXBot) lsi.maxXBot = x;
                 }
             }
-            lsi.topChampionCount = (lsi.maxX - lsi.minX) / 180;
-            lsi.botChampionCount = (lsi.maxXBot - lsi.minXBot) / 180;
 
-            if (lsi.topChampionCount <= 0 || lsi.botChampionCount <= 0)
-            {
-
-                loadScreenInfo = null;
-                return;
-            }
             //find a safe bottom point
             int bot = b.Height / 2;
             for (int y = b.Height / 2; y >= 0; y--)
@@ -609,6 +601,16 @@ namespace LeagueOverlay
             
 
             lsi.scale = (lsi.maxY - lsi.minY) / 341.0;
+
+            lsi.topChampionCount = (int)((lsi.maxX - lsi.minX) / (185 * lsi.scale - 5));
+            lsi.botChampionCount = (int)((lsi.maxXBot - lsi.minXBot) / (185 * lsi.scale - 5));
+
+            if (lsi.topChampionCount <= 0 || lsi.botChampionCount <= 0)
+            {
+
+                loadScreenInfo = null;
+                return;
+            }
 
             lsi.championWidth = (int)Math.Round(190 * lsi.scale);
             lsi.championHeight = (int)Math.Round(341 * lsi.scale);

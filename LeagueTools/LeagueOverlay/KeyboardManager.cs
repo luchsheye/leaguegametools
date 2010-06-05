@@ -67,8 +67,8 @@ namespace LeagueOverlay
             System.Windows.Forms.SendKeys.SendWait(Message);
             Thread.Sleep(20);
             sendKeyPress(DIK_RETURN);
-            if (wasControlDown)
-                sendKeyDown(DIK_LCONTROL);
+            //if (wasControlDown)
+             //   sendKeyDown(DIK_LCONTROL);
         }
         [AttrLuaFunc("SendChatMessage")]
         public void sendChatMessage(string Message)

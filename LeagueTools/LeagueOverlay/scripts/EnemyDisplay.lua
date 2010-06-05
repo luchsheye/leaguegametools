@@ -25,7 +25,7 @@ function EnemyDisplay:UIInit()
 	self.teamRect = NewRectangle();
 	SetComponentPos(self.teamRect,GetResolutionX()- 60, yPos);
 	SetRectangleSize(self.teamRect,60,20);
-	SetRectangleBgColor(self.teamRect,255,4,61,124);
+	SetRectangleBgColor(self.teamRect,255,94,2,130);
 	SetRectangleClickEvent(self.teamRect,"EnemyDisplay:SwapTeams()");
 	yPos = yPos + 25;
 	for i = 0, 4 do
@@ -117,10 +117,10 @@ end
 
 function EnemyDisplay:SummonerSpellClick(sNum,cNum)
 	if(sNum == 0) then
-		self.sSpell1Cooldown = self.summonerInfoTable[cNum].spell1Cooldown;
+		self.sSpell1Cooldown[cNum] = self.summonerInfoTable[cNum].spell1Cooldown;
 		SetComponentVisible(self.sSpell1CooldownLbl[cNum],true);
 	else
-		self.sSpell2Cooldown = self.summonerInfoTable[cNum].spell1Cooldown;
+		self.sSpell2Cooldown[cNum] = self.summonerInfoTable[cNum].spell1Cooldown;
 		SetComponentVisible(self.sSpell2CooldownLbl[cNum],true);
 	end
 end
