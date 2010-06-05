@@ -22,25 +22,26 @@ function EnemyDisplay:UIInit()
 	
 	local i;
 	local yPos = GetResolutionY() / 2 - 300;	
-	self.teamRect = NewRectangle();
+	if(self.initialized == false) then self.teamRect = NewRectangle(); end;
+	PrintMsg(self.teamRect);
 	SetComponentPos(self.teamRect,GetResolutionX()- 60, yPos);
 	SetRectangleSize(self.teamRect,60,20);
 	SetRectangleBgColor(self.teamRect,255,94,2,130);
 	SetRectangleClickEvent(self.teamRect,"EnemyDisplay:SwapTeams()");
 	yPos = yPos + 25;
 	for i = 0, 4 do
-		self.championImages[i] = NewRectangle();
+		if(self.initialized  == false) then self.championImages[i] = NewRectangle(); end;
 		SetComponentPos(self.championImages[i],GetResolutionX()- 40, yPos);
 		SetRectangleSize(self.championImages[i],40,40);
 		SetRectangleBgColor(self.championImages[i],255,255,0,0);
 		SetRectangleClickEvent(self.championImages[i],"EnemyDisplay:RectangleClick("..i..")");
 
-		self.sSpell1Images[i] = NewRectangle();
+		if(self.initialized  == false) then self.sSpell1Images[i] = NewRectangle(); end;
 		SetComponentPos(self.sSpell1Images[i],GetResolutionX()- 60, yPos);
 		SetRectangleSize(self.sSpell1Images[i],20,20);
 		SetRectangleClickEvent(self.sSpell1Images[i],"EnemyDisplay:SummonerSpellClick(0,"..i..")");
 		
-		self.sSpell1CooldownLbl[i] = NewLabel();
+		if(self.initialized  == false) then self.sSpell1CooldownLbl[i] = NewLabel(); end;
 		SetComponentPos(self.sSpell1CooldownLbl[i],GetResolutionX()- 60, yPos);
 		SetLabelFont(self.sSpell1CooldownLbl[i],"Tahoma",13);
 		SetLabelText(self.sSpell1CooldownLbl[i],"0");
@@ -48,12 +49,12 @@ function EnemyDisplay:UIInit()
 		SetComponentVisible(self.sSpell1CooldownLbl[i],false);
 		self.sSpell1Cooldown[i] = 0;
 
-		self.sSpell2Images[i] = NewRectangle();
+		if(self.initialized  == false) then self.sSpell2Images[i] = NewRectangle(); end;
 		SetComponentPos(self.sSpell2Images[i],GetResolutionX()- 60, yPos + 20);
 		SetRectangleSize(self.sSpell2Images[i],20,20);
 		SetRectangleClickEvent(self.sSpell2Images[i],"EnemyDisplay:SummonerSpellClick(1,"..i..")");
 
-		self.sSpell2CooldownLbl[i] = NewLabel();
+		if(self.initialized  == false) then self.sSpell2CooldownLbl[i] = NewLabel(); end;
 		SetComponentPos(self.sSpell2CooldownLbl[i],GetResolutionX()- 60, yPos + 20);
 		SetLabelFont(self.sSpell2CooldownLbl[i],"Tahoma",13);
 		SetLabelText(self.sSpell2CooldownLbl[i],"0");
@@ -120,7 +121,7 @@ function EnemyDisplay:SummonerSpellClick(sNum,cNum)
 		self.sSpell1Cooldown[cNum] = self.summonerInfoTable[cNum].spell1Cooldown;
 		SetComponentVisible(self.sSpell1CooldownLbl[cNum],true);
 	else
-		self.sSpell2Cooldown[cNum] = self.summonerInfoTable[cNum].spell1Cooldown;
+		self.sSpell2Cooldown[cNum] = self.summonerInfoTable[cNum].spell2Cooldown;
 		SetComponentVisible(self.sSpell2CooldownLbl[cNum],true);
 	end
 end
