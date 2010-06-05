@@ -41,9 +41,11 @@ namespace LeagueOverlay
         public static MainWindow parent;
         public static int xResolution, yResolution,levelBitSize=0;
         public static byte[][] levelBmBytes = new byte[18][];
+        public static Dictionary<int, Rect> levelRects = new Dictionary<int, Rect>();
         public static void setMainWindow(MainWindow mw)
         {
             parent = mw;
+            
         }
         public static void loadLevelBitmaps()
         {
@@ -72,6 +74,9 @@ namespace LeagueOverlay
         //calculate all of the locations for screen elements
         public static void init(int xRes, int yRes)
         {
+            levelRects[1024] = new Rect(61, 768 - 743, 10, 6);
+            levelRects[1152] = new Rect(69, 864 - 836, 11, 7);
+            levelRects[1280] = new Rect(76, 768 - 737, 12, 8);
 
             xResolution = xRes;
             yResolution = yRes;
@@ -80,47 +85,8 @@ namespace LeagueOverlay
             double widthScale = xRes / 1280.0;
             double heightScale = yRes / 758.0;
 
-            ///////
-            int tempx = (int)Math.Round(73 * widthScale);
-            int tempy = (int)Math.Round(yRes - (768 - 734) * widthScale);
-            int wid = (int)Math.Round(19 * widthScale);
-            int hi = (int)Math.Round(13 * widthScale);
-
-            int resShift=0;
-            int resXSift = 0;
-            int heightShift = 0;
-            switch (xRes)
-            {
-                case 1280:
-                    resShift = 1;
-                    break;
-                case 1152:
-                    resShift = 1;
-                    resXSift = 1;
-                    break;
-                case 1024:
-                    resShift = 0;
-                    break;
-                case 1900:
-                    heightShift = 1;
-                    resShift = 5;
-                    resXSift = -15;
-                    break;
-                case 1920:
-                    heightShift = 1;
-                    resShift = 5;
-                    resXSift = -15;
-                    break;
-
-                default:
-                    resShift = 1;
-                    break;
-            }
-
-            int cLevelWidth = (int)Math.Round(12 * widthScale);
-            int cLevelHeight0 = (int)Math.Round(8 * widthScale);
-           //139-
-            cLevel = new Rect((int)Math.Round(tempx+ Math.Round(wid / 2.0) - Math.Round(cLevelWidth/2.0))-1+resXSift, (int)Math.Round(tempy + Math.Round(hi / 2.0) - Math.Round(cLevelHeight0/2.0))+resShift, cLevelWidth, cLevelHeight0-heightShift);
+             
+            cLevel = new Rect(levelRects[xRes].X, yRes - levelRects[xRes].Y, levelRects[xRes].Width, levelRects[xRes].Height);
 
 
             ////
