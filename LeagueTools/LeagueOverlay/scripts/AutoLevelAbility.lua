@@ -16,10 +16,11 @@ while true do
 
 	if(name == nil) then 
 		return;
+
 	elseif (name == GetHeroName()) then --check if the line is the hero name you want, if not, keep looping
 		local temp = lfile:read(); --get the next line, string containing leveling up info
 		--levelDiff = level-lastSeenLevel;
-		for n=lastSeenLevel,level do
+		for n=lastSeenLevel+1,level do
 				local abNum = string.sub(temp,n,n); --get which ability to level up for this level
 				SendKeyDown(0x1D); --send control key down
 		
