@@ -226,7 +226,8 @@ namespace LeagueToolLauncher
                 try
                 {
                     MessageBox.Show("The launcher will now close and the update will be applied", "Download Complete");
-                    Process.Start("Updater\\UpdateTool.exe");
+                    Directory.SetCurrentDirectory("Updater");
+                    Process.Start("UpdateTool.exe");
                     this.Close();
                 }
                 catch
@@ -278,6 +279,11 @@ namespace LeagueToolLauncher
             {
                 leagueOverlayProcess.Kill();
             }
+        }
+
+        private void button3_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("Updater\\UpdateTool.exe");
         }
     }
 }

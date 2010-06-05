@@ -31,7 +31,7 @@ namespace UpdateTool
             bgWorker = new BackgroundWorker();
             bgWorker.DoWork += new DoWorkEventHandler(bgWorker_DoWork);
             bgWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgWorker_RunWorkerCompleted);
-            bgWorker.RunWorkerAsync();
+            
         }
 
         void bgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -71,12 +71,18 @@ namespace UpdateTool
         {
             try
             {
-                Process.Start("../LeagueToolLauncher.exe");
+                Directory.SetCurrentDirectory("..\\");
+                Process.Start("LeagueToolLauncher.exe");
             }
             catch
             {
                 Console.WriteLine("definitely not good");
             }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            bgWorker.RunWorkerAsync();
         }
 
        
