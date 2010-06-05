@@ -126,60 +126,60 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="levelImages\level_1.png">
+    <None Include="levelImages\level_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_2.png">
+    </None>
+    <None Include="levelImages\level_2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_3.png">
+    </None>
+    <None Include="levelImages\level_3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_4.png">
+    </None>
+    <None Include="levelImages\level_4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_5.png">
+    </None>
+    <None Include="levelImages\level_5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_6.png">
+    </None>
+    <None Include="levelImages\level_6.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_7.png">
+    </None>
+    <None Include="levelImages\level_7.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_8.png">
+    </None>
+    <None Include="levelImages\level_8.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_9.png">
+    </None>
+    <None Include="levelImages\level_9.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_10.png">
+    </None>
+    <None Include="levelImages\level_10.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_11.png">
+    </None>
+    <None Include="levelImages\level_11.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_12.png">
+    </None>
+    <None Include="levelImages\level_12.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_13.png">
+    </None>
+    <None Include="levelImages\level_13.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_14.png">
+    </None>
+    <None Include="levelImages\level_14.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_15.png">
+    </None>
+    <None Include="levelImages\level_15.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_16.png">
+    </None>
+    <None Include="levelImages\level_16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_17.png">
+    </None>
+    <None Include="levelImages\level_17.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="levelImages\level_18.png">
+    </None>
+    <None Include="levelImages\level_18.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </None>
     <Content Include="lua51.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
