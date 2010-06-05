@@ -49,7 +49,7 @@ namespace RecommendedItemTool
             {
                
               
-                if (!AutoAbilityTool.canLevelAbility(AutoAbilityTool.abLetterToNum(temp[i]), level, abLevels))
+                if (!AutoAbilityTool.canLevelAbility(AutoAbilityTool.abLetterToNum(temp[i]), level, abLevels) || temp.Length<18)
                 {
                     textBox1.Text = "INVALID STRING";
                     return;
@@ -58,8 +58,8 @@ namespace RecommendedItemTool
                 level++;
 
             }
+            mw.autoAbilityTool.heroCurrentLevel = 18;
 
-            mw.autoAbilityTool.heroCurrentLevel = 1;
 
             for (int i = 0; i < 3; i++)
             {

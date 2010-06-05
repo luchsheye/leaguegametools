@@ -1,6 +1,7 @@
-RegisterEvent("levelUp","autoLevelAbilityFunction");
+--Ability Auto-Leveler Script
 
 lastSeenLevel = 1;
+
 function autoLevelAbilityFunction(level)
 --Input -> level=the level which was leveled up to (int).
 --Function -> automatically levels up an ability
@@ -49,3 +50,6 @@ lastSeenLevel = level;
 
 
 end
+
+
+RegisterEvent("levelUp","autoLevelAbilityFunction");

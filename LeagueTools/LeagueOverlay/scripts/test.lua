@@ -1,3 +1,4 @@
+--[[
 RegisterEvent("update","updateFunction");
 
 testLabel = NewLabel();
@@ -13,3 +14,4 @@ function updateFunction(elapsed)
 	SetComponentPos(testLabel,x,2);
 	--PrintMsg(GetmsTime().."ms run time :: elapsed time:"..elapsed);
 end
+--]]

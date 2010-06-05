@@ -88,7 +88,7 @@ namespace LeagueOverlay
 
             int resShift=0;
             int resXSift = 0;
-            
+            int heightShift = 0;
             switch (xRes)
             {
                 case 1280:
@@ -101,6 +101,17 @@ namespace LeagueOverlay
                 case 1024:
                     resShift = 0;
                     break;
+                case 1900:
+                    heightShift = 1;
+                    resShift = 5;
+                    resXSift = -15;
+                    break;
+                case 1920:
+                    heightShift = 1;
+                    resShift = 5;
+                    resXSift = -15;
+                    break;
+
                 default:
                     resShift = 1;
                     break;
@@ -108,8 +119,8 @@ namespace LeagueOverlay
 
             int cLevelWidth = (int)Math.Round(12 * widthScale);
             int cLevelHeight0 = (int)Math.Round(8 * widthScale);
-           
-            cLevel = new Rect((int)Math.Round(tempx+ Math.Round(wid / 2.0) - Math.Round(cLevelWidth/2.0))-1+resXSift, (int)Math.Round(tempy + Math.Round(hi / 2.0) - Math.Round(cLevelHeight0/2.0))+resShift, cLevelWidth, cLevelHeight0);
+           //139-
+            cLevel = new Rect((int)Math.Round(tempx+ Math.Round(wid / 2.0) - Math.Round(cLevelWidth/2.0))-1+resXSift, (int)Math.Round(tempy + Math.Round(hi / 2.0) - Math.Round(cLevelHeight0/2.0))+resShift, cLevelWidth, cLevelHeight0-heightShift);
 
 
             ////
