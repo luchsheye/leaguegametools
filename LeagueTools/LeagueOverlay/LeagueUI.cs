@@ -74,7 +74,7 @@ namespace LeagueOverlay
         //calculate all of the locations for screen elements
         public static void init(int xRes, int yRes)
         {
-            levelRects[1024] = new Rect(61, 768 - 743, 10, 6);
+            levelRects[1024] = new Rect(60, 768 - 743, 10, 6);
             levelRects[1152] = new Rect(69, 864 - 836, 11, 7);
             levelRects[1280] = new Rect(76, 768 - 737, 12, 8);
 

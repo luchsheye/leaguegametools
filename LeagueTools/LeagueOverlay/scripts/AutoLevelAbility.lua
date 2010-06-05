@@ -1,12 +1,15 @@
 --Ability Auto-Leveler Script
 
-lastSeenLevel = 1;
+lastSeenLevel = -1;
 
 function autoLevelAbilityFunction(level)
 --Input -> level=the level which was leveled up to (int).
 --Function -> automatically levels up an ability
 
 
+if(lastSeenLevel==-1) then
+lastSeenLevel=GetHeroLevel()-1;
+end
 local lfile = io.open("abilities.txt","r"); --open the file containing the level up info
 if (lfile==nil) then return; end;
 
@@ -20,7 +23,7 @@ while true do
 	elseif (name == GetHeroName()) then --check if the line is the hero name you want, if not, keep looping
 		local temp = lfile:read(); --get the next line, string containing leveling up info
 		--levelDiff = level-lastSeenLevel;
-		for n=lastSeenLevel+1,level do
+		for n=level,lastSeenLevel+1 do
 				local abNum = string.sub(temp,n,n); --get which ability to level up for this level
 				SendKeyDown(0x1D); --send control key down
 		
