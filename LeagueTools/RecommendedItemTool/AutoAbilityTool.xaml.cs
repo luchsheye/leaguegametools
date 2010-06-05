@@ -118,7 +118,7 @@ namespace RecommendedItemTool
             sr.Close();
 
         }
-        public string abNumToLetter(int num)
+        public static string abNumToLetter(int num)
         {
             switch (num)
             {
@@ -137,7 +137,7 @@ namespace RecommendedItemTool
 
         }
 
-        public int abLetterToNum(char s)
+        public static int abLetterToNum(char s)
         {
             switch (s)
             {
@@ -175,6 +175,30 @@ namespace RecommendedItemTool
                 else if (heroCurrentLevel == 6)
                     return true;
                 else if (heroCurrentLevel > 6 && heroAbilityLevels[3] < 1)
+                    return true;
+            }
+            return false; ;
+        }
+
+        public static bool canLevelAbility(int aNum,int curLevel,int [] abLevels)
+        {
+            if (aNum < 3 && (abLevels[aNum] * 2 + 1 <= curLevel && abLevels[aNum] < 5))
+            {
+                return true;
+            }
+            else if (aNum == 3)
+            {
+                if (curLevel == 16)
+                    return true;
+                else if (curLevel > 16 && abLevels[3] < 3)
+                    return true;
+                else if (curLevel == 11)
+                    return true;
+                else if (curLevel > 11 && abLevels[3] < 2)
+                    return true;
+                else if (curLevel == 6)
+                    return true;
+                else if (curLevel > 6 && abLevels[3] < 1)
                     return true;
             }
             return false; ;

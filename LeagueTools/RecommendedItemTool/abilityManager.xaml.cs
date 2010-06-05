@@ -36,22 +36,41 @@ namespace RecommendedItemTool
         private void button2_Click(object sender, RoutedEventArgs e)
         {
             textBox1.Text = mw.autoAbilityTool.abilityString;
+            
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
+            string temp = textBox1.Text;
+            int level = 1;
+            int[] abLevels = new int[4] { 0, 0, 0, 0 };
+           
+            for (int i = 0; i < temp.Length; i++)
+            {
+               
+              
+                if (!AutoAbilityTool.canLevelAbility(AutoAbilityTool.abLetterToNum(temp[i]), level, abLevels))
+                {
+                    textBox1.Text = "INVALID STRING";
+                    return;
+                }
+                abLevels[AutoAbilityTool.abLetterToNum(temp[i])]++;
+                level++;
+
+            }
 
             mw.autoAbilityTool.heroCurrentLevel = 1;
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 mw.autoAbilityTool.heroAbilityLevels[i] = 0;
             }
+            mw.autoAbilityTool.heroAbilityLevels[3] = 0;
             mw.autoAbilityTool.abilityString = textBox1.Text;
             for (int i = 0; i < mw.autoAbilityTool.abilityString.Length; i++)
             {
                 char num = mw.autoAbilityTool.abilityString[i];
-                mw.autoAbilityTool.heroAbilityLevels[mw.autoAbilityTool.abLetterToNum(num)]++;
+                mw.autoAbilityTool.heroAbilityLevels[AutoAbilityTool.abLetterToNum(num)]++;
             }
             mw.autoAbilityTool.writeAbilityLabel();
             mw.autoAbilityTool.initAbilityButtons();
