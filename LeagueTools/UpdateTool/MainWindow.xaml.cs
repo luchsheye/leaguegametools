@@ -73,6 +73,7 @@ namespace UpdateTool
             {
                 Directory.SetCurrentDirectory("..\\");
                 Process.Start("LeagueToolLauncher.exe");
+                this.Close();
             }
             catch
             {

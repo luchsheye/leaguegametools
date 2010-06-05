@@ -207,6 +207,11 @@ namespace LeagueToolLauncher
 
         void webClient_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
+            if (e.Error != null)
+            {
+                MessageBox.Show("Error: File not found on the server. Please wait and try again.");
+                return;
+            }
             if (downloadingUpdater)
             {
                 File.WriteAllBytes("Updater.zip", e.Result);

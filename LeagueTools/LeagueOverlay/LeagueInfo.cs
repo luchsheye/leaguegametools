@@ -673,17 +673,14 @@ namespace LeagueOverlay
             double minChampionRMS = double.MaxValue;
             champImg = new Bitmap(champImg, 307, 557);
             Rectangle compareRect = new Rectangle(0, 130, 150, 20);
-            champImg.Clone(compareRect, System.Drawing.Imaging.PixelFormat.DontCare).Save("champ.png");
             foreach (FileInfo fi in new DirectoryInfo(Preferences.leagueFolder + @"\air\assets\images\champions").GetFiles("*.jpg"))
             {
                 if (fi.Name.ToLower().Contains("_square_") || fi.Name.ToLower().Contains("_splash_") || fi.Name.Count(c => c == '_') != 1) continue;
                 Bitmap temp = (Bitmap)Bitmap.FromFile(fi.FullName);
-                if (fi.Name.ToLower().Contains("arms") && fi.Name.ToLower().Contains("0")) temp.Clone(compareRect, System.Drawing.Imaging.PixelFormat.DontCare).Save("morde.png");
                 double rms = calcRMSDiff(champImg, temp, compareRect);
                 if (rms < minChampionRMS)
                 {
                     si.championCodeName = fi.Name.Split('_')[0];
-                    temp.Clone(compareRect, System.Drawing.Imaging.PixelFormat.DontCare).Save("bestfit.png");
                     minChampionRMS = rms;
                 }
             }
