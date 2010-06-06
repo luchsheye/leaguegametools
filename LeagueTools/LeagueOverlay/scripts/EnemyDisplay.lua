@@ -23,7 +23,6 @@ function EnemyDisplay:UIInit()
 	local i;
 	local yPos = GetResolutionY() / 2 - 300;	
 	if(self.initialized == false) then self.teamRect = NewRectangle(); end;
-	PrintMsg(self.teamRect);
 	SetComponentPos(self.teamRect,GetResolutionX()- 60, yPos);
 	SetRectangleSize(self.teamRect,60,20);
 	SetRectangleBgColor(self.teamRect,255,94,2,130);

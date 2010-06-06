@@ -498,16 +498,35 @@ namespace LeagueOverlay
             {
                 SummonerInfo si = summonerInfo[team][summoner];
 
-                infoTable["championName"] = cnames[si.championCodeName];
+                if (cnames.ContainsKey(si.championCodeName))
+                    infoTable["championName"] = cnames[si.championCodeName];
+                else
+                    infoTable["championName"] = "Bad Name";
                 infoTable["championCodeName"] = si.championCodeName;
 
                 infoTable["spell1CodeName"] = si.summonerSpell1;
-                infoTable["spell1Name"] = summonerSpellInfo[si.summonerSpell1].name;
-                infoTable["spell1Cooldown"] = summonerSpellInfo[si.summonerSpell1].cooldown;
+                if (summonerSpellInfo.ContainsKey(si.summonerSpell1))
+                {
+                    infoTable["spell1Name"] = summonerSpellInfo[si.summonerSpell1].name;
+                    infoTable["spell1Cooldown"] = summonerSpellInfo[si.summonerSpell1].cooldown;
+                }
+                else
+                {
+                    infoTable["spell1Name"] = "??";
+                    infoTable["spell1Cooldown"] = 10;
+                }
 
                 infoTable["spell2CodeName"] = si.summonerSpell2;
-                infoTable["spell2Name"] = summonerSpellInfo[si.summonerSpell2].name;
-                infoTable["spell2Cooldown"] = summonerSpellInfo[si.summonerSpell2].cooldown;
+                if (summonerSpellInfo.ContainsKey(si.summonerSpell2))
+                {
+                    infoTable["spell2Name"] = summonerSpellInfo[si.summonerSpell2].name;
+                    infoTable["spell2Cooldown"] = summonerSpellInfo[si.summonerSpell2].cooldown;
+                }
+                else
+                {
+                    infoTable["spell2Name"] = "??";
+                    infoTable["spell2Cooldown"] = 10;
+                }
             }
             return infoTable;
         }
@@ -663,6 +682,7 @@ namespace LeagueOverlay
 
             foreach (FileInfo fi in new DirectoryInfo(Preferences.leagueFolder + @"\air\assets\images\spells").GetFiles("*.png"))
             {
+                if (fi.Name.Contains("Stifle")) continue;
                 Bitmap temp = (Bitmap)Bitmap.FromFile(fi.FullName);
                 double rms = calcRMSDiff(sSpell1, temp);
                 if (rms < minRMS1)
