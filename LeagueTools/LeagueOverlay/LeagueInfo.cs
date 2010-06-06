@@ -481,7 +481,20 @@ namespace LeagueOverlay
         [AttrLuaFunc("GetSummonerInfo")]
         public LuaTable getSummonerInfo(int team, int summoner, LuaTable infoTable)
         {
-            try
+            if (summonerInfo[team] == null || summonerInfo[team][summoner] == null)
+            {
+                infoTable["championName"] = "Ashe";
+                infoTable["championCodeName"] = "Bowmaster";
+
+                infoTable["spell1CodeName"] = "Spell_SummonerBoost";
+                infoTable["spell1Name"] = "Cleanse";
+                infoTable["spell1Cooldown"] = 10;
+
+                infoTable["spell2CodeName"] = "Spell_SummonerDot";
+                infoTable["spell2Name"] = "Ignite";
+                infoTable["spell2Cooldown"] = 10;
+            }
+            else
             {
                 SummonerInfo si = summonerInfo[team][summoner];
 
@@ -495,20 +508,6 @@ namespace LeagueOverlay
                 infoTable["spell2CodeName"] = si.summonerSpell2;
                 infoTable["spell2Name"] = summonerSpellInfo[si.summonerSpell2].name;
                 infoTable["spell2Cooldown"] = summonerSpellInfo[si.summonerSpell2].cooldown;
-
-            }
-            catch
-            {
-                infoTable["championName"] = "Ashe";
-                infoTable["championCodeName"] = "Bowmaster";               
-
-                infoTable["spell1CodeName"] = "Spell_SummonerBoost";
-                infoTable["spell1Name"] = "Cleanse";
-                infoTable["spell1Cooldown"] = 10;
-
-                infoTable["spell2CodeName"] = "Spell_SummonerDot";
-                infoTable["spell2Name"] = "Ignite";
-                infoTable["spell2Cooldown"] = 10;
             }
             return infoTable;
         }

@@ -98,6 +98,8 @@ function EnemyDisplay:UpdateTeamDisplay()
 		SetComponentVisible(self.sSpell2CooldownLbl[i],true);
 
 		self.summonerInfoTable[i] = summonerInfo;
+		self.sSpell1Cooldown[i] = 0;
+		self.sSpell2Cooldown[i] = 0;
 	end
 	for i = summonerCount, 4 do
 		SetComponentVisible(self.championImages[i],false);
@@ -149,7 +151,7 @@ function EnemyDisplay:UIUpdate(elapsed)
 			SetLabelText(self.sSpell2CooldownLbl[i],""..math.ceil(self.sSpell2Cooldown[i]));
 		elseif(self.sSpell2Cooldown[i] > 0) then
 			SetComponentVisible(self.sSpell2CooldownLbl[i],false);
-			self.sSpell1Cooldown[i] = 0;
+			self.sSpell2Cooldown[i] = 0;
 		end
 	end
 end
