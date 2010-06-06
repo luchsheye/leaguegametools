@@ -78,6 +78,7 @@ namespace LeagueOverlay
             levelRects[1024] = new Rect(60, 768 - 742, 10, 7);
             levelRects[1152] = new Rect(68, 864 - 836, 11, 7);
             levelRects[1280] = new Rect(76, 768 - 737, 12, 8);
+            levelRects[1440] = new Rect(97, 900 - 865, 13, 9);
 
             xResolution = xRes;
             yResolution = yRes;

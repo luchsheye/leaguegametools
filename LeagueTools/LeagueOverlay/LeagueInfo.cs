@@ -481,6 +481,7 @@ namespace LeagueOverlay
         [AttrLuaFunc("GetSummonerInfo")]
         public LuaTable getSummonerInfo(int team, int summoner, LuaTable infoTable)
         {
+            Console.WriteLine(team + " " + summoner);
             if (summonerInfo[team] == null || summonerInfo[team][summoner] == null)
             {
                 infoTable["championName"] = "Ashe";

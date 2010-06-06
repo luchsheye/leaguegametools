@@ -63,7 +63,7 @@ function EnemyDisplay:UIInit()
 
 		yPos = yPos + 50;
 	end
-
+	
 	self:UpdateTeamDisplay();
 	
 	self.initialized = true;
