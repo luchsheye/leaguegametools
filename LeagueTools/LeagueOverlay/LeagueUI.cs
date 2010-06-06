@@ -75,7 +75,7 @@ namespace LeagueOverlay
         public static void init(int xRes, int yRes)
         {
             //scalings didn't work well enough, so hardcoded it is...
-            levelRects[1024] = new Rect(60, 768 - 743, 10, 6);
+            levelRects[1024] = new Rect(60, 768 - 742, 10, 7);
             levelRects[1152] = new Rect(68, 864 - 836, 11, 7);
             levelRects[1280] = new Rect(76, 768 - 737, 12, 8);
 
@@ -91,7 +91,7 @@ namespace LeagueOverlay
             cLevel = new Rect(levelRects[xRes].X, yRes - levelRects[xRes].Y, levelRects[xRes].Width, levelRects[xRes].Height);
              else
              {
-                   cLevel = new Rect(levelRects[1280].X, yRes - levelRects[1280].Y, levelRects[1280].Width, levelRects[1280].Height);
+               cLevel = new Rect(levelRects[1280].X, yRes - levelRects[1280].Y, levelRects[1280].Width, levelRects[1280].Height);
              }
 
             ////
