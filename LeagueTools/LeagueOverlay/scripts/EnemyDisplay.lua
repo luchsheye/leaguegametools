@@ -99,6 +99,8 @@ function EnemyDisplay:UpdateTeamDisplay()
 		self.summonerInfoTable[i] = summonerInfo;
 		self.sSpell1Cooldown[i] = 0;
 		self.sSpell2Cooldown[i] = 0;
+		SetComponentVisible(self.sSpell1CooldownLbl[i],false);
+		SetComponentVisible(self.sSpell2CooldownLbl[i],false);
 	end
 	for i = summonerCount, 4 do
 		SetComponentVisible(self.championImages[i],false);
