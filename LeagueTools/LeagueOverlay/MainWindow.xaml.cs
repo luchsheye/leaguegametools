@@ -27,7 +27,7 @@ namespace LeagueOverlay
     {
         IntPtr windowHandle;
         IntPtr windowBitmapHandle;
-        public byte[] windowBytes;
+        //public byte[] windowBytes;
         public Bitmap windowImage = new Bitmap(1, 1);
         public LeagueInfo leagueInfo;
         public ScriptControl scriptControl;
@@ -105,35 +105,38 @@ namespace LeagueOverlay
                 windowHandle = tempHandle;
                 Bitmap temp = windowImage;
                 windowImage = GetClientWindowImage();
-                System.Drawing.Imaging.BitmapData bd = windowImage.LockBits(new System.Drawing.Rectangle(0,0,windowImage.Width,windowImage.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-                IntPtr ip = bd.Scan0;
-                int bytes = bd.Stride * windowImage.Height;
-                windowBytes = new byte[bytes];
-                System.Runtime.InteropServices.Marshal.Copy(ip, windowBytes, 0, bytes);
-                windowImage.UnlockBits(bd);
-
                 temp.Dispose();
+                if (windowImage.Width < 10 || windowImage.Height < 10) return;
+                //System.Drawing.Imaging.BitmapData bd = windowImage.LockBits(new System.Drawing.Rectangle(0,0,windowImage.Width,windowImage.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                //IntPtr ip = bd.Scan0;
+                //int bytes = bd.Stride * windowImage.Height;
+                //windowBytes = new byte[bytes];
+                //System.Runtime.InteropServices.Marshal.Copy(ip, windowBytes, 0, bytes);
+                //windowImage.UnlockBits(bd);
+
+                if (Preferences.hideLeagueBorders == false)
+                {
+                    //adjust the window position and show the UI
+                    WIN32_API.RECT leagueLoc = new WIN32_API.RECT();
+                    WIN32_API.RECT clientDim = new WIN32_API.RECT();
+                    WIN32_API.GetWindowRect(windowHandle, ref leagueLoc);
+                    WIN32_API.GetClientRect(windowHandle, ref clientDim);
+
+                    //the numbers used may depend on what kind of window the person is using
+                    //probably gives wrong alignments on windows xp...
+                    //45 = 3d width
+                    //5 = border width
+                    //31 = titlebar height
+                    this.Left = leagueLoc.x + (int)WIN32_API.GetSystemMetrics((IntPtr)45) + (int)WIN32_API.GetSystemMetrics((IntPtr)5);
+                    this.Top = leagueLoc.y + (int)WIN32_API.GetSystemMetrics((IntPtr)45) + (int)WIN32_API.GetSystemMetrics((IntPtr)5) + (int)WIN32_API.GetSystemMetrics((IntPtr)31);
+                    this.Width = clientDim.width;
+                    this.Height = clientDim.height;
+                    mainCanvas.Width = this.Width;
+                    mainCanvas.Height = this.Height;
+                }
 
                 //TODO: Add image processing here
                 leagueInfo.update();
-
-                //adjust the window position and show the UI
-                WIN32_API.RECT leagueLoc = new WIN32_API.RECT();
-                WIN32_API.RECT clientDim = new WIN32_API.RECT();
-                WIN32_API.GetWindowRect(windowHandle, ref leagueLoc);
-                WIN32_API.GetClientRect(windowHandle, ref clientDim);
-
-                //the numbers used may depend on what kind of window the person is using
-                //probably gives wrong alignments on windows xp...
-                //45 = 3d width
-                //5 = border width
-                //31 = titlebar height
-                this.Left = leagueLoc.x + (int)WIN32_API.GetSystemMetrics((IntPtr)45) + (int)WIN32_API.GetSystemMetrics((IntPtr)5);
-                this.Top = leagueLoc.y + (int)WIN32_API.GetSystemMetrics((IntPtr)45) + (int)WIN32_API.GetSystemMetrics((IntPtr)5) + (int)WIN32_API.GetSystemMetrics((IntPtr)31);
-                this.Width = clientDim.width;
-                this.Height = clientDim.height;
-                mainCanvas.Width = this.Width;
-                mainCanvas.Height = this.Height;
                 
                 this.procTimeLabel.Content = "Procesing Time:" + (int)(Math.Round((DateTime.Now - start).TotalMilliseconds)) + "ms";
                 scriptControl.raiseEvent("processingFinished", "");
@@ -159,6 +162,25 @@ namespace LeagueOverlay
             if (windowBitmapHandle == IntPtr.Zero || (int)windowSize.width != windowImage.Width || (int)windowSize.height != windowImage.Height)
             {
                 Console.WriteLine("got a new bitmap handle");
+                if (Preferences.hideLeagueBorders)
+                {
+                    //adjust the window position and show the UI
+                    WIN32_API.SetWindowLong(windowHandle, WIN32_API.GWL_STYLE,
+                        WIN32_API.GetWindowLong(windowHandle, WIN32_API.GWL_STYLE) & ~WIN32_API.WS_CAPTION);
+                    int XPadding = (System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - windowSize.width) / 2;
+                    int YPadding = (System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height - windowSize.height) / 2;
+
+                    WIN32_API.SetWindowPos(windowHandle, 0, XPadding, YPadding, windowSize.width, windowSize.height, 0);
+
+
+                    this.Left = XPadding;
+                    this.Top = YPadding;
+                    this.Width = windowSize.width;
+                    this.Height = windowSize.height;
+                    mainCanvas.Width = this.Width;
+                    mainCanvas.Height = this.Height;
+                }
+                //init the UI rectangle locations and notify scripts
                 LeagueUI.init(windowSize.width, windowSize.height);
                
                 windowBitmapHandle = WIN32_API.CreateCompatibleBitmap(hDC, (IntPtr)windowSize.width, (IntPtr)windowSize.height);

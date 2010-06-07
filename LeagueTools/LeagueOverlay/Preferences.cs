@@ -12,6 +12,7 @@ namespace LeagueOverlay
 
         public static string leagueFolder = "C:\\Riot Games\\League of Legends";
         public static bool disclaimerAccepted = false;
+        public static bool hideLeagueBorders = true;
 
         public static bool Load()
         {
@@ -32,6 +33,10 @@ namespace LeagueOverlay
             {
                 disclaimerAccepted = Convert.ToBoolean(pref["Preferences"]["DisclaimerAccepted"].InnerText);
             }
+            if (pref["Preferences"]["HideLeagueBorders"] != null)
+            {
+                disclaimerAccepted = Convert.ToBoolean(pref["Preferences"]["HideLeagueBorders"].InnerText);
+            }
             return true;
         }
 
@@ -39,7 +44,7 @@ namespace LeagueOverlay
         {
             XmlDocument xd = new XmlDocument();
 
-            xd.LoadXml("<Preferences><LeagueFolder>" + leagueFolder + "</LeagueFolder><DisclaimerAccepted>" + disclaimerAccepted + "</DisclaimerAccepted></Preferences>");
+            xd.LoadXml("<Preferences><LeagueFolder>" + leagueFolder + "</LeagueFolder><DisclaimerAccepted>" + disclaimerAccepted + "</DisclaimerAccepted><HideLeagueBorders>" + hideLeagueBorders + "</HideLeagueBorders></Preferences>");
             xd.Save("preferences.xml");
         }
 

@@ -23,6 +23,11 @@ namespace LeagueOverlay
         public const int SRCCOPY = 13369376;
         public const int SM_CXSCREEN = 0;
         public const int SM_CYSCREEN = 1;
+        public static int GWL_STYLE = -16;
+        public static int WS_CHILD = 0x40000000; //child window
+        public static int WS_BORDER = 0x00800000; //window with border
+        public static int WS_DLGFRAME = 0x00400000; //window with double border but no title
+        public static int WS_CAPTION = WS_BORDER | WS_DLGFRAME; //window with a title bar
 
         [DllImport("gdi32.dll", EntryPoint = "DeleteDC")]
         public static extern IntPtr DeleteDC(IntPtr hDc);
@@ -59,6 +64,9 @@ namespace LeagueOverlay
 
         [DllImport("user32.dll" )]
         public static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
+        public static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr GetWindowRect(IntPtr hWnd, ref RECT rect);
