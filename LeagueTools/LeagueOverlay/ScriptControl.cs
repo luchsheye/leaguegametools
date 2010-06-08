@@ -73,7 +73,7 @@ namespace LeagueOverlay
                 if (f.Name.Contains(".lua"))
                 {
                     LuaVM.DoFile(f.FullName);
-                    log(f.Name + "...Loaded");
+                    log('\t' + f.Name + "...Loaded");
                     /*
                     try
                     {
@@ -124,7 +124,6 @@ namespace LeagueOverlay
         {
             if (eventTable.ContainsKey(eventName))
             {
-                log("Event: " + eventName + " [Args:" + arguments + "]");
                 foreach (string s in eventTable[eventName])
                 {
                     LuaVM.DoString(s + "(" + arguments + ")");
@@ -143,6 +142,7 @@ namespace LeagueOverlay
         }
         public void levelUp()
         {
+            log("LevelUp: " + LeagueInfo.currentLevel);
             foreach (string s in eventTable["levelUp"])
             {
                 

@@ -270,15 +270,13 @@ namespace LeagueOverlay
                 double rms = 0;
 
                 Bitmap cBit = new Bitmap((Image)form.windowImage.Clone(LeagueUI.playerAvatar, System.Drawing.Imaging.PixelFormat.Undefined), new System.Drawing.Size(120, 120)); ;
-                cBit = cBit.Clone(new System.Drawing.Rectangle((int)(cBit.Width * .25), (int)(cBit.Height * .25), (int)(cBit.Width * .5), (int)(cBit.Height * .5)), System.Drawing.Imaging.PixelFormat.Undefined);
                 Bitmap bit;
                 // loop through heroes and find the one with the lowest rms diff.
                 foreach (string c in cnames.Keys)
                 {
                     bit = new Bitmap(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + c + "_Square_0.png");
-                    bit = bit.Clone(new System.Drawing.Rectangle((int)(bit.Width * .25), (int)(bit.Height * .25), (int)(bit.Width * .5), (int)(bit.Height * .5)), System.Drawing.Imaging.PixelFormat.Undefined);
-
-                    rms = calcRMSDiff(cBit, bit);
+                    
+                    rms = calcRMSDiff(cBit, bit, new System.Drawing.Rectangle((int)(bit.Width * .25), (int)(bit.Height * .25), (int)(bit.Width * .5), (int)(bit.Height * .5)));
                     bit.Dispose();
                     if (rms < curRMS)
                     {
@@ -290,6 +288,7 @@ namespace LeagueOverlay
                 }
                 heroName = curName;
                 Console.WriteLine("Hero Name" + heroName);
+                form.scriptControl.log("Player Champion: " + heroName);
             }
 
             /* End Setting Hero Name */
