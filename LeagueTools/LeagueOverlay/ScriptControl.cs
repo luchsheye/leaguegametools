@@ -32,6 +32,9 @@ namespace LeagueOverlay
             registerLuaFunctions(this);
 
             //LuaVM.RegisterFunction("RegisterEvent", this, parent.leagueInfo.GetType().GetMethod("registerEvent"));
+
+            log("-----------------------------------------------------------");
+            log("Overlay Init:" + DateTime.Now);
         }
         public LuaTable storeRectInTable(System.Drawing.Rectangle r, LuaTable table)
         {
@@ -64,12 +67,13 @@ namespace LeagueOverlay
         
         public void LoadScriptFiles()
         {
+            log("Loading script files...");
             foreach (FileInfo f in (new DirectoryInfo("scripts")).GetFiles())
             {
                 if (f.Name.Contains(".lua"))
                 {
                     LuaVM.DoFile(f.FullName);
-                    
+                    log(f.Name + "...Loaded");
                     /*
                     try
                     {
@@ -120,6 +124,7 @@ namespace LeagueOverlay
         {
             if (eventTable.ContainsKey(eventName))
             {
+                log("Event: " + eventName + " [Args:" + arguments + "]");
                 foreach (string s in eventTable[eventName])
                 {
                     LuaVM.DoString(s + "(" + arguments + ")");
@@ -152,6 +157,13 @@ namespace LeagueOverlay
             Console.WriteLine(msg);
         }
 
+        [AttrLuaFunc("Log")]
+        public void log(string msg)
+        {
+            var sr = File.AppendText("Log.txt");
+            sr.WriteLine(msg);
+            sr.Close();
+        }
         [AttrLuaFunc("GetmsTime")]
         public int getmsTime()
         {

@@ -162,6 +162,7 @@ namespace LeagueOverlay
             if (windowBitmapHandle == IntPtr.Zero || (int)windowSize.width != windowImage.Width || (int)windowSize.height != windowImage.Height)
             {
                 Console.WriteLine("got a new bitmap handle");
+                scriptControl.log("New Window Resolution:" + (int)windowSize.width + " x " + (int)windowSize.height);
                 if (Preferences.hideLeagueBorders)
                 {
                     //adjust the window position and show the UI
