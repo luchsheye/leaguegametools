@@ -33,6 +33,7 @@ while true do
 		for n=level,lastSeenLevel+1,-1 do
 				if (string.len(temp) ==0) then return; end;
 				local abNum = string.sub(temp,n,n); --get which ability to level up for this level
+				SetLabelText(testLabel,""..name.." is level "..str.." and picked ability "..abNum);
 				SendKeyDown(0x1D); --send control key down
 				
 				--Check which ability is going to be leveled, send the key for it
