@@ -241,6 +241,10 @@ namespace LeagueOverlay
                             loadScreenInfo.minX + i * (loadScreenInfo.championWidth + loadScreenInfo.xpadding), 
                             loadScreenInfo.topPadding, 
                             loadScreenInfo.scale);
+                        if (summonerInfo[0][i] != null)
+                        {
+                            form.scriptControl.log("LoadScreen: Found top champion (" + summonerInfo[0][i].championCodeName + ") with " + summonerInfo[0][i].summonerSpell1 + " and " + summonerInfo[0][i].summonerSpell2);
+                        }
                     }
 
                     for (int i = 0; i < loadScreenInfo.botChampionCount; i++)
@@ -251,6 +255,10 @@ namespace LeagueOverlay
                             loadScreenInfo.minXBot + i * (loadScreenInfo.championWidth + loadScreenInfo.xpadding), 
                             w.Height - loadScreenInfo.topPadding - loadScreenInfo.championHeight + 1, 
                             loadScreenInfo.scale);
+                        if (summonerInfo[1][i] != null)
+                        {
+                            form.scriptControl.log("LoadScreen: Found bot champion (" + summonerInfo[0][i].championCodeName + ") with " + summonerInfo[0][i].summonerSpell1 + " and " + summonerInfo[0][i].summonerSpell2);
+                        }
                     }
                     return;
                 }
@@ -258,6 +266,7 @@ namespace LeagueOverlay
                 {
                     form.scriptControl.raiseEvent("interfaceInit", "");
                     outOfLoadScreen = true;
+                    form.scriptControl.log("Left Load Screen");
                 }
             }
 
@@ -605,8 +614,8 @@ namespace LeagueOverlay
             //Console.WriteLine("Bottom champions:" + lsi.botChampionCount);
             summonerInfo[0] = new SummonerInfo[lsi.topChampionCount];
             summonerInfo[1] = new SummonerInfo[lsi.botChampionCount];
-            
-             
+
+            form.scriptControl.log("LoadScreen: " + lsi.topChampionCount + " (top) " + lsi.topChampionCount + " (bot)");
         }
 
         SummonerInfo getSummonerInfo(Bitmap screenImage, int left, int top, double scale)

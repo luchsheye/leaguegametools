@@ -130,6 +130,7 @@ namespace LeagueOverlay
             {
                 System.Diagnostics.Debug.WriteLine("SendInput failed with code: " +
                 Marshal.GetLastWin32Error().ToString());
+                parent.scriptControl.log("Keypress send failed: " + Marshal.GetLastWin32Error().ToString());
             }
         }
 

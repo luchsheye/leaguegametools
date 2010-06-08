@@ -24,18 +24,26 @@ namespace LeagueOverlay
             }
             //load anything that is needed
             XmlDocument pref = new XmlDocument();
+            int optionCount = 0;
             pref.Load("preferences.xml");
             if (pref["Preferences"]["LeagueFolder"] != null)
             {
                 leagueFolder = pref["Preferences"]["LeagueFolder"].InnerText;
+                optionCount++;
             }
             if (pref["Preferences"]["DisclaimerAccepted"] != null)
             {
                 disclaimerAccepted = Convert.ToBoolean(pref["Preferences"]["DisclaimerAccepted"].InnerText);
+                optionCount++;
             }
             if (pref["Preferences"]["HideLeagueBorders"] != null)
             {
-                disclaimerAccepted = Convert.ToBoolean(pref["Preferences"]["HideLeagueBorders"].InnerText);
+                hideLeagueBorders = Convert.ToBoolean(pref["Preferences"]["HideLeagueBorders"].InnerText);
+                optionCount++;
+            }
+            if (optionCount != 3)
+            {
+                Save();
             }
             return true;
         }

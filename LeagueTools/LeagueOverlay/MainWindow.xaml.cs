@@ -97,7 +97,7 @@ namespace LeagueOverlay
             IntPtr tempHandle = WIN32_API.GetForegroundWindow();
             WIN32_API.GetWindowText(tempHandle, sb, (IntPtr)sb.MaxCapacity);
 
-            
+            Console.WriteLine(WIN32_API.GetWindowLong(windowHandle, -20));
             if (sb.ToString().ToLower().Contains("league of legends (tm) client"))
             {
                 DateTime start = DateTime.Now;
