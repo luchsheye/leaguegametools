@@ -9,16 +9,16 @@ namespace RecommendedItemTool
 {
     public class Preferences
     {
-
         public static string leagueFolder = "C:\\Riot Games\\League of Legends";
         public static bool disclaimerAccepted = false;
+        public static bool hideLeagueBorders = true;
 
         public static bool Load()
         {
             if (!File.Exists("preferences.xml"))
             {
                 //create everything
-                
+
                 return false;
             }
             //load anything that is needed
@@ -32,6 +32,10 @@ namespace RecommendedItemTool
             {
                 disclaimerAccepted = Convert.ToBoolean(pref["Preferences"]["DisclaimerAccepted"].InnerText);
             }
+            if (pref["Preferences"]["HideLeagueBorders"] != null)
+            {
+                disclaimerAccepted = Convert.ToBoolean(pref["Preferences"]["HideLeagueBorders"].InnerText);
+            }
             return true;
         }
 
@@ -39,7 +43,7 @@ namespace RecommendedItemTool
         {
             XmlDocument xd = new XmlDocument();
 
-            xd.LoadXml("<Preferences><LeagueFolder>" + leagueFolder + "</LeagueFolder><DisclaimerAccepted>" + disclaimerAccepted + "</DisclaimerAccepted></Preferences>");
+            xd.LoadXml("<Preferences><LeagueFolder>" + leagueFolder + "</LeagueFolder><DisclaimerAccepted>" + disclaimerAccepted + "</DisclaimerAccepted><HideLeagueBorders>" + hideLeagueBorders + "</HideLeagueBorders></Preferences>");
             xd.Save("preferences.xml");
         }
 

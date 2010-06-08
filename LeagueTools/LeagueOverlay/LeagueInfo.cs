@@ -27,7 +27,6 @@ namespace LeagueOverlay
         static int healthPixCount = -1;
         public static double healthPercent=100;
         
-        public static bool[] canChooseAbility = new bool[4] { false, false, false, false };
         public MainWindow form;
         public static Dictionary<string, string> cnames = new Dictionary<string, string>();
 
@@ -39,6 +38,47 @@ namespace LeagueOverlay
         SummonerInfo[][] summonerInfo = new SummonerInfo[2][];
 
         Dictionary<string, SummonerSpellInfo> summonerSpellInfo = new Dictionary<string, SummonerSpellInfo>();
+
+
+        //Some classes
+        class SummonerInfo
+        {
+            public string championCodeName;
+            public string summonerSpell1;
+            public string summonerSpell2;
+        }
+        class SummonerSpellInfo
+        {
+            public string codeName;
+            public string name;
+            public int cooldown;
+            public Bitmap image;
+        }
+
+        class LoadScreenInfo
+        {
+            public int
+                minX,
+                maxX,
+                minY,
+                maxY,
+                minXBot,
+                maxXBot,
+                topChampionCount,
+                botChampionCount,
+                championWidth,
+                championHeight,
+                xpadding,
+                topPadding;
+            public double scale;
+        }
+        public class ChampNameAndImage
+        {
+            public string codeName;
+            public Bitmap image;
+        }
+
+        List<ChampNameAndImage> champData = new List<ChampNameAndImage>();
 
         public LeagueInfo(MainWindow f)
         {
@@ -64,6 +104,15 @@ namespace LeagueOverlay
                 }
             }
 
+            //get champion images for load screen processing
+            foreach (FileInfo fi in new DirectoryInfo(Preferences.leagueFolder + @"\air\assets\images\champions").GetFiles("*.jpg"))
+            {
+                if (fi.Name.ToLower().Contains("_square_") || fi.Name.ToLower().Contains("_splash_") || fi.Name.Count(c => c == '_') != 1) continue;
+                ChampNameAndImage champ = new ChampNameAndImage();
+                champ.codeName = fi.Name.Split('_')[0];
+                champ.image = (Bitmap)Bitmap.FromFile(fi.FullName);
+                champData.Add(champ);
+            }
 
             //init summoner spell info table
             SummonerSpellInfo ssi = new SummonerSpellInfo();
@@ -149,7 +198,10 @@ namespace LeagueOverlay
             ssi.cooldown = 240;
             summonerSpellInfo[ssi.codeName] = ssi;
 
-
+            foreach (string key in summonerSpellInfo.Keys)
+            {
+                summonerSpellInfo[key].image = (Bitmap)Image.FromFile(Preferences.leagueFolder + @"\air\assets\images\spells\" + key + ".png");
+            }
         }
 
         //do update league info
@@ -263,21 +315,12 @@ namespace LeagueOverlay
 
            for (int i =0;i<LeagueUI.levelBmBytes.Length;i++)
             {
-              
-                
-                    // if (Convert.ToInt32(split[1]) == 2) levelBit.Save("C://Level2.png");
                 lrms = calcRMSDiff(LeagueUI.levelBmBytes[i], wBytes);
-               // lrms = calcRMSDiff(levelBit, wLevelBit);
-                //Console.WriteLine(f.Name + " " + lrms);
-               //levelBit.Save("C:\\LEVELTHink" + split[1]+".png");
-                //Console.WriteLine(f.Name + " rms " + lrms);
                 if (lrms < curlrms)
                 {
                     curlrms = lrms;
                     thinkLevel = i+1;
-                    //levelBit.Save("LEVELTHink.png");
                 }
-                // tempLevel++;
             }
 
             if (thinkLevel > currentLevel)
@@ -346,58 +389,53 @@ namespace LeagueOverlay
         {
             return healthPercent;
         }
-        [AttrLuaFunc("CanLevelAbility")]
-        public static bool canLevelAbility(int abilityNum)
-        {
-            return canChooseAbility[abilityNum];
-        }
-
-        public bool canLevelAbility(Rectangle r)
-        {
-            int count = 0;
-            for (int i = 0; i < (int)(r.Width ); i++)
-            {
-                for (int j = 0; j < (int)(r.Height ); j++)
-                {
-                    var temp = form.windowImage.GetPixel(r.X + 1 + i, r.Y + 1 + j);
-                    if (temp.R > 175 && temp.B < 150 && temp.G < 150) count++;
-                }
-            }
-
-            double total = r.Width * r.Height;
-            if ((double)count / (double)total > .1) return true;
-            return false;
-        }
 
         public double calcRMSDiff(Bitmap r, Bitmap b)
         {
-
-            double sum = 0;
-            int w, h;
-            w = r.Width;
-            h = r.Height;
-
-            System.Drawing.Imaging.BitmapData bd = r.LockBits(new System.Drawing.Rectangle(0, 0, r.Width, r.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-            IntPtr ip = bd.Scan0;
-            int bytes = bd.Stride * r.Height;
-            byte[] rBytes = new byte[bytes];
-            System.Runtime.InteropServices.Marshal.Copy(ip, rBytes, 0, bytes);
-            r.UnlockBits(bd);
-
-            bd = b.LockBits(new System.Drawing.Rectangle(0, 0, b.Width, b.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-            ip = bd.Scan0;
-            byte[] bBytes = new byte[bytes];
-            System.Runtime.InteropServices.Marshal.Copy(ip, bBytes, 0, bytes);
-            b.UnlockBits(bd);
-
-            for (int i = 0; i < w*h*3; i++)
+            double s = 0;
+            if (r.Width != b.Width || r.Height != b.Height) return double.MaxValue;
+            var rInfo = r.LockBits(new Rectangle(0, 0, r.Width, r.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            var bInfo = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            unsafe
             {
-                     sum += Math.Pow(rBytes[i] - bBytes[i], 2);
-            }
+                byte* rStart = (byte*)rInfo.Scan0;
+                byte* bStart = (byte*)bInfo.Scan0;
 
-            return (1 / ((double)(h * w))) * sum;
+                for (int i = 0; i < rInfo.Stride * rInfo.Height; i++)
+                {
+                    int temp = bStart[i] - rStart[i];
+                    s += temp * temp;
+                }
+            }
+            r.UnlockBits(rInfo);
+            b.UnlockBits(bInfo);
+            return (1 / ((double)(r.Height * r.Width))) * s;
+        }
+
+        public double calcRMSDiff(Bitmap r, Bitmap b, Rectangle rect)
+        {
+            if (rect.Right > b.Width || rect.Height > b.Height || rect.X > b.Width || rect.Y > b.Height) return double.MaxValue;
+            double sum = 0;
+            var rInfo = r.LockBits(new Rectangle(0, 0, r.Width, r.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            var bInfo = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            unsafe
+            {
+                byte* rStart = (byte*)rInfo.Scan0;
+                byte* bStart = (byte*)bInfo.Scan0;
+
+                for (int i = 0; i < rInfo.Stride * rInfo.Height; i++)
+                {
+                    int temp = bStart[i] - rStart[i];
+                    sum += temp * temp;
+                }
+            }
+            r.UnlockBits(rInfo);
+            b.UnlockBits(bInfo);
+
+            return (1 / ((double)(r.Height * r.Width))) * sum;
 
         }
+
         //two byte arrays
         public double calcRMSDiff(byte []  rBytes, byte[] bBytes)
         {
@@ -415,62 +453,6 @@ namespace LeagueOverlay
 
         }
 
-
-        public double calcRMSDiff(Bitmap r, Bitmap b, Rectangle rect)
-        {
-
-            double sumR = 0, sumG = 0, sumB = 0, sum = 0;
-            int w, h;
-            w = r.Width;
-            h = r.Height;
-            if (rect.Right > b.Width || rect.Height > b.Height || rect.X > b.Width || rect.Y > b.Height) return double.MaxValue;
-            for (int j = rect.Top; j < rect.Bottom; j++)
-            {
-                for (int i = rect.Left; i < rect.Right; i++)
-                {
-                    var wi = r.GetPixel(i, j);
-                    var bi = b.GetPixel(i, j);
-                    //red
-                    sumR = Math.Pow(wi.R - bi.R, 2);
-                    //green
-                    sumG = Math.Pow(wi.G - bi.G, 2);
-                    //blue
-                    sumB = Math.Pow(wi.B - bi.B, 2);
-
-                    sum += (sumR + sumG + sumB);
-                    sumR = sumG = sumB = 0;
-
-                }
-            }
-
-            return (1 / ((double)(h * w))) * sum;
-
-        }
-
-        public bool[] levelableAbilities(int[] ab,int curLevel)
-        {
-            bool[] temp = new bool[4];
-
-            //regular abilities
-            for (int i = 0; i < 3; i++)
-            {
-                if (ab[i] * 2 + 1 <= curLevel)
-                    temp[i] = true;
-            }
-            //ultimate
-            if (curLevel == 18)
-                temp[3] = true;
-            else if (curLevel == 12)
-                temp[3] = true;
-            else if (curLevel > 12 && ab[3] < 2)
-                temp[3] = true;
-            else if (curLevel == 6)
-                temp[3] = true;
-            else if (curLevel > 6 && ab[3] < 1)
-                temp[3] = true;
-
-            return temp;
-        }
         [AttrLuaFunc("GetSummonerCount")]
         public int getSummonerCount(int team)
         {
@@ -532,36 +514,6 @@ namespace LeagueOverlay
             return infoTable;
         }
 
-        class SummonerInfo
-        {
-            public string championCodeName;
-            public string summonerSpell1;
-            public string summonerSpell2;
-        }
-        class SummonerSpellInfo
-        {
-            public string codeName;
-            public string name;
-            public int cooldown;
-        }
-
-        class LoadScreenInfo
-        {
-            public int 
-                minX, 
-                maxX, 
-                minY,
-                maxY,
-                minXBot, 
-                maxXBot,
-                topChampionCount,
-                botChampionCount,
-                championWidth,
-                championHeight,
-                xpadding,
-                topPadding;
-            public double scale;
-        }
 
 
             
@@ -681,21 +633,20 @@ namespace LeagueOverlay
             }
             if (blackCount / (64.0 * 64.0) > 0.8) return null;
 
-            foreach (FileInfo fi in new DirectoryInfo(Preferences.leagueFolder + @"\air\assets\images\spells").GetFiles("*.png"))
+            foreach (KeyValuePair<string,SummonerSpellInfo> kvp in summonerSpellInfo)
             {
-                if (fi.Name.Contains("Stifle")) continue;
-                Bitmap temp = (Bitmap)Bitmap.FromFile(fi.FullName);
+                Bitmap temp = kvp.Value.image;
                 double rms = calcRMSDiff(sSpell1, temp);
                 if (rms < minRMS1)
                 {
                     
-                    si.summonerSpell1 = fi.Name.Split('.')[0];
+                    si.summonerSpell1 = kvp.Key;
                     minRMS1 = rms;
                 }
                 rms = calcRMSDiff(sSpell2, temp);
                 if (rms < minRMS2)
                 {
-                    si.summonerSpell2 = fi.Name.Split('.')[0];
+                    si.summonerSpell2 = kvp.Key;
                     minRMS2 = rms;
                 }
             }
@@ -706,14 +657,13 @@ namespace LeagueOverlay
             double minChampionRMS = double.MaxValue;
             champImg = new Bitmap(champImg, 307, 557);
             Rectangle compareRect = new Rectangle(0, 130, 150, 20);
-            foreach (FileInfo fi in new DirectoryInfo(Preferences.leagueFolder + @"\air\assets\images\champions").GetFiles("*.jpg"))
+            foreach (ChampNameAndImage champ in champData)
             {
-                if (fi.Name.ToLower().Contains("_square_") || fi.Name.ToLower().Contains("_splash_") || fi.Name.Count(c => c == '_') != 1) continue;
-                Bitmap temp = (Bitmap)Bitmap.FromFile(fi.FullName);
+                Bitmap temp = champ.image;
                 double rms = calcRMSDiff(champImg, temp, compareRect);
                 if (rms < minChampionRMS)
                 {
-                    si.championCodeName = fi.Name.Split('_')[0];
+                    si.championCodeName = champ.codeName;
                     minChampionRMS = rms;
                 }
             }
