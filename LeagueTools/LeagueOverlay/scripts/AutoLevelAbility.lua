@@ -25,9 +25,10 @@ while true do
 		local temp = lfile:read(); --get the next line, string containing leveling up info
 		--levelDiff = level-lastSeenLevel;
 		for n=level,lastSeenLevel+1,-1 do
+				if (string.len(temp) ==0) then return; end;
 				local abNum = string.sub(temp,n,n); --get which ability to level up for this level
 				SendKeyDown(0x1D); --send control key down
-		
+				
 				--Check which ability is going to be leveled, send the key for it
 
 					if (abNum=="q") then
