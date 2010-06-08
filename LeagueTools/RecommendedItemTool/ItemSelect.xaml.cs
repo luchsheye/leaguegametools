@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace RecommendedItemTool
 {
@@ -248,7 +249,16 @@ namespace RecommendedItemTool
                     iPictureBoxes[i].Width = 40;
                     Canvas.SetLeft(iPictureBoxes[i], posx);
                     Canvas.SetTop(iPictureBoxes[i], posy);
-                    iPictureBoxes[i].Fill = new ImageBrush(new BitmapImage(new Uri(Preferences.leagueFolder + "\\air\\assets\\images\\items\\" + id.Value.iconFile)));
+                    if (File.Exists(Preferences.leagueFolder + "\\air\\assets\\images\\items\\" + id.Value.iconFile))
+                    {
+                        iPictureBoxes[i].Fill = new ImageBrush(new BitmapImage(new Uri(Preferences.leagueFolder + "\\air\\assets\\images\\items\\" + id.Value.iconFile)));
+                    }
+                    else
+                    {
+                        iPictureBoxes[i].Fill = new ImageBrush(new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\images\\image_not_found.png")));
+                    }
+                        
+                    
                     iPictureBoxes[i].Tag = id.Value.id;
                     //iPictureBoxes[i].Click += new EventHandler(selectItem);
                     posx += iPictureBoxes[i].Width + 10;

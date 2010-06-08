@@ -439,9 +439,16 @@ namespace RecommendedItemTool
         {
             for (int i = 0; i < 6; i++)
             {
-                rPictureBoxes[i].Fill = new ImageBrush(
-                    new BitmapImage(new Uri(Preferences.leagueFolder + "\\air\\assets\\images\\items\\" + itemData[recommendedItems[i]].iconFile)));
-
+                if (File.Exists(Preferences.leagueFolder + "\\air\\assets\\images\\items\\" + itemData[recommendedItems[i]].iconFile))
+                {
+                     rPictureBoxes[i].Fill  = new ImageBrush(new BitmapImage(new Uri(Preferences.leagueFolder + "\\air\\assets\\images\\items\\" + itemData[recommendedItems[i]].iconFile)));
+                }
+                else
+                {
+                    rPictureBoxes[i].Fill = new ImageBrush(new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\images\\image_not_found.png")));
+                }
+                       
+               
             }
         }
 
@@ -491,9 +498,17 @@ namespace RecommendedItemTool
         public void startDraggingItem(string ItemID)
         {
             draggingItemID = ItemID;
-            
-            draggingItemPic.Fill = new ImageBrush(new BitmapImage(
-                new Uri(Preferences.leagueFolder + "\\air\\assets\\images\\items\\" + itemData[ItemID].iconFile)));
+            if (File.Exists(Preferences.leagueFolder + "\\air\\assets\\images\\items\\" + itemData[ItemID].iconFile))
+            {
+                draggingItemPic.Fill = new ImageBrush(new BitmapImage(
+               new Uri(Preferences.leagueFolder + "\\air\\assets\\images\\items\\" + itemData[ItemID].iconFile)));
+            }
+            else
+            {
+                draggingItemPic.Fill = new ImageBrush(new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\images\\image_not_found.png")));
+               
+            }
+          
             Point mouseLoc = Mouse.GetPosition(mainCanvas);
             Canvas.SetLeft(draggingItemPic, mouseLoc.X);
             Canvas.SetTop(draggingItemPic, mouseLoc.Y);
