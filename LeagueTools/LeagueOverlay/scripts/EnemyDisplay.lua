@@ -25,7 +25,7 @@ function EnemyDisplay:UIInit()
 	if(self.initialized == false) then self.teamRect = NewRectangle(); end;
 	SetComponentPos(self.teamRect,GetResolutionX()- 60, yPos);
 	SetRectangleSize(self.teamRect,60,20);
-	SetRectangleBgColor(self.teamRect,255,94,2,130);
+	SetRectangleBgColor(self.teamRect,255,4,61,124);
 	SetRectangleClickEvent(self.teamRect,"EnemyDisplay:SwapTeams()");
 	yPos = yPos + 25;
 	for i = 0, 4 do
@@ -71,11 +71,11 @@ end
 
 function EnemyDisplay:SwapTeams()
 	if(self.currentTeam == 0) then
-		self.currentTeam = 1;
-		SetRectangleBgColor(self.teamRect,255,4,61,124);
+		self.currentTeam = 1;		
+		SetRectangleBgColor(self.teamRect,255,94,2,130);
 	else
 		self.currentTeam = 0;
-		SetRectangleBgColor(self.teamRect,255,94,2,130);
+		SetRectangleBgColor(self.teamRect,255,4,61,124);
 	end
 	self:UpdateTeamDisplay();
 end
