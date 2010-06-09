@@ -285,8 +285,8 @@ namespace LeagueOverlay
                 foreach (string c in cnames.Keys)
                 {
                     bit = new Bitmap(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + c + "_Square_0.png");
-                    
-                    rms = calcRMSDiff(cBit, bit, new System.Drawing.Rectangle((int)(bit.Width * .25), (int)(bit.Height * .25), (int)(bit.Width * .5), (int)(bit.Height * .5)));
+
+                    rms = calcRMSDiff(cBit, bit, new System.Drawing.Rectangle((int)(bit.Width * (20.0 / 120.0)), (int)(bit.Height * (20.0 / 120.0)), (int)(bit.Width * (68.0/120.0)), (int)(bit.Height * (72.0/120.0))));
                     bit.Dispose();
                     if (rms < curRMS)
                     {
