@@ -49,6 +49,7 @@ namespace LeagueOverlay
             WindowInteropHelper helper = new WindowInteropHelper(this);
             WIN32_API.SetWindowLong(helper.Handle, -20,
                 WIN32_API.GetWindowLong(helper.Handle, -20) | 0x08000000 | 0x00000020);
+            
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -97,9 +98,11 @@ namespace LeagueOverlay
             IntPtr tempHandle = WIN32_API.GetForegroundWindow();
             WIN32_API.GetWindowText(tempHandle, sb, (IntPtr)sb.MaxCapacity);
 
-            Console.WriteLine(WIN32_API.GetWindowLong(windowHandle, -20));
+            
+
             if (sb.ToString().ToLower().Contains("league of legends (tm) client"))
             {
+                this.Visibility = Visibility.Visible;
                 DateTime start = DateTime.Now;
                 //grab the current screen image from league of legends
                 windowHandle = tempHandle;
@@ -107,12 +110,6 @@ namespace LeagueOverlay
                 windowImage = GetClientWindowImage();
                 temp.Dispose();
                 if (windowImage.Width < 10 || windowImage.Height < 10) return;
-                //System.Drawing.Imaging.BitmapData bd = windowImage.LockBits(new System.Drawing.Rectangle(0,0,windowImage.Width,windowImage.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-                //IntPtr ip = bd.Scan0;
-                //int bytes = bd.Stride * windowImage.Height;
-                //windowBytes = new byte[bytes];
-                //System.Runtime.InteropServices.Marshal.Copy(ip, windowBytes, 0, bytes);
-                //windowImage.UnlockBits(bd);
 
                 if (Preferences.hideLeagueBorders == false)
                 {
@@ -140,14 +137,10 @@ namespace LeagueOverlay
                 
                 this.procTimeLabel.Content = "Procesing Time:" + (int)(Math.Round((DateTime.Now - start).TotalMilliseconds)) + "ms";
                 scriptControl.raiseEvent("processingFinished", "");
-                //this.Show();
-                //WIN32_API.SetFocus(windowHandle);
             }
             else
             {
-                //this.Hide();
-                Width = 0;
-                Height = 0;
+                this.Visibility = Visibility.Hidden;
             }
         }
 
@@ -159,8 +152,10 @@ namespace LeagueOverlay
             WIN32_API.RECT windowSize = new WIN32_API.RECT();
             WIN32_API.GetClientRect(windowHandle, ref windowSize);
 
+            if ((int)windowSize.width <= 10 || (int)windowSize.height <= 10) return new Bitmap(1, 1);
             if (windowBitmapHandle == IntPtr.Zero || (int)windowSize.width != windowImage.Width || (int)windowSize.height != windowImage.Height)
             {
+                
                 Console.WriteLine("got a new bitmap handle");
                 scriptControl.log("New Window Resolution:" + (int)windowSize.width + " x " + (int)windowSize.height);
                 if (Preferences.hideLeagueBorders)
@@ -170,7 +165,6 @@ namespace LeagueOverlay
                         WIN32_API.GetWindowLong(windowHandle, WIN32_API.GWL_STYLE) & ~WIN32_API.WS_CAPTION);
                     int XPadding = (System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width - windowSize.width) / 2;
                     int YPadding = (System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height - windowSize.height) / 2;
-
                     WIN32_API.SetWindowPos(windowHandle, 0, XPadding, YPadding, windowSize.width, windowSize.height, 0);
 
 

@@ -236,28 +236,32 @@ namespace LeagueOverlay
                     for (int i = 0; i < loadScreenInfo.topChampionCount; i++)
                     {
                         if (summonerInfo[0][i] == null)
-                        summonerInfo[0][i] = getSummonerInfo(
-                            (Bitmap)w, 
-                            loadScreenInfo.minX + i * (loadScreenInfo.championWidth + loadScreenInfo.xpadding), 
-                            loadScreenInfo.topPadding, 
-                            loadScreenInfo.scale);
-                        if (summonerInfo[0][i] != null)
                         {
-                            form.scriptControl.log("LoadScreen: Found top champion (" + summonerInfo[0][i].championCodeName + ") with " + summonerInfo[0][i].summonerSpell1 + " and " + summonerInfo[0][i].summonerSpell2);
+                            summonerInfo[0][i] = getSummonerInfo(
+                                (Bitmap)w,
+                                loadScreenInfo.minX + i * (loadScreenInfo.championWidth + loadScreenInfo.xpadding),
+                                loadScreenInfo.topPadding,
+                                loadScreenInfo.scale);
+                            if (summonerInfo[0][i] != null)
+                            {
+                                form.scriptControl.log("LoadScreen: Found top champion (" + summonerInfo[0][i].championCodeName + ") with " + summonerInfo[0][i].summonerSpell1 + " and " + summonerInfo[0][i].summonerSpell2);
+                            }
                         }
                     }
 
                     for (int i = 0; i < loadScreenInfo.botChampionCount; i++)
                     {
                         if (summonerInfo[1][i] == null)
-                        summonerInfo[1][i] = getSummonerInfo(
-                            (Bitmap)w, 
-                            loadScreenInfo.minXBot + i * (loadScreenInfo.championWidth + loadScreenInfo.xpadding), 
-                            w.Height - loadScreenInfo.topPadding - loadScreenInfo.championHeight + 1, 
-                            loadScreenInfo.scale);
-                        if (summonerInfo[1][i] != null)
                         {
-                            form.scriptControl.log("LoadScreen: Found bot champion (" + summonerInfo[0][i].championCodeName + ") with " + summonerInfo[0][i].summonerSpell1 + " and " + summonerInfo[0][i].summonerSpell2);
+                            summonerInfo[1][i] = getSummonerInfo(
+                                (Bitmap)w,
+                                loadScreenInfo.minXBot + i * (loadScreenInfo.championWidth + loadScreenInfo.xpadding),
+                                w.Height - loadScreenInfo.topPadding - loadScreenInfo.championHeight + 1,
+                                loadScreenInfo.scale);
+                            if (summonerInfo[1][i] != null)
+                            {
+                                form.scriptControl.log("LoadScreen: Found bot champion (" + summonerInfo[0][i].championCodeName + ") with " + summonerInfo[0][i].summonerSpell1 + " and " + summonerInfo[0][i].summonerSpell2);
+                            }
                         }
                     }
                     return;

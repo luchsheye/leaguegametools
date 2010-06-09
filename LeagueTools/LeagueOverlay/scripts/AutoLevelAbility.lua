@@ -10,6 +10,8 @@ function autoLevelAbilityFunction(level)
 --Input -> level=the level which was leveled up to (int).
 --Function -> automatically levels up an ability
 
+local str = string.format("%i",level);
+SetLabelText(testLabel,""..GetHeroName().." is level "..str);
 
 if(lastSeenLevel==-1) then
 lastSeenLevel=level-1;
@@ -28,8 +30,7 @@ while true do
 	elseif (name == GetHeroName()) then --check if the line is the hero name you want, if not, keep looping
 		local temp = lfile:read(); --get the next line, string containing leveling up info
 		--levelDiff = level-lastSeenLevel;
-		local str = string.format("%i",level);
-		SetLabelText(testLabel,""..name.." is level "..str);
+		
 		for n=level,lastSeenLevel+1,-1 do
 				if (string.len(temp) ==0) then return; end;
 				local abNum = string.sub(temp,n,n); --get which ability to level up for this level

@@ -95,6 +95,7 @@ namespace LeagueOverlay
                 System.Diagnostics.Debug.WriteLine("SendInput failed with code: " +
                 Marshal.GetLastWin32Error().ToString());
             }
+            
         }
 
         [AttrLuaFunc("SendKeyUp")]
