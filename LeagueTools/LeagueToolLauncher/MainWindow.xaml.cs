@@ -29,7 +29,7 @@ namespace LeagueToolLauncher
         WebClient webClient = new WebClient();
         bool versionCheckDone = false;
         Dictionary<string, string> versionInformation = new Dictionary<string, string>();
-        string versionString = "2.0b1";
+        string versionString = "2.0b2";
 
         Process leagueOverlayProcess;
 
@@ -288,7 +288,7 @@ namespace LeagueToolLauncher
 
         private void button3_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("Updater\\UpdateTool.exe");
+            
         }
     }
 }

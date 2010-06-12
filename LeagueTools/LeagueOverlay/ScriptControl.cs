@@ -174,5 +174,10 @@ namespace LeagueOverlay
         {
             return Preferences.leagueFolder + "\\";
         }
+        [AttrLuaFunc("GetToolDir")]
+        public string getToolDir()
+        {
+            return Directory.GetCurrentDirectory() + "\\";
+        }
     }
 }

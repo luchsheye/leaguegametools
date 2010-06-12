@@ -83,36 +83,6 @@ namespace LeagueOverlay
         public LeagueInfo(MainWindow f)
         {
             form = f;
-            Regex r = new Regex(@"""(\w+)_(\w+)"" = ""([^""]+)");
-            foreach (string s in File.ReadAllLines(Preferences.leagueFolder + "\\game\\DATA\\Menu\\fontconfig_en_US.txt"))
-            {
-                
-                Match m = r.Match(s);
-               
-                if (m.Success)
-                {
-
-                    string infoType = m.Groups[1].Value;
-                    string infoID = m.Groups[2].Value;
-                    string infoValue = m.Groups[3].Value;
-                    if (infoType == "game_character_displayname"
-                        && File.Exists(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + infoID + "_Square_0.png"))
-                    {
-                        cnames.Add(infoID, infoValue);
-                    }
-
-                }
-            }
-
-            //get champion images for load screen processing
-            foreach (FileInfo fi in new DirectoryInfo(Preferences.leagueFolder + @"\air\assets\images\champions").GetFiles("*.jpg"))
-            {
-                if (fi.Name.ToLower().Contains("_square_") || fi.Name.ToLower().Contains("_splash_") || fi.Name.Count(c => c == '_') != 1) continue;
-                ChampNameAndImage champ = new ChampNameAndImage();
-                champ.codeName = fi.Name.Split('_')[0];
-                champ.image = (Bitmap)Bitmap.FromFile(fi.FullName);
-                champData.Add(champ);
-            }
 
             //init summoner spell info table
             SummonerSpellInfo ssi = new SummonerSpellInfo();
@@ -202,6 +172,38 @@ namespace LeagueOverlay
             {
                 summonerSpellInfo[key].image = (Bitmap)Image.FromFile(Preferences.leagueFolder + @"\air\assets\images\spells\" + key + ".png");
             }
+
+            Regex r = new Regex(@"""(\w+)_(\w+)"" = ""([^""]+)");
+            foreach (string s in File.ReadAllLines(Preferences.leagueFolder + "\\game\\DATA\\Menu\\fontconfig_en_US.txt"))
+            {
+                
+                Match m = r.Match(s);
+               
+                if (m.Success)
+                {
+
+                    string infoType = m.Groups[1].Value;
+                    string infoID = m.Groups[2].Value;
+                    string infoValue = m.Groups[3].Value;
+                    if (infoType == "game_character_displayname"
+                        && File.Exists(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + infoID + "_Square_0.png"))
+                    {
+                        cnames.Add(infoID, infoValue);
+                    }
+
+                }
+            }
+
+            //get champion images for load screen processing
+            foreach (FileInfo fi in new DirectoryInfo(Preferences.leagueFolder + @"\air\assets\images\champions").GetFiles("*.jpg"))
+            {
+                if (fi.Name.ToLower().Contains("_square_") || fi.Name.ToLower().Contains("_splash_") || fi.Name.Count(c => c == '_') != 1) continue;
+                ChampNameAndImage champ = new ChampNameAndImage();
+                champ.codeName = fi.Name.Split('_')[0];
+                champ.image = (Bitmap)Bitmap.FromFile(fi.FullName);
+                champData.Add(champ);
+            }
+
         }
 
         //do update league info
@@ -665,7 +667,8 @@ namespace LeagueOverlay
                     minRMS2 = rms;
                 }
             }
-
+            //Added this because somehow they can end up being null (no keys in summonerSpellInfo??)
+            if (si.summonerSpell1 == null || si.summonerSpell2 == null) return null;
             Console.WriteLine("S1 = " + si.summonerSpell1 + " minrms of" + minRMS1);
             Console.WriteLine("S2 = " + si.summonerSpell2);
 
