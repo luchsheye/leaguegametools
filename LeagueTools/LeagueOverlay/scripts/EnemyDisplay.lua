@@ -110,7 +110,7 @@ end
 
 function EnemyDisplay:UpdateTeamDisplay()
 	local imageDir = GetLeagueDir().."air\\assets\\images\\";
-	local summonerCount = 5;--GetSummonerCount(self.currentTeam);
+	local summonerCount = GetSummonerCount(self.currentTeam);
 	for i = 0, (summonerCount-1) do
 		local summonerInfo = {};
 		GetSummonerInfo(self.currentTeam,i,summonerInfo);
@@ -123,6 +123,8 @@ function EnemyDisplay:UpdateTeamDisplay()
 		SetComponentVisible(self.sSpell2Images[i],true);
 		SetComponentVisible(self.sSpell1CooldownLbl[i],true);
 		SetComponentVisible(self.sSpell2CooldownLbl[i],true);
+		SetComponentVisible(self.miaImages[i],true);
+		SetComponentVisible(self.reImages[i],true);
 
 		self.summonerInfoTable[i] = summonerInfo;
 		self.sSpell1Cooldown[i] = 0;
@@ -136,6 +138,8 @@ function EnemyDisplay:UpdateTeamDisplay()
 		SetComponentVisible(self.sSpell2Images[i],false);
 		SetComponentVisible(self.sSpell1CooldownLbl[i],false);
 		SetComponentVisible(self.sSpell2CooldownLbl[i],false);
+		SetComponentVisible(self.miaImages[i],false);
+		SetComponentVisible(self.reImages[i],false);
 	end
 end
 
