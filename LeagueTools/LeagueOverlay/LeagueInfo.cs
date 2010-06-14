@@ -258,7 +258,7 @@ namespace LeagueOverlay
                             summonerInfo[1][i] = getSummonerInfo(
                                 (Bitmap)w,
                                 loadScreenInfo.minXBot + i * (loadScreenInfo.championWidth + loadScreenInfo.xpadding),
-                                w.Height - loadScreenInfo.topPadding - loadScreenInfo.championHeight + 1,
+                                w.Height - loadScreenInfo.topPadding - loadScreenInfo.championHeight - 2,
                                 loadScreenInfo.scale);
                             if (summonerInfo[1][i] != null)
                             {
@@ -614,8 +614,8 @@ namespace LeagueOverlay
 
             lsi.championWidth = (int)Math.Round(190 * lsi.scale);
             lsi.championHeight = (int)Math.Round(341 * lsi.scale);
-            lsi.xpadding = (int)Math.Round(9 * lsi.scale);
-            lsi.topPadding = (int)Math.Round(18 * lsi.scale);
+            lsi.xpadding = (int)Math.Round(10 * lsi.scale);
+            lsi.topPadding = lsi.minY;
 
 
             //Console.WriteLine("Top champions:" + lsi.topChampionCount);
@@ -646,16 +646,16 @@ namespace LeagueOverlay
             sSpell2 = new Bitmap(sSpell2, 64, 64);
 
             //check the color on sSpell1 if it is black summoner is not connected
-            int blackCount=0;
+            int blackCount = 0;
             for (int x = 0; x < sSpell1.Width; x++)
             {
                 for (int y = 0; y < sSpell1.Height; y++)
                 {
                     var c = sSpell1.GetPixel(x, y);
-                    if (c.R == 0 && c.G == 0 && c.B == 0) blackCount++;
+                    if (c.R < 20 && c.G < 20 && c.B < 20) blackCount++;
                 }
             }
-            if (blackCount / (64.0 * 64.0) > 0.8) return null;
+            if (blackCount / (64.0 * 64.0) >= 0.7) return null;
 
             foreach (KeyValuePair<string,SummonerSpellInfo> kvp in summonerSpellInfo)
             {
