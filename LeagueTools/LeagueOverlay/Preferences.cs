@@ -13,13 +13,17 @@ namespace LeagueOverlay
         public static string leagueFolder = "C:\\Riot Games\\League of Legends";
         public static bool disclaimerAccepted = false;
         public static bool hideLeagueBorders = true;
+        public static int processingTimer = 500;
+        public static int UITimer = 32;
 
         public static bool Load()
         {
             if (!File.Exists("preferences.xml"))
             {
                 //create everything
-                
+
+
+                Save();
                 return false;
             }
             //load anything that is needed
@@ -41,7 +45,17 @@ namespace LeagueOverlay
                 hideLeagueBorders = Convert.ToBoolean(pref["Preferences"]["HideLeagueBorders"].InnerText);
                 optionCount++;
             }
-            if (optionCount != 3)
+            if (pref["Preferences"]["ProcessingTimer"] != null)
+            {
+                processingTimer = Convert.ToInt32(pref["Preferences"]["ProcessingTimer"].InnerText);
+                optionCount++;
+            }
+            if (pref["Preferences"]["UITimer"] != null)
+            {
+                UITimer = Convert.ToInt32(pref["Preferences"]["UITimer"].InnerText);
+                optionCount++;
+            }
+            if (optionCount != 5)
             {
                 Save();
             }
@@ -52,7 +66,12 @@ namespace LeagueOverlay
         {
             XmlDocument xd = new XmlDocument();
 
-            xd.LoadXml("<Preferences><LeagueFolder>" + leagueFolder + "</LeagueFolder><DisclaimerAccepted>" + disclaimerAccepted + "</DisclaimerAccepted><HideLeagueBorders>" + hideLeagueBorders + "</HideLeagueBorders></Preferences>");
+            xd.LoadXml("<Preferences><LeagueFolder>" + leagueFolder + 
+                "</LeagueFolder><DisclaimerAccepted>" + disclaimerAccepted + 
+                "</DisclaimerAccepted><HideLeagueBorders>" + hideLeagueBorders + 
+                "</HideLeagueBorders><ProcessingTimer>" + processingTimer + 
+                "</ProcessingTimer><UITimer>" + UITimer +
+                "</UITimer></Preferences>");
             xd.Save("preferences.xml");
         }
 

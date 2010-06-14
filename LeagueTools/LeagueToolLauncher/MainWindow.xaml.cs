@@ -27,9 +27,8 @@ namespace LeagueToolLauncher
     public partial class MainWindow : Window
     {
         WebClient webClient = new WebClient();
-        bool versionCheckDone = false;
         Dictionary<string, string> versionInformation = new Dictionary<string, string>();
-        string versionString = "2.0b2";
+        string versionString = "2.0b3";
 
         Process leagueOverlayProcess;
 
@@ -165,7 +164,6 @@ namespace LeagueToolLauncher
                            versionInformation[keyAndValue[0]] = keyAndValue[1];
                         }
                     }
-                    versionCheckDone = true;
 
 
                     if (versionInformation["Version"] != versionString)
@@ -274,7 +272,15 @@ namespace LeagueToolLauncher
 
         void leagueOverlayProcess_Exited(object sender, EventArgs e)
         {
-            leagueOverlayProcess = null;
+            if (leagueOverlayProcess.ExitCode == 1)
+            {
+                leagueOverlayProcess = Process.Start("LeagueOverlay.exe");
+                leagueOverlayProcess.Exited += new EventHandler(leagueOverlayProcess_Exited);
+            }
+            else
+            {
+                leagueOverlayProcess = null;
+            }
             updateOverlayButtons();
         }
 

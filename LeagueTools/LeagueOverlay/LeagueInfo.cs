@@ -630,11 +630,19 @@ namespace LeagueOverlay
         SummonerInfo getSummonerInfo(Bitmap screenImage, int left, int top, double scale)
         {
             SummonerInfo si = new SummonerInfo();
-            Bitmap champImg = screenImage.Clone(new Rectangle(left, top, (int)Math.Round(185 * scale), (int)Math.Round(305 * scale)), System.Drawing.Imaging.PixelFormat.DontCare);
-            Bitmap sSpell1 = screenImage.Clone(new Rectangle(left + (int)Math.Round(72 * scale), top + (int)Math.Round(298 * scale), (int)Math.Round(23 * scale), (int)Math.Round(24 * scale)), System.Drawing.Imaging.PixelFormat.DontCare);
-            Bitmap sSpell2 = screenImage.Clone(new Rectangle(left + (int)Math.Round(99 * scale), top + (int)Math.Round(298 * scale), (int)Math.Round(23 * scale), (int)Math.Round(24 * scale)), System.Drawing.Imaging.PixelFormat.DontCare);
+            Bitmap champImg, sSpell1, sSpell2;
             double minRMS1 = double.MaxValue;
             double minRMS2 = double.MaxValue;
+            try
+            {
+                champImg = screenImage.Clone(new Rectangle(left, top, (int)Math.Round(185 * scale), (int)Math.Round(305 * scale)), System.Drawing.Imaging.PixelFormat.DontCare);
+                sSpell1 = screenImage.Clone(new Rectangle(left + (int)Math.Round(72 * scale), top + (int)Math.Round(298 * scale), (int)Math.Round(23 * scale), (int)Math.Round(24 * scale)), System.Drawing.Imaging.PixelFormat.DontCare);
+                sSpell2 = screenImage.Clone(new Rectangle(left + (int)Math.Round(99 * scale), top + (int)Math.Round(298 * scale), (int)Math.Round(23 * scale), (int)Math.Round(24 * scale)), System.Drawing.Imaging.PixelFormat.DontCare);             
+            }
+            catch
+            {
+                return null;
+            }
             sSpell1 = new Bitmap(sSpell1, 64, 64);
             sSpell2 = new Bitmap(sSpell2, 64, 64);
 

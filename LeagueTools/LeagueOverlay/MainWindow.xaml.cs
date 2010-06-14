@@ -71,17 +71,18 @@ namespace LeagueOverlay
 
             Width = 0;
             Height = 0;
-
+            
             //create the timers
             processingTimer = new DispatcherTimer();
-            processingTimer.Interval = TimeSpan.FromMilliseconds(500);
+            processingTimer.Interval = TimeSpan.FromMilliseconds(Preferences.processingTimer);
             processingTimer.Tick += new EventHandler(processingTimer_Tick);
             processingTimer.Start();
 
             UILogicTimer = new DispatcherTimer();
-            UILogicTimer.Interval = TimeSpan.FromMilliseconds(32);
+            UILogicTimer.Interval = TimeSpan.FromMilliseconds(Preferences.UITimer);
             UILogicTimer.Tick += new EventHandler(UILogicTimer_Tick);
             UILogicTimer.Start();
+
         }
 
         void UILogicTimer_Tick(object sender, EventArgs e)
@@ -98,8 +99,22 @@ namespace LeagueOverlay
             IntPtr tempHandle = WIN32_API.GetForegroundWindow();
             WIN32_API.GetWindowText(tempHandle, sb, (IntPtr)sb.MaxCapacity);
 
-            
-
+            if (windowHandle != IntPtr.Zero)
+            {
+                uint windowStyle = (uint)WIN32_API.GetWindowLong(windowHandle, WIN32_API.GWL_STYLE);
+                if (windowStyle == 0)
+                {
+                    scriptControl.log("Closing...League of legends window no longer detected");
+                    System.Environment.Exit(1);
+                    return;
+                }
+                else if ((windowStyle & 0x80000) != 0x80000)
+                {
+                    scriptControl.log("Error: League was in fullscreen mode when the overlay started");
+                    this.Close();
+                    return;
+                }
+            }
             if (sb.ToString().ToLower().Contains("league of legends (tm) client"))
             {
                 this.Visibility = Visibility.Visible;

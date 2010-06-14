@@ -2,10 +2,17 @@
 
 lastSeenLevel = -1;
 testLabel = NewLabel();
-SetLabelText(testLabel,"0");
+SetLabelText(testLabel,"L");
 SetLabelColor(testLabel,255,0,255,0);
-SetLabelFont(testLabel,"Comic Sans",20);
+SetLabelFont(testLabel,"Miramonte",16);
 SetComponentPos(testLabel,350,2);
+
+function autoLevelAbility_UIInit()
+	local yPos = GetResolutionY() / 19;	
+	local xPos = 5;
+	SetComponentPos(testLabel,xPos,yPos);
+end
+
 function autoLevelAbilityFunction(level)
 --Input -> level=the level which was leveled up to (int).
 --Function -> automatically levels up an ability
@@ -67,3 +74,4 @@ end
 
 
 RegisterEvent("levelUp","autoLevelAbilityFunction");
+RegisterEvent("interfaceInit","autoLevelAbility_UIInit");

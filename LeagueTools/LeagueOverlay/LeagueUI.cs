@@ -37,19 +37,19 @@ namespace LeagueOverlay
             ab4Plus,
 
             playerAvatar;
-        
+
         public static MainWindow parent;
-        public static int xResolution, yResolution,levelBitSize=0;
+        public static int xResolution, yResolution, levelBitSize = 0;
         public static byte[][] levelBmBytes = new byte[18][];
         public static Dictionary<int, Rect> levelRects = new Dictionary<int, Rect>();
         public static void setMainWindow(MainWindow mw)
         {
             parent = mw;
-            
+
         }
         public static void loadLevelBitmaps()
         {
-            
+
             Bitmap[] levelBitmaps = new Bitmap[18];
             System.Drawing.Imaging.BitmapData bd;
             IntPtr ip;
@@ -57,19 +57,19 @@ namespace LeagueOverlay
             foreach (FileInfo f in (new DirectoryInfo("levelImages")).GetFiles())
             {
                 string[] split = f.Name.Split("_.".ToCharArray());
-                index = Convert.ToInt32(split[1])-1;
-                levelBitmaps[index]= new Bitmap(new Bitmap(f.FullName).Clone(new Rect(3, 3, (12), (8)), System.Drawing.Imaging.PixelFormat.Undefined));
-                bd = levelBitmaps[index].LockBits(new System.Drawing.Rectangle(0, 0,  12,  8), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                index = Convert.ToInt32(split[1]) - 1;
+                levelBitmaps[index] = new Bitmap(new Bitmap(f.FullName).Clone(new Rect(3, 3, (12), (8)), System.Drawing.Imaging.PixelFormat.Undefined));
+                bd = levelBitmaps[index].LockBits(new System.Drawing.Rectangle(0, 0, 12, 8), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
                 ip = bd.Scan0;
                 levelBitSize = bd.Stride * levelBitmaps[index].Height;
                 levelBmBytes[index] = new byte[levelBitSize];
                 System.Runtime.InteropServices.Marshal.Copy(ip, levelBmBytes[index], 0, levelBitSize);
                 levelBitmaps[index].UnlockBits(bd);
-                
+
             }
 
-                
-                
+
+
         }
         //calculate all of the locations for screen elements
         public static void init(int xRes, int yRes)
@@ -87,17 +87,17 @@ namespace LeagueOverlay
 
             xResolution = xRes;
             yResolution = yRes;
-         
+
             double widthScale = xRes / 1280.0;
             double heightScale = yRes / 758.0;
 
             //Since not all resolutions are supported, just use 1280 for default so nothing crashes...
-             if (levelRects.Keys.Contains(xRes)) 
-            cLevel = new Rect(levelRects[xRes].X, yRes - levelRects[xRes].Y, levelRects[xRes].Width, levelRects[xRes].Height);
-             else
-             {
-               cLevel = new Rect(levelRects[1280].X, yRes - levelRects[1280].Y, levelRects[1280].Width, levelRects[1280].Height);
-             }
+            if (levelRects.Keys.Contains(xRes))
+                cLevel = new Rect(levelRects[xRes].X, yRes - levelRects[xRes].Y, levelRects[xRes].Width, levelRects[xRes].Height);
+            else
+            {
+                cLevel = new Rect(levelRects[1280].X, yRes - levelRects[1280].Y, levelRects[1280].Width, levelRects[1280].Height);
+            }
 
             ////
 
@@ -107,8 +107,8 @@ namespace LeagueOverlay
             int abilityHeight = (int)Math.Round(yRes - 105 * widthScale);
 
             int avatarSize = (int)Math.Round(102 * widthScale);
-            int abPlusHeight = (int)Math.Round(yRes - 142 * widthScale) -(int)(Math.Ceiling(1.0/widthScale));
-            int clevelHeight = (int)Math.Floor (yRes - (31) * widthScale)-1;
+            int abPlusHeight = (int)Math.Round(yRes - 142 * widthScale) - (int)(Math.Ceiling(1.0 / widthScale));
+            int clevelHeight = (int)Math.Floor(yRes - (31) * widthScale) - 1;
             int playerAvatarHeight = (int)Math.Round(yRes - (116) * widthScale);
             //3 3 - 14 10
             cAbility1R = new Rect((int)Math.Round((507) * widthScale), abilityHeight, abilitySize, abilitySize);
@@ -136,13 +136,13 @@ namespace LeagueOverlay
                 (int)Math.Round(14 * widthScale));
 
             playerAvatar = new Rect((int)Math.Round(9 * widthScale), playerAvatarHeight, avatarSize, avatarSize);
-           // cLevel = new Rect((int)Math.Floor(76 * widthScale), clevelHeight, cLevelWidth, cLevelHeight0);
+            // cLevel = new Rect((int)Math.Floor(76 * widthScale), clevelHeight, cLevelWidth, cLevelHeight0);
 
-            if(parent.leagueInfo.outOfLoadScreen)
+            if (parent.leagueInfo.outOfLoadScreen)
                 parent.scriptControl.raiseEvent("interfaceInit", "");
         }
 
-        
+
         //functions for getting UI element positions in LUA
         [AttrLuaFunc("GetResolutionX")]
         public int getResolutionX() { return xResolution; }
