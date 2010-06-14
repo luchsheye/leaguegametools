@@ -162,10 +162,7 @@ namespace RecommendedItemTool
             {
                 if ((heroAbilityLevels[aNum] * 2 + 1 <= heroCurrentLevel && heroAbilityLevels[aNum] < 5))
                 {
-                    if (aNum == 3 && heroAbilityLevels[aNum] < 3)
-                        return true;
-                    else if (aNum < 3) return true;
-                    else return false;
+                    return true;
                 }
                 else return false;
             }
@@ -255,18 +252,37 @@ namespace RecommendedItemTool
                 E_btn.IsEnabled = true;
                 label_E.Content = Math.Abs(heroAbilityLevels[2] - 5);
             }
-            if (!canLevelAbility(3, parent.selectedChampion))
+            if (parent.selectedChampion.ToLower() != "udyr")
             {
-                R_btn.Opacity = .5;
-                R_btn.IsEnabled = false;
-                label_R.Content = Math.Abs(3 - heroAbilityLevels[3]);
+                if (!canLevelAbility(3, parent.selectedChampion))
+                {
+                    R_btn.Opacity = .5;
+                    R_btn.IsEnabled = false;
+                    label_R.Content = Math.Abs(3 - heroAbilityLevels[3]);
+                }
+                else
+                {
+                    R_btn.Opacity = 1;
+                    R_btn.IsEnabled = true;
+                    label_R.Content = Math.Abs(3 - heroAbilityLevels[3]);
+                }
             }
             else
             {
-                R_btn.Opacity = 1;
-                R_btn.IsEnabled = true;
-                label_R.Content = Math.Abs(3 - heroAbilityLevels[3]);
+                if (!canLevelAbility(3, parent.selectedChampion))
+                {
+                    R_btn.Opacity = .5;
+                    R_btn.IsEnabled = false;
+                    label_R.Content = Math.Abs(5 - heroAbilityLevels[3]);
+                }
+                else
+                {
+                    R_btn.Opacity = 1;
+                    R_btn.IsEnabled = true;
+                    label_R.Content = Math.Abs(5 - heroAbilityLevels[3]);
+                }
             }
+           
         }
         private void saveAbilityBtn_Click(object sender, RoutedEventArgs e)
         {
