@@ -285,20 +285,24 @@ namespace LeagueOverlay
                 double rms = 0;
 
                 Bitmap cBit = new Bitmap((Image)form.windowImage.Clone(LeagueUI.playerAvatar, System.Drawing.Imaging.PixelFormat.Undefined), new System.Drawing.Size(120, 120)); ;
+                Rectangle r = new System.Drawing.Rectangle((int)(cBit.Width * (20.0 / 120.0)), (int)(cBit.Height * (20.0 / 120.0)), (int)(cBit.Width * (68.0 / 120.0)), (int)(cBit.Height * (72.0 / 120.0)));
+                cBit = new Bitmap(cBit.Clone(r, System.Drawing.Imaging.PixelFormat.Undefined));
                 Bitmap bit;
                 cBit.Save("champion.png");
                 // loop through heroes and find the one with the lowest rms diff.
                 foreach (string c in cnames.Keys)
                 {
-                    bit = new Bitmap(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + c + "_Square_0.png");
-
-                    rms = calcRMSDiff(cBit, bit, new System.Drawing.Rectangle((int)(bit.Width * (20.0 / 120.0)), (int)(bit.Height * (20.0 / 120.0)), (int)(bit.Width * (68.0/120.0)), (int)(bit.Height * (72.0/120.0))));
+                    bit = (new Bitmap(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + c + "_Square_0.png")).Clone(r, System.Drawing.Imaging.PixelFormat.Undefined);
+                   
+                    if (c.ToLower() == "garen") bit.Save("garen.png");
+                    rms = calcRMSDiff(cBit, bit);
                     bit.Dispose();
                     if (rms < curRMS)
                     {
                         curRMS = rms;
                         curName = c;
                     }
+                    bit.Dispose();
                     //  Console.WriteLine(cnames[i] + " " + rms);
 
                 }
@@ -441,6 +445,32 @@ namespace LeagueOverlay
                 byte* bStart = (byte*)bInfo.Scan0;
 
                 for (int i = 0; i < rInfo.Stride * rInfo.Height; i++)
+                {
+                    int temp = bStart[i] - rStart[i];
+                    sum += temp * temp;
+                }
+            }
+            r.UnlockBits(rInfo);
+            b.UnlockBits(bInfo);
+
+            return (1 / ((double)(r.Height * r.Width))) * sum;
+
+        }
+
+
+        public double calcRMSDiffTest(Bitmap r, Bitmap b, Rectangle rect)
+        {
+            if (rect.Right > b.Width || rect.Height > b.Height || rect.X > b.Width || rect.Y > b.Height) return double.MaxValue;
+            double sum = 0;
+            var rInfo = r.LockBits(new Rectangle(0, 0, r.Width, r.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            var bInfo = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            unsafe
+            {
+                
+                byte* rStart = (byte*)rInfo.Scan0;
+                byte* bStart = (byte*)bInfo.Scan0;
+
+                for (int i = rect.X*rect.Y*3; i < rect.Width * rect.Height * 3; i++)
                 {
                     int temp = bStart[i] - rStart[i];
                     sum += temp * temp;

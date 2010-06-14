@@ -156,8 +156,20 @@ namespace RecommendedItemTool
 
         }
 
-        public bool canLevelAbility(int aNum)
+        public bool canLevelAbility(int aNum, string name)
         {
+            if (name.ToLower() == "udyr")
+            {
+                if ((heroAbilityLevels[aNum] * 2 + 1 <= heroCurrentLevel && heroAbilityLevels[aNum] < 5))
+                {
+                    if (aNum == 3 && heroAbilityLevels[aNum] < 3)
+                        return true;
+                    else if (aNum < 3) return true;
+                    else return false;
+                }
+                else return false;
+            }
+
             if (aNum < 3 && (heroAbilityLevels[aNum] * 2 + 1 <= heroCurrentLevel && heroAbilityLevels[aNum] < 5))
             {
                 return true;
@@ -206,7 +218,7 @@ namespace RecommendedItemTool
 
         public void initAbilityButtons()
         {
-            if (!canLevelAbility(0))
+            if (!canLevelAbility(0,parent.selectedChampion))
             {
                 Q_btn.Opacity = .5;
                 Q_btn.IsEnabled = false;
@@ -218,7 +230,7 @@ namespace RecommendedItemTool
                 Q_btn.IsEnabled = true;
                 label_Q.Content = Math.Abs(heroAbilityLevels[0] - 5);
             }
-            if (!canLevelAbility(1))
+            if (!canLevelAbility(1, parent.selectedChampion))
             {
                 W_btn.Opacity = .5;
                 W_btn.IsEnabled = false;
@@ -231,7 +243,7 @@ namespace RecommendedItemTool
                 label_W.Content = Math.Abs(heroAbilityLevels[1] - 5);
 
             }
-            if (!canLevelAbility(2))
+            if (!canLevelAbility(2, parent.selectedChampion))
             {
                 E_btn.Opacity = .5;
                 E_btn.IsEnabled = false;
@@ -243,7 +255,7 @@ namespace RecommendedItemTool
                 E_btn.IsEnabled = true;
                 label_E.Content = Math.Abs(heroAbilityLevels[2] - 5);
             }
-            if (!canLevelAbility(3))
+            if (!canLevelAbility(3, parent.selectedChampion))
             {
                 R_btn.Opacity = .5;
                 R_btn.IsEnabled = false;
@@ -300,7 +312,7 @@ namespace RecommendedItemTool
         {
 
             if (abilityString.Length == 18) return;
-            if (canLevelAbility(0))
+            if (canLevelAbility(0, parent.selectedChampion))
             {
                 heroAbilityLevels[0]++;
                 abilityString += abNumToLetter(0);
@@ -313,7 +325,7 @@ namespace RecommendedItemTool
         public void W_btn_Click(object sender, RoutedEventArgs e)
         {
             if (abilityString.Length == 18) return;
-            if (canLevelAbility(1))
+            if (canLevelAbility(1, parent.selectedChampion))
             {
                 heroAbilityLevels[1]++;
                 abilityString += abNumToLetter(1);
@@ -326,7 +338,7 @@ namespace RecommendedItemTool
         public void E_btn_Click(object sender, RoutedEventArgs e)
         {
             if (abilityString.Length == 18) return;
-            if (canLevelAbility(2))
+            if (canLevelAbility(2, parent.selectedChampion))
             {
                 heroAbilityLevels[2]++;
                 abilityString += abNumToLetter(2);
@@ -340,7 +352,7 @@ namespace RecommendedItemTool
         {
 
             if (abilityString.Length == 18) return;
-            if (canLevelAbility(3))
+            if (canLevelAbility(3, parent.selectedChampion))
             {
                 heroAbilityLevels[3]++;
                 abilityString += abNumToLetter(3);
