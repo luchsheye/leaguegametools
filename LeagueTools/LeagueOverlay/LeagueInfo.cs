@@ -273,6 +273,11 @@ namespace LeagueOverlay
                     form.scriptControl.raiseEvent("interfaceInit", "");
                     outOfLoadScreen = true;
                     form.scriptControl.log("Left Load Screen");
+                    foreach (var v in champData)
+                    {
+                        v.image.Dispose();
+                        v.image = null;
+                    }
                 }
             }
 

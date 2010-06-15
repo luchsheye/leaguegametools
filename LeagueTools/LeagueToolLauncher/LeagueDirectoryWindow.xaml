@@ -5,7 +5,7 @@
     <Canvas Height="Auto" Name="canvas1" Width="Auto">
         <TextBlock Canvas.Left="10" Canvas.Top="10" FontFamily="Miramonte" FontSize="14" Foreground="White" Height="22" Name="textBlock1" Text="League of legends directory:" TextWrapping="Wrap" Width="182" />
         <Button Canvas.Left="533" Canvas.Top="44" Content="Change" Height="24" Name="changeDirectoryBtn" Style="{StaticResource GlassButton}" Visibility="Visible" Width="85" Click="changeDirectoryBtn_Click" />
-        <TextBlock Canvas.Left="182" Canvas.Top="10" FontFamily="Miramonte" FontSize="14" Foreground="White" Height="22" Name="leagueDirectoryLabel" Text="League of legends directory:" TextWrapping="Wrap" Width="514" />
+        <TextBlock Canvas.Left="182" Canvas.Top="10" FontFamily="Miramonte" FontSize="14" Foreground="White" Height="22" Name="leagueDirectoryLabel" Text="&lt; Auto Detect Failed &gt;" TextWrapping="Wrap" Width="514" />
         <Button Canvas.Left="624" Canvas.Top="44" Content="Done" Height="24" Name="doneBtn" Style="{StaticResource GlassButton}" Visibility="Visible" Width="72" Click="doneBtn_Click" />
     </Canvas>
 </Window>

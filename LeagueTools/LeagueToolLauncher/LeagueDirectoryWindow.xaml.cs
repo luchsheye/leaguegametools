@@ -46,6 +46,7 @@ namespace LeagueToolLauncher
                     }
                 }
             }
+            leagueDirectoryLabel.Text = Preferences.leagueFolder;
         }
 
         private void changeDirectoryBtn_Click(object sender, RoutedEventArgs e)
