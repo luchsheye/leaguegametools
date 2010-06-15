@@ -121,9 +121,16 @@ namespace LeagueOverlay
                 DateTime start = DateTime.Now;
                 //grab the current screen image from league of legends
                 windowHandle = tempHandle;
-                Bitmap temp = windowImage;
-                windowImage = GetClientWindowImage();
-                temp.Dispose();
+                Bitmap temp = GetClientWindowImage();
+                if (temp != null)
+                {
+                    windowImage.Dispose();
+                    windowImage = temp;
+                }
+                else
+                {
+                    return;
+                }
                 if (windowImage.Width < 10 || windowImage.Height < 10) return;
 
                 if (Preferences.hideLeagueBorders == false)
@@ -164,10 +171,12 @@ namespace LeagueOverlay
             IntPtr hDC = WIN32_API.GetDC(windowHandle);
             IntPtr hMemDC = WIN32_API.CreateCompatibleDC(hDC);
 
+            if (hDC == IntPtr.Zero || hMemDC == IntPtr.Zero) return null;
+
             WIN32_API.RECT windowSize = new WIN32_API.RECT();
             WIN32_API.GetClientRect(windowHandle, ref windowSize);
 
-            if ((int)windowSize.width <= 10 || (int)windowSize.height <= 10) return new Bitmap(1, 1);
+            if ((int)windowSize.width <= 10 || (int)windowSize.height <= 10) return null;
             if (windowBitmapHandle == IntPtr.Zero || (int)windowSize.width != windowImage.Width || (int)windowSize.height != windowImage.Height)
             {
                 
@@ -206,6 +215,8 @@ namespace LeagueOverlay
                 WIN32_API.ReleaseDC(windowHandle, hDC);
                 return System.Drawing.Image.FromHbitmap(windowBitmapHandle);
             }
+            WIN32_API.DeleteDC(hMemDC);
+            WIN32_API.ReleaseDC(windowHandle, hDC);
             return null;
         }
 

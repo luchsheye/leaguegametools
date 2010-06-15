@@ -32,7 +32,6 @@ namespace LeagueOverlay
             registerLuaFunctions(this);
 
             //LuaVM.RegisterFunction("RegisterEvent", this, parent.leagueInfo.GetType().GetMethod("registerEvent"));
-
             log("-----------------------------------------------------------");
             log("Overlay Init:" + DateTime.Now);
         }

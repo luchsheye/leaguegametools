@@ -262,7 +262,7 @@ namespace LeagueOverlay
                                 loadScreenInfo.scale);
                             if (summonerInfo[1][i] != null)
                             {
-                                form.scriptControl.log("LoadScreen: Found bot champion (" + summonerInfo[0][i].championCodeName + ") with " + summonerInfo[0][i].summonerSpell1 + " and " + summonerInfo[0][i].summonerSpell2);
+                                form.scriptControl.log("LoadScreen: Found bot champion (" + summonerInfo[1][i].championCodeName + ") with " + summonerInfo[1][i].summonerSpell1 + " and " + summonerInfo[1][i].summonerSpell2);
                             }
                         }
                     }
