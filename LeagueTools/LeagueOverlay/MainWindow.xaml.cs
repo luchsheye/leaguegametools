@@ -88,9 +88,11 @@ namespace LeagueOverlay
         void UILogicTimer_Tick(object sender, EventArgs e)
         {
             //do logic such as updating timers or UI elements
+            //DateTime start = DateTime.Now;
             DisplayTimers.updateTimers();
             keyboardManager.update();
             scriptControl.update();
+            //UITimeLabel.Content = "UI Time:" + (int)(DateTime.Now - start).TotalMilliseconds + "ms";
         }
 
         void processingTimer_Tick(object sender, EventArgs e)
@@ -119,12 +121,14 @@ namespace LeagueOverlay
             {
                 this.Visibility = Visibility.Visible;
                 DateTime start = DateTime.Now;
+
                 //grab the current screen image from league of legends
                 windowHandle = tempHandle;
                 Bitmap temp = GetClientWindowImage();
+                
                 if (temp != null)
                 {
-                    windowImage.Dispose();
+                    //windowImage.Dispose();
                     windowImage = temp;
                 }
                 else
@@ -156,9 +160,9 @@ namespace LeagueOverlay
 
                 //TODO: Add image processing here
                 leagueInfo.update();
-                
-                this.procTimeLabel.Content = "Procesing Time:" + (int)(Math.Round((DateTime.Now - start).TotalMilliseconds)) + "ms";
                 scriptControl.raiseEvent("processingFinished", "");
+                this.procTimeLabel.Content = "Procesing Time:" + (int)(Math.Round((DateTime.Now - start).TotalMilliseconds)) + "ms";
+               
             }
             else
             {
@@ -166,20 +170,25 @@ namespace LeagueOverlay
             }
         }
 
+        Bitmap rawWindowImage;
+        IntPtr rawWindowImageBits;
+
         public Bitmap GetClientWindowImage()
         {
+            
             IntPtr hDC = WIN32_API.GetDC(windowHandle);
             IntPtr hMemDC = WIN32_API.CreateCompatibleDC(hDC);
-
+                
             if (hDC == IntPtr.Zero || hMemDC == IntPtr.Zero) return null;
 
             WIN32_API.RECT windowSize = new WIN32_API.RECT();
             WIN32_API.GetClientRect(windowHandle, ref windowSize);
 
             if ((int)windowSize.width <= 10 || (int)windowSize.height <= 10) return null;
+
             if (windowBitmapHandle == IntPtr.Zero || (int)windowSize.width != windowImage.Width || (int)windowSize.height != windowImage.Height)
             {
-                
+
                 Console.WriteLine("got a new bitmap handle");
                 scriptControl.log("New Window Resolution:" + (int)windowSize.width + " x " + (int)windowSize.height);
                 if (Preferences.hideLeagueBorders)
@@ -199,21 +208,83 @@ namespace LeagueOverlay
                     mainCanvas.Width = this.Width;
                     mainCanvas.Height = this.Height;
                 }
+
+
                 //init the UI rectangle locations and notify scripts
                 LeagueUI.init(windowSize.width, windowSize.height);
-               
-                windowBitmapHandle = WIN32_API.CreateCompatibleBitmap(hDC, (IntPtr)windowSize.width, (IntPtr)windowSize.height);
+                //windowBitmapHandle = WIN32_API.CreateCompatibleBitmap(hDC, (IntPtr)windowSize.width, (IntPtr)windowSize.height);
+
+                WIN32_API.BITMAPINFO bmi = new WIN32_API.BITMAPINFO();
+                bmi.biSize = 40;  // the size of the BITMAPHEADERINFO struct
+                bmi.biWidth = windowSize.width;
+                bmi.biHeight = windowSize.height;
+                bmi.biPlanes = 1; // "planes" are confusing. We always use just 1. Read MSDN for more info.
+                bmi.biBitCount = 24; // ie. 1bpp or 8bpp
+                bmi.biCompression = WIN32_API.BI_RGB; // ie. the pixels in our RGBQUAD table are stored as RGBs, not palette indexes
+                bmi.biSizeImage = 0;
+                bmi.biXPelsPerMeter = 1000000; // not really important
+                bmi.biYPelsPerMeter = 1000000; // not really important
+                bmi.biClrUsed = 0;
+                bmi.biClrImportant = 0;
+
+                rawWindowImage = new Bitmap(windowSize.width, windowSize.height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                windowBitmapHandle = WIN32_API.CreateDIBSection(hDC, ref bmi, WIN32_API.DIB_RGB_COLORS, out rawWindowImageBits, IntPtr.Zero, 0);
+                
             }
-
-
+             
             if (windowBitmapHandle != IntPtr.Zero)
             {
                 IntPtr hOld = (IntPtr)WIN32_API.SelectObject(hMemDC, windowBitmapHandle);
-                WIN32_API.BitBlt(hMemDC, 0, 0, windowSize.width, windowSize.height, hDC, 0, 0, WIN32_API.SRCCOPY);
+                if(!leagueInfo.outOfLoadScreen)
+                    WIN32_API.BitBlt(hMemDC, 0, 0, windowSize.width, windowSize.height, hDC, 0, 0, WIN32_API.SRCCOPY);
+                else
+                    WIN32_API.BitBlt(hMemDC, 0, 3 * windowSize.height / 4, windowSize.width/4, windowSize.height / 4, hDC, 0, 3 * windowSize.height / 4, WIN32_API.SRCCOPY);
                 WIN32_API.SelectObject(hMemDC, hOld);
                 WIN32_API.DeleteDC(hMemDC);
                 WIN32_API.ReleaseDC(windowHandle, hDC);
-                return System.Drawing.Image.FromHbitmap(windowBitmapHandle);
+
+                var bInfo = rawWindowImage.LockBits(new System.Drawing.Rectangle(0, 0, rawWindowImage.Width, rawWindowImage.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+               
+                //copy the data from the windows bitmap to a c# bitmap...would be nice to not have to do this
+                unsafe
+                {
+                    int* s = (int*)bInfo.Scan0;
+                    int intWidth = bInfo.Stride / 4;
+                    int len = rawWindowImage.Height * intWidth;
+                    int* screenImg = (int*)rawWindowImageBits + len;
+                    int* t;
+
+
+                    int yCount = rawWindowImage.Height;
+                    int lineLen = intWidth;
+                    int bitSkip = 0;
+                    if (leagueInfo.outOfLoadScreen)
+                    {
+                        int startY = 3 * windowSize.height / 4;
+                        yCount = rawWindowImage.Height / 4;
+                        s += startY * intWidth;
+                        screenImg -= startY * intWidth;
+                        lineLen /= 4;
+                        bitSkip = intWidth - lineLen;
+                    }
+
+                    for (int y = 0; y < yCount; y++)
+                    {
+                        screenImg -= intWidth;
+                        t = screenImg;
+                        for (int x = 0; x < lineLen; x++)
+                        {
+                            *(s++) = *(t++);
+                        }
+                        s += bitSkip;
+                    }
+                   
+                } 
+                rawWindowImage.UnlockBits(bInfo);
+
+                //Bitmap bm = System.Drawing.Image.FromHbitmap(windowBitmapHandle);
+
+                return rawWindowImage;
             }
             WIN32_API.DeleteDC(hMemDC);
             WIN32_API.ReleaseDC(windowHandle, hDC);

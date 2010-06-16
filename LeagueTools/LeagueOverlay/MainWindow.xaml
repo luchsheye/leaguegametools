@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded" AllowsTransparency="True" Background="#00000000" WindowStyle="None" ResizeMode="NoResize" Topmost="True" ShowInTaskbar="False">
     <Canvas Height="285" Name="mainCanvas" Width="480">
-        <Label Canvas.Left="0" Canvas.Top="0" Content="Label" Height="47" Name="procTimeLabel" Width="292" FontFamily="Calibri" FontSize="28" Foreground="#FFC8E512" Visibility="Hidden" />
+        <Label Canvas.Left="0" Canvas.Top="0" Content="Label" Height="47" Name="procTimeLabel" Width="292" FontFamily="Calibri" FontSize="28" Foreground="#FFC8E512" Visibility="Visible" />
+        <Label Canvas.Left="0" Canvas.Top="37" Content="Label" FontFamily="Calibri" FontSize="28" Foreground="#FFC8E512" Height="47" Name="UITimeLabel" Visibility="Hidden" Width="292" />
     </Canvas>
 </Window>

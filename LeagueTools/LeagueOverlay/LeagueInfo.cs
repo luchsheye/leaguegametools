@@ -286,19 +286,24 @@ namespace LeagueOverlay
             if (heroName == "")
             {
                 string curName = "";
-                double curRMS = 1000000.0;
+                double curRMS = double.MaxValue;
                 double rms = 0;
-
-                Bitmap cBit = new Bitmap((Image)form.windowImage.Clone(LeagueUI.playerAvatar, System.Drawing.Imaging.PixelFormat.Undefined), new System.Drawing.Size(120, 120)); ;
+                Bitmap bit, temp;
+                temp = form.windowImage.Clone(LeagueUI.playerAvatar, System.Drawing.Imaging.PixelFormat.Undefined);
+                Bitmap cBit = new Bitmap(temp, new System.Drawing.Size(120, 120));
+                temp.Dispose();
                 Rectangle r = new System.Drawing.Rectangle((int)(cBit.Width * (20.0 / 120.0)), (int)(cBit.Height * (20.0 / 120.0)), (int)(cBit.Width * (68.0 / 120.0)), (int)(cBit.Height * (72.0 / 120.0)));
-                cBit = new Bitmap(cBit.Clone(r, System.Drawing.Imaging.PixelFormat.Undefined));
-                Bitmap bit;
+                temp = cBit;
+                cBit = cBit.Clone(r, System.Drawing.Imaging.PixelFormat.Undefined);
+                temp.Dispose();
                 cBit.Save("champion.png");
                 // loop through heroes and find the one with the lowest rms diff.
                 foreach (string c in cnames.Keys)
                 {
-                    bit = (new Bitmap(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + c + "_Square_0.png")).Clone(r, System.Drawing.Imaging.PixelFormat.Undefined);
-                   
+                    temp = new Bitmap(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + c + "_Square_0.png");
+                    bit = temp.Clone(r, System.Drawing.Imaging.PixelFormat.Undefined);
+                    temp.Dispose();
+
                     if (c.ToLower() == "garen") bit.Save("garen.png");
                     rms = calcRMSDiff(cBit, bit);
                     bit.Dispose();
@@ -311,8 +316,9 @@ namespace LeagueOverlay
                     //  Console.WriteLine(cnames[i] + " " + rms);
 
                 }
+                cBit.Dispose();
                 heroName = curName;
-                bit = new Bitmap(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + heroName + "_Square_0.png");
+                //bit = new Bitmap(Preferences.leagueFolder + "\\air\\assets\\images\\champions\\" + heroName + "_Square_0.png");
                
                 Console.WriteLine("Hero Name" + heroName);
                 form.scriptControl.log("Player Champion: " + heroName);
@@ -324,11 +330,13 @@ namespace LeagueOverlay
 
             /* Set Current Hero Level */
             int thinkLevel = 1;
-            Bitmap wLevelBit;
+            Bitmap wLevelBit,unResizedLevelBit;
 
             //Console.WriteLine(LeagueUI.cLevel);
-            wLevelBit = new Bitmap(form.windowImage.Clone(LeagueUI.cLevel, System.Drawing.Imaging.PixelFormat.Undefined),new System.Drawing.Size(12,8));
-            double lrms = 0, curlrms = 1000000.0;
+            unResizedLevelBit = form.windowImage.Clone(LeagueUI.cLevel, System.Drawing.Imaging.PixelFormat.Undefined);
+            wLevelBit = new Bitmap(unResizedLevelBit, new System.Drawing.Size(12, 8));
+            unResizedLevelBit.Dispose();
+            double lrms = 0, curlrms = double.MaxValue;
             System.Drawing.Imaging.BitmapData bd;
             IntPtr ip;
             bd = wLevelBit.LockBits(new System.Drawing.Rectangle(0, 0, wLevelBit.Width,wLevelBit.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
@@ -356,6 +364,7 @@ namespace LeagueOverlay
                 form.scriptControl.levelUp();
             }
 
+            wLevelBit.Dispose();
             /* End Setting Hero Level*/
 
             /*********************************************************************/
@@ -367,6 +376,7 @@ namespace LeagueOverlay
             /*********************************************************************/
 
             /* Set Health Percent */
+            /*
             Bitmap hBit = form.windowImage.Clone(LeagueUI.cHealth, System.Drawing.Imaging.PixelFormat.Undefined);
             SColor hColor;
             int hCount = 0;
@@ -380,7 +390,7 @@ namespace LeagueOverlay
 
                 }
             }
-
+            
             if (healthPixCount == -1)
             {
                 healthPercent = 100.0;
@@ -390,6 +400,7 @@ namespace LeagueOverlay
             {
                 healthPercent = (double)hCount / (double)healthPixCount;
             }
+             * */
             //Console.WriteLine("health percent" + healthPercent);
             /* Set Mana/Energy Percent */
 
@@ -449,36 +460,16 @@ namespace LeagueOverlay
                 byte* rStart = (byte*)rInfo.Scan0;
                 byte* bStart = (byte*)bInfo.Scan0;
 
-                for (int i = 0; i < rInfo.Stride * rInfo.Height; i++)
+                for (int y = rect.Y; y <= rect.Y + rect.Height; y++)
                 {
-                    int temp = bStart[i] - rStart[i];
-                    sum += temp * temp;
-                }
-            }
-            r.UnlockBits(rInfo);
-            b.UnlockBits(bInfo);
+                    for (int x = rect.X; x <= rect.X + rect.Width; x++)
+                    {
+                        int redD = bStart[x + y * bInfo.Stride] - rStart[x + y * rInfo.Stride];
+                        int greenD = bStart[x + y * bInfo.Stride + 1] - rStart[x + y * rInfo.Stride + 1];
+                        int blueD = bStart[x + y * bInfo.Stride + 2] - rStart[x + y * rInfo.Stride + 2];
 
-            return (1 / ((double)(r.Height * r.Width))) * sum;
-
-        }
-
-
-        public double calcRMSDiffTest(Bitmap r, Bitmap b, Rectangle rect)
-        {
-            if (rect.Right > b.Width || rect.Height > b.Height || rect.X > b.Width || rect.Y > b.Height) return double.MaxValue;
-            double sum = 0;
-            var rInfo = r.LockBits(new Rectangle(0, 0, r.Width, r.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-            var bInfo = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-            unsafe
-            {
-                
-                byte* rStart = (byte*)rInfo.Scan0;
-                byte* bStart = (byte*)bInfo.Scan0;
-
-                for (int i = rect.X*rect.Y*3; i < rect.Width * rect.Height * 3; i++)
-                {
-                    int temp = bStart[i] - rStart[i];
-                    sum += temp * temp;
+                        sum += redD * redD + greenD * greenD + blueD * blueD;
+                    }
                 }
             }
             r.UnlockBits(rInfo);
@@ -664,37 +655,45 @@ namespace LeagueOverlay
         SummonerInfo getSummonerInfo(Bitmap screenImage, int left, int top, double scale)
         {
             SummonerInfo si = new SummonerInfo();
-            Bitmap champImg, sSpell1, sSpell2;
+            Bitmap champImg, sSpell1, sSpell2, temp;
             double minRMS1 = double.MaxValue;
             double minRMS2 = double.MaxValue;
+            Rect spell1Rect = new Rectangle(left + (int)Math.Round(72 * scale), top + (int)Math.Round(298 * scale), (int)Math.Round(23 * scale), (int)Math.Round(24 * scale));
+            
+            //check the color on sSpell1 if it is black summoner is not connected
+            if (spell1Rect.Right >= screenImage.Width || spell1Rect.Bottom >= screenImage.Height) return null;
+            int blackCount = 0;
+            for (int y = spell1Rect.Y; y <= spell1Rect.Y + spell1Rect.Height; y++)
+            {
+                for (int x = spell1Rect.X; x <= spell1Rect.X + spell1Rect.Width; x++)
+                {
+                    var c = screenImage.GetPixel(x, y);
+                    if (c.R < 20 && c.G < 20 && c.B < 20) blackCount++;
+                }
+            }
+
+            if (blackCount / (64.0 * 64.0) >= 0.7) return null;
             try
             {
                 champImg = screenImage.Clone(new Rectangle(left, top, (int)Math.Round(185 * scale), (int)Math.Round(305 * scale)), System.Drawing.Imaging.PixelFormat.DontCare);
-                sSpell1 = screenImage.Clone(new Rectangle(left + (int)Math.Round(72 * scale), top + (int)Math.Round(298 * scale), (int)Math.Round(23 * scale), (int)Math.Round(24 * scale)), System.Drawing.Imaging.PixelFormat.DontCare);
+                sSpell1 = screenImage.Clone(spell1Rect, System.Drawing.Imaging.PixelFormat.DontCare);
                 sSpell2 = screenImage.Clone(new Rectangle(left + (int)Math.Round(99 * scale), top + (int)Math.Round(298 * scale), (int)Math.Round(23 * scale), (int)Math.Round(24 * scale)), System.Drawing.Imaging.PixelFormat.DontCare);             
             }
             catch
             {
                 return null;
             }
+
+
+            temp = sSpell1;
             sSpell1 = new Bitmap(sSpell1, 64, 64);
+            temp.Dispose();
+            temp = sSpell2;
             sSpell2 = new Bitmap(sSpell2, 64, 64);
-
-            //check the color on sSpell1 if it is black summoner is not connected
-            int blackCount = 0;
-            for (int x = 0; x < sSpell1.Width; x++)
-            {
-                for (int y = 0; y < sSpell1.Height; y++)
-                {
-                    var c = sSpell1.GetPixel(x, y);
-                    if (c.R < 20 && c.G < 20 && c.B < 20) blackCount++;
-                }
-            }
-            if (blackCount / (64.0 * 64.0) >= 0.7) return null;
-
+            temp.Dispose();
             foreach (KeyValuePair<string,SummonerSpellInfo> kvp in summonerSpellInfo)
             {
-                Bitmap temp = kvp.Value.image;
+                temp = kvp.Value.image;
                 double rms = calcRMSDiff(sSpell1, temp);
                 if (rms < minRMS1)
                 {
@@ -710,16 +709,24 @@ namespace LeagueOverlay
                 }
             }
             //Added this because somehow they can end up being null (no keys in summonerSpellInfo??)
-            if (si.summonerSpell1 == null || si.summonerSpell2 == null) return null;
+            if (si.summonerSpell1 == null || si.summonerSpell2 == null)
+            {
+                sSpell1.Dispose();
+                sSpell2.Dispose();
+                champImg.Dispose();
+                return null;
+            }
             Console.WriteLine("S1 = " + si.summonerSpell1 + " minrms of" + minRMS1);
             Console.WriteLine("S2 = " + si.summonerSpell2);
 
             double minChampionRMS = double.MaxValue;
+            temp = champImg;
             champImg = new Bitmap(champImg, 307, 557);
-            Rectangle compareRect = new Rectangle(0, 130, 150, 20);
+            temp.Dispose();
+            Rectangle compareRect = new Rectangle(0, 0, 307, 100);
             foreach (ChampNameAndImage champ in champData)
             {
-                Bitmap temp = champ.image;
+                temp = champ.image;
                 double rms = calcRMSDiff(champImg, temp, compareRect);
                 if (rms < minChampionRMS)
                 {
@@ -728,6 +735,9 @@ namespace LeagueOverlay
                 }
             }
             Console.WriteLine("champion is " + si.championCodeName);
+            sSpell1.Dispose();
+            sSpell2.Dispose();
+            champImg.Dispose();
             return si;
         }
 
