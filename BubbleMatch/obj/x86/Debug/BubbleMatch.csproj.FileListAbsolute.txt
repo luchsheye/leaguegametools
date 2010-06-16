@@ -1,9 +1,0 @@
-c:\users\jared\documents\visual studio 2010\Projects\BubbleMatch\BubbleMatch\bin\Debug\BubbleMatch.exe
-c:\users\jared\documents\visual studio 2010\Projects\BubbleMatch\BubbleMatch\bin\Debug\BubbleMatch.pdb
-c:\users\jared\documents\visual studio 2010\Projects\BubbleMatch\BubbleMatch\obj\x86\Debug\ResolveAssemblyReference.cache
-c:\users\jared\documents\visual studio 2010\Projects\BubbleMatch\BubbleMatch\obj\x86\Debug\BubbleMatch.Form1.resources
-c:\users\jared\documents\visual studio 2010\Projects\BubbleMatch\BubbleMatch\obj\x86\Debug\BubbleMatch.Properties.Resources.resources
-c:\users\jared\documents\visual studio 2010\Projects\BubbleMatch\BubbleMatch\obj\x86\Debug\ResGen.read.1.tlog
-c:\users\jared\documents\visual studio 2010\Projects\BubbleMatch\BubbleMatch\obj\x86\Debug\ResGen.write.1.tlog
-c:\users\jared\documents\visual studio 2010\Projects\BubbleMatch\BubbleMatch\obj\x86\Debug\BubbleMatch.exe
-c:\users\jared\documents\visual studio 2010\Projects\BubbleMatch\BubbleMatch\obj\x86\Debug\BubbleMatch.pdb
